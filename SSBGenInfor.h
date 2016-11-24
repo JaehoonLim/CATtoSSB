@@ -131,11 +131,14 @@ class SSBGenInfor : public edm::EDAnalyzer {
       vec_i SelectedPar;
 
       map_ii SelectedpdgId;
+      map_ii SelectedpdgId_FT;
 
       map_s ParName;
 
-      bool isSignal;
+      bool isTop;
+      unsigned int NTop;
       int ChannelIndex;
+
       // ----------member data ---------------------------
 
 };
