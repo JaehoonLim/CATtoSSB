@@ -45,19 +45,20 @@ else :
                                          # Reco Level Cut Variables
                                          Save_Channel      = cms.untracked.string(ChannelName),
                                          Save_Inversion    = cms.untracked.bool(MakeOthersSample),
-                                         # Cut 0
+                                         # Trigger0
                                          Do_Trigger_Cut    = cms.untracked.bool(False), 
-                                         ejet_Trigger      = cms.untracked.vstring('HLT_Ele23_WPLoose_Gsf'),
-                                         mjet_Trigger      = cms.untracked.vstring('HLT_IsoMu18'),
-                                         # Cut 1
-                                         ejet_ElectronID   = cms.untracked.string("Medium"),
-                                         ejet_ElectronPt   = cms.untracked.double(30.0),
-                                         ejet_ElectronEta  = cms.untracked.double(2.4),
-                                         mjet_MuonID       = cms.untracked.string("Tight"),
-                                         mjet_MuonPt       = cms.untracked.double(26.0),
-                                         mjet_MuonEta      = cms.untracked.double(2.1),
-                                         mjet_MuonIso      = cms.untracked.double(0.15),
-                                         # Cut 2
+                                         e_Trigger         = cms.untracked.vstring('HLT_Ele23_WPLoose_Gsf'),
+                                         m_Trigger         = cms.untracked.vstring('HLT_IsoMu18'),
+                                         em_Trigger        = cms.untracked.vstring('HLT_IsoMu18'),
+                                         # Lepton
+                                         ElectronID   = cms.untracked.string("Medium"),
+                                         ElectronPt   = cms.untracked.double(30.0),
+                                         ElectronEta  = cms.untracked.double(2.4),
+                                         MuonID       = cms.untracked.string("Tight"),
+                                         MuonPt       = cms.untracked.double(26.0),
+                                         MuonEta      = cms.untracked.double(2.1),
+                                         MuonIso      = cms.untracked.double(0.15),
+                                         # Veto Lepton
                                          veto_ElectronID   = cms.untracked.string("Veto"),
                                          veto_ElectronPt   = cms.untracked.double(10.0),
                                          veto_ElectronEta  = cms.untracked.double(2.4),
@@ -65,15 +66,18 @@ else :
                                          veto_MuonPt       = cms.untracked.double(10.0),
                                          veto_MuonEta      = cms.untracked.double(2.4),
                                          veto_MuonIso      = cms.untracked.double(0.25),
-                                         # Cut 3
-                                         ljet_JetID        = cms.untracked.string("Loose"),
-                                         ljet_JetPt        = cms.untracked.double(30.0),
-                                         ljet_JetEta       = cms.untracked.double(2.4),
-                                         ljet_CleaningdR   = cms.untracked.double(0.4),
-                                         # Cut 4
-                                         ljet_BTag         = cms.untracked.string("Medium"),
-                                         # Cut Test
-                                         ljet_METPt        = cms.untracked.double(0.0)
+                                         # Jet
+                                         JetID        = cms.untracked.string("Loose"),
+                                         JetPt        = cms.untracked.double(30.0),
+                                         JetEta       = cms.untracked.double(2.4),
+                                         CleaningdR   = cms.untracked.double(0.4),
+                                         # B-Jet
+                                         BTag         = cms.untracked.string("Medium"),
+                                         # Lepton Inclusive Mass (Z Mass)
+                                         InclusiveMass = cms.untracked.double(80.4),
+                                         PlusMinus     = cms.untracked.double(15.0),
+                                         # MET
+                                         METPt        = cms.untracked.double(0.0)
                                         )
 
 process.TFileService=cms.Service("TFileService",
