@@ -1,4 +1,4 @@
-// SSBTMMaker v2.01
+// SSBTMMaker v2.11
 
 #include "SSBTreeManager.h"
 
@@ -197,8 +197,8 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Channel_Jets_Abs", &VariableBox_Int["Channel_Jets_Abs"], "Channel_Jets_Abs/I");
     ssbtree->Branch("Channel_Lepton_Count", &VariableBox_Int["Channel_Lepton_Count"], "Channel_Lepton_Count/I");
     ssbtree->Branch("Channel_Lepton_Count_Final", &VariableBox_Int["Channel_Lepton_Count_Final"], "Channel_Lepton_Count_Final/I");
-    ssbtree->Branch("Channel_Lepton_Plus", &VariableBox_Int["Channel_Lepton_Plus"], "Channel_Lepton_Plus/I");
     ssbtree->Branch("Channel_Lepton_Minus", &VariableBox_Int["Channel_Lepton_Minus"], "Channel_Lepton_Minus/I");
+    ssbtree->Branch("Channel_Lepton_Plus", &VariableBox_Int["Channel_Lepton_Plus"], "Channel_Lepton_Plus/I");
     ssbtree->Branch("Cut_BJet_Count", &VariableBox_Int["Cut_BJet_Count"], "Cut_BJet_Count/I");
     ssbtree->Branch("Cut_Elec", "TClonesArray", &VariableBox_LorentzVector["Cut_Elec"], 32000, 0);
     VariableBox_LorentzVector["Cut_Elec"]->BypassStreamer();
@@ -290,8 +290,8 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Int["Channel_Jets_Abs"] = 0;
     VariableBox_Int["Channel_Lepton_Count"] = 0;
     VariableBox_Int["Channel_Lepton_Count_Final"] = 0;
-    VariableBox_Int["Channel_Lepton_Plus"] = 0;
     VariableBox_Int["Channel_Lepton_Minus"] = 0;
+    VariableBox_Int["Channel_Lepton_Plus"] = 0;
     VariableBox_Int["Cut_BJet_Count"] = 0;
     VariableBox_LorentzVector["Cut_Elec"]->Clear();
     VariableBox_LorentzVector["Cut_Jet"]->Clear();
@@ -374,8 +374,8 @@ void SSBTreeManager::GenBook(TTree* tree){
     ssbtree->Branch("Channel_Jets_Abs", &VariableBox_Int["Channel_Jets_Abs"], "Channel_Jets_Abs/I");
     ssbtree->Branch("Channel_Lepton_Count", &VariableBox_Int["Channel_Lepton_Count"], "Channel_Lepton_Count/I");
     ssbtree->Branch("Channel_Lepton_Count_Final", &VariableBox_Int["Channel_Lepton_Count_Final"], "Channel_Lepton_Count_Final/I");
-    ssbtree->Branch("Channel_Lepton_Plus", &VariableBox_Int["Channel_Lepton_Plus"], "Channel_Lepton_Plus/I");
     ssbtree->Branch("Channel_Lepton_Minus", &VariableBox_Int["Channel_Lepton_Minus"], "Channel_Lepton_Minus/I");
+    ssbtree->Branch("Channel_Lepton_Plus", &VariableBox_Int["Channel_Lepton_Plus"], "Channel_Lepton_Plus/I");
     ssbtree->Branch("GenJet", "TClonesArray", &VariableBox_LorentzVector["GenJet"], 32000, 0);
     VariableBox_LorentzVector["GenJet"]->BypassStreamer();
     ssbtree->Branch("GenJet_Count", &VariableBox_Int["GenJet_Count"], "GenJet_Count/I");
@@ -410,8 +410,8 @@ void SSBTreeManager::GenInitializeVariables(){
     VariableBox_Int["Channel_Jets_Abs"] = 0;
     VariableBox_Int["Channel_Lepton_Count"] = 0;
     VariableBox_Int["Channel_Lepton_Count_Final"] = 0;
-    VariableBox_Int["Channel_Lepton_Plus"] = 0;
     VariableBox_Int["Channel_Lepton_Minus"] = 0;
+    VariableBox_Int["Channel_Lepton_Plus"] = 0;
     VariableBox_LorentzVector["GenJet"]->Clear();
     VariableBox_Int["GenJet_Count"] = 0;
     VectorBox_Float["GenJet_ECalEnergy"].clear();
