@@ -138,6 +138,10 @@ class SSBGenInfor : public edm::EDAnalyzer {
       bool isTop;
       unsigned int NTop;
       int ChannelIndex;
+      int ChannelLepton;
+      int ChannelLeptonFinal;
+      int ChannelLeptonP;
+      int ChannelLeptonM;
 
       // ----------member data ---------------------------
 

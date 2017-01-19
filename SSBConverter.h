@@ -75,12 +75,17 @@ class SSBConverter : public edm::EDAnalyzer {
       virtual void beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&);
       virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&);
 
-      virtual void cutstep();
+      virtual void CutStep();
       // ----------member data ---------------------------
      
       // Input from python
       std::string              Save_Channel;
+      std::string              Save_CutStep;
       bool                     Save_Inversion;
+
+      std::vector<std::string> CutStepName;
+
+      std::vector<std::string> EventFilter;
 
       bool                     Try_Cut_Trigger;
       std::vector<std::string> e_Trigger;
@@ -123,6 +128,7 @@ class SSBConverter : public edm::EDAnalyzer {
       edm::EDGetTokenT<cat::METCollection>          metToken_;
       edm::EDGetTokenT<int>                         npvToken_;
       edm::EDGetTokenT<edm::TriggerResults>         triggerBits_;
+      edm::EDGetTokenT<edm::TriggerResults>         EventFilterBits_;
 
       // variables for NTuple
       TTree* ssbtree;
@@ -130,6 +136,9 @@ class SSBConverter : public edm::EDAnalyzer {
       edm::Service<TFileService> ssbfs;
       TH1F* ejets_EventInfo;
       TH1F* mjets_EventInfo;
+      TH1F* ee_EventInfo;
+      TH1F* mm_EventInfo;
+      TH1F* em_EventInfo;
       bool FillNTuple;
 
       // variables for Event info.
@@ -146,31 +155,52 @@ class SSBConverter : public edm::EDAnalyzer {
       unsigned int Num_em_Trigger;
 
       // variables for Cut Flag
+      bool Cut_Event_Filter;
+
       bool Cut_e_Trigger;
       bool Cut_m_Trigger;
       bool Cut_em_Trigger;
 
-      bool Cut_m_MuonVeto;
       bool Cut_e_MuonVeto;
+      bool Cut_m_MuonVeto;
 
       bool Cut_e_ElectronVeto;
       bool Cut_m_ElectronVeto;
 
+      bool Cut_e_Charge;
+      bool Cut_m_Charge;
+
+      bool Cut_e_MassVeto;
+      bool Cut_m_MassVeto;
+
       bool Cut_LeptonMass;
       bool Cut_MET;
+      bool Cut_MT_min;
 
       bool Cut_ej_ElectronIso;
+      bool Cut_ej_Step0c;
       bool Cut_ej_Step1;
       bool Cut_ej_Step2a;
       bool Cut_ej_Step2b;
 
       bool Cut_mj_MuonIso;
+      bool Cut_mj_Step0c;
       bool Cut_mj_Step1;
       bool Cut_mj_Step2a;
       bool Cut_mj_Step2b;
 
       int Num_PlusLepton;
       int Num_MinusLepton;
+
+      bool Cut_ee_LeptonPair;
+      bool Cut_mm_LeptonPair;
+      bool Cut_em_LeptonPair;
+      bool Cut_dl_Opposite;
+      bool Cut_dl_Same;
+
+      std::map<std::string,bool> Cut_ee_Step;
+      std::map<std::string,bool> Cut_mm_Step;
+      std::map<std::string,bool> Cut_em_Step;
 
       // variables for Muons 
       int Index_Muon;
@@ -222,9 +252,11 @@ class SSBConverter : public edm::EDAnalyzer {
       TLorentzVector LV_electron;
       TLorentzVector LV_muon;
       TLorentzVector LV_AllLepton;
+      TLorentzVector LV_MET;
+      TLorentzVector LV_Iso;
+      TLorentzVector LV_Veto;
 
-      // variables for MET
-
+      double HT;
 };
 
 #endif

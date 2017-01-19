@@ -1,0 +1,3 @@
+for FILE in SSB*;
+    do ln "$FILE" "$CMSSW_BASE/src/CATTools/CatAnalyzer/plugins/$FILE";
+done
