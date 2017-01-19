@@ -256,10 +256,10 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
     temp_index  = 0;
     temp_lqindex.clear();
     SelectedPar.push_back(AllTop.at(TopLoop));   	
-    temp_Windex = IndexLinker(AllParDau, AllTop.at(TopLoop), 0, -999, Wid);
+    temp_Windex = IndexLinker(AllParDau, AllTop.at(TopLoop), 0, -999, Wid, 22);
     SelectedPar.push_back( temp_Windex );	
     TreePar.erase(find(TreePar.begin(), TreePar.end(), temp_Windex));
-    temp_Bindex = IndexLinker(AllParDau, AllTop.at(TopLoop), 0, -999, Bid);
+    temp_Bindex = IndexLinker(AllParDau, AllTop.at(TopLoop), 0, -999, Bid, 23);
     SelectedPar.push_back( temp_Bindex );
     TreePar.erase(find(TreePar.begin(), TreePar.end(), temp_Bindex));
     for (unsigned int TreeLoop = 0; TreeLoop < TreePar.size(); ++TreeLoop){
@@ -457,10 +457,10 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	}
     } * remove neutrinos in FinalPar */ 
 
-    int ChannelLepton = 0;
-    int ChannelLeptonFinal = 0;
-    int ChannelLeptonP = 0;
-    int ChannelLeptonM = 0;
+    ChannelLepton = 0;
+    ChannelLeptonFinal = 0;
+    ChannelLeptonP = 0;
+    ChannelLeptonM = 0;
     ChannelIndex = 0;
     int ChannelIndexFinal = 0;
     for (unsigned int OnlyLepton = 0; OnlyLepton < SelectedPar.size(); ++OnlyLepton) {
@@ -755,8 +755,8 @@ SSBGenInfor::GenJet(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	ssbtreeManager->Fill( "GenJet", (*itgJet).pt(), (*itgJet).eta(), (*itgJet).phi(), (*itgJet).energy(), genJet_index );
         //ssbtreeManager->Fill( "GenJet_HadronFlavour", (*itgJet).hadronFlavour() );
         //ssbtreeManager->Fill( "GenJet_PartonFlavour", (*itgJet).partonFlavour() );
-        ssbtreeManager->Fill( "GenJet_HCalEnergy"   , (*itgJet).hadEnergy()     );
-        ssbtreeManager->Fill( "GenJet_ECalEnergy"   , (*itgJet).emEnergy()      );
+        //ssbtreeManager->Fill( "GenJet_HCalEnergy"   , (*itgJet).hadEnergy()     );
+        //ssbtreeManager->Fill( "GenJet_ECalEnergy"   , (*itgJet).emEnergy()      );
 	genJet_index++;   
     }
 
@@ -766,7 +766,14 @@ SSBGenInfor::GenJet(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 std::string
 SSBGenInfor::ReturnChannel(const edm::Event& iEvent) {
     std::string ChannelName = "Background";
+    std::string ChannelCharge = "";
     if(isTop){
+
+        if(ChannelLepton > 1){
+            if(ChannelLeptonP == 0 || ChannelLeptonM == 0) ChannelCharge = "SS";
+            else if(ChannelLeptonP == ChannelLeptonM) ChannelCharge = "OP";
+        }
+
         if(ChannelIndex ==   0) ChannelName = "Hadronic";
 
         else if(ChannelIndex ==  11) ChannelName = "Ljets_Electron+Jets";
@@ -811,6 +818,7 @@ SSBGenInfor::ReturnChannel(const edm::Event& iEvent) {
             cerr << endl << "Error : Is Signal? " << ChannelIndex << endl << endl; 
         }
     }
+    ChannelName = ChannelCharge + ChannelName;
     return ChannelName;
 }
 
