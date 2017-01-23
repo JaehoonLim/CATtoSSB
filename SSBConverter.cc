@@ -330,7 +330,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_PlusLepton = 0;
     Num_MinusLepton = 0;
     LV_AllLepton.SetPtEtaPhiE(0,0,0,0);
-    HT = 0;
     Cut_MT_min = true;
 
     Cut_e_MuonVeto = false;
@@ -403,7 +402,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         ssbtreeManager->Fill( "Cut_Muon", IsoMuon.pt(), IsoMuon.eta(), IsoMuon.phi(), IsoMuon.energy(), muon_i );
         LV_muon.SetPtEtaPhiE(IsoMuon.pt(), IsoMuon.eta(), IsoMuon.phi(), IsoMuon.energy());
         LV_AllLepton += LV_muon;
-        HT += LV_muon.Et();
         //if(sqrt( pow(LV_muon.Et()-LV_MET.Et(),2) + pow(LV_muon.Px()-LV_MET.Px(),2) + pow(LV_muon.Py()-LV_MET.Py(),2) ) < 120) Cut_MT_min = false;
         //if((IsoMuon.bestTrack()->ptError() / IsoMuon.bestTrack()->pt()) > 0.3) Cut_m_Charge = false;
         auto muon_a = std::find(Index_VetoMuon.begin(), Index_VetoMuon.end(), Index_IsolatedMuon.at(muon_i));
@@ -531,7 +529,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         ssbtreeManager->Fill( "Cut_Elec", IsoElectron.pt(), IsoElectron.eta(), IsoElectron.phi(), IsoElectron.energy(), elec_i );
         LV_electron.SetPtEtaPhiE(IsoElectron.pt(), IsoElectron.eta(), IsoElectron.phi(), IsoElectron.energy());
         LV_AllLepton += LV_electron;
-        HT += LV_electron.Et();
         //if(sqrt( pow(LV_electron.Et()-LV_MET.Et(),2) + pow(LV_electron.Px()-LV_MET.Px(),2) + pow(LV_electron.Py()-LV_MET.Py(),2) ) < 120) Cut_MT_min = false;
         auto elec_a = std::find(Index_VetoElectron.begin(), Index_VetoElectron.end(), Index_IsolatedElectron.at(elec_i));
         if(elec_a != Index_VetoElectron.end()){
@@ -596,6 +593,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Index_Jet = 0;
     Index_Cut_Jet = 0;
     Index_Cut_BJet = 0;
+    HT = 0;
  
     Handle<cat::JetCollection> jets;
     iEvent.getByToken(jetToken_, jets);
