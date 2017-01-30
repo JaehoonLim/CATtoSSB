@@ -19,6 +19,7 @@
 
 #include "SSBConverter.h"
 #include "SSBCutStep.h"
+#include "SSBFillHistogram.h"
 
 //
 // constants, enums and typedefs
@@ -40,14 +41,14 @@ e_Trigger(           iConfig.getUntrackedParameter< std::vector<std::string> >( 
 m_Trigger(           iConfig.getUntrackedParameter< std::vector<std::string> >( "m_Trigger"                                 )),
 em_Trigger(          iConfig.getUntrackedParameter< std::vector<std::string> >( "em_Trigger"                                )),
 
-IsolatedMuonID(      iConfig.getUntrackedParameter< std::string >(              "MuonID",           std::string("Tight")  )), 
-IsolatedMuonPt(      iConfig.getUntrackedParameter< double >(                   "MuonPt",           26.0                  )),
-IsolatedMuonEta(     iConfig.getUntrackedParameter< double >(                   "MuonEta",          2.1                   )),
-IsolatedMuonIso(     iConfig.getUntrackedParameter< double >(                   "MuonIso",          0.15                  )),
+IsolatedMuonID(      iConfig.getUntrackedParameter< std::string >(              "MuonID",             std::string("Tight")  )), 
+IsolatedMuonPt(      iConfig.getUntrackedParameter< double >(                   "MuonPt",             26.0                  )),
+IsolatedMuonEta(     iConfig.getUntrackedParameter< double >(                   "MuonEta",            2.1                   )),
+IsolatedMuonIso(     iConfig.getUntrackedParameter< double >(                   "MuonIso",            0.15                  )),
 
-IsolatedElectronID(  iConfig.getUntrackedParameter< std::string >(              "ElectronID",       std::string("Medium") )), 
-IsolatedElectronPt(  iConfig.getUntrackedParameter< double >(                   "ElectronPt",       30.0                  )),
-IsolatedElectronEta( iConfig.getUntrackedParameter< double >(                   "ElectronEta",      2.4                   )),
+IsolatedElectronID(  iConfig.getUntrackedParameter< std::string >(              "ElectronID",         std::string("Medium") )), 
+IsolatedElectronPt(  iConfig.getUntrackedParameter< double >(                   "ElectronPt",         30.0                  )),
+IsolatedElectronEta( iConfig.getUntrackedParameter< double >(                   "ElectronEta",        2.4                   )),
 
 VetoMuonID(          iConfig.getUntrackedParameter< std::string >(              "veto_MuonID",        std::string("Loose")  )), 
 VetoMuonPt(          iConfig.getUntrackedParameter< double >(                   "veto_MuonPt",        10.0                  )),
@@ -64,14 +65,16 @@ JetEta(              iConfig.getUntrackedParameter< double >(                   
 JetBTag(             iConfig.getUntrackedParameter< std::string >(              "BTag",               std::string("Medium") )),
 JetCleaningdR(       iConfig.getUntrackedParameter< double >(                   "CleaningdR",         0.4                   )),
 
-InclusiveMass(       iConfig.getUntrackedParameter< double >(                   "InclusiveMass",      80.4                  )),
-InclusiveMassE(      iConfig.getUntrackedParameter< double >(                   "PlusMinus",          15.0                  )),
+InvariantMass(       iConfig.getUntrackedParameter< double >(                   "InvariantMass",      91.2                  )),
+InvariantMassE(      iConfig.getUntrackedParameter< double >(                   "PlusMinus",          15.0                  )),
 METPt(               iConfig.getUntrackedParameter< double >(                   "METPt",              0.0                   ))
 {
     //now do what ever initialization is needed
 
     genParInfoTag    = consumes<reco::GenParticleCollection> (iConfig.getParameter<edm::InputTag>("genParTag"));
     genJetInfoTag    = consumes<reco::GenJetCollection>      (iConfig.getParameter<edm::InputTag>("genJetTag"));
+
+    genWeightToken_  = consumes<cat::GenWeights>             (iConfig.getParameter<edm::InputTag>("genWeightLabel"));
 
     muonToken_       = consumes<cat::MuonCollection>         (iConfig.getParameter<edm::InputTag>("muonTag"));
     electronToken_   = consumes<cat::ElectronCollection>     (iConfig.getParameter<edm::InputTag>("electronTag"));
@@ -85,6 +88,7 @@ METPt(               iConfig.getUntrackedParameter< double >(                   
 
     ssbgeninfor = new SSBGenInfor(iConfig);
 
+    //FIXME:When you change the cut steps
     CutStepName = {"0a","0b","0c","1a","1b","2","3","4","5"};
 
     EventFilter = {"Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_goodVertices", "Flag_eeBadScFilter", "Flag_globalTightHalo2016Filter", "Flag_badPFMuon", "Flag_badChargedHadron"};
@@ -154,9 +158,9 @@ METPt(               iConfig.getUntrackedParameter< double >(                   
         cerr << endl << "BTag Error"<< endl << endl;
         bDiscCut = 1.00;
     }
-    ee_EventInfo = ssbfs->make<TH1F>("ee_EventInfo","ee Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
-    mm_EventInfo = ssbfs->make<TH1F>("mm_EventInfo","#mu#mu Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
-    em_EventInfo = ssbfs->make<TH1F>("em_EventInfo","e#mu Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
+    ee_EventInfo = ssbfs->make<TH1D>("ee_EventInfo","ee Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
+    mm_EventInfo = ssbfs->make<TH1D>("mm_EventInfo","#mu#mu Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
+    em_EventInfo = ssbfs->make<TH1D>("em_EventInfo","e#mu Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
     ee_EventInfo->GetXaxis()->SetBinLabel(1 ,"Number of Inclusive Samples");
     mm_EventInfo->GetXaxis()->SetBinLabel(1 ,"Number of Inclusive Samples");
     em_EventInfo->GetXaxis()->SetBinLabel(1 ,"Number of Inclusive Samples");
@@ -165,6 +169,9 @@ METPt(               iConfig.getUntrackedParameter< double >(                   
         mm_EventInfo->GetXaxis()->SetBinLabel(i_SetBinLabel, CutStepName[i_SetBinLabel-2].c_str());
         em_EventInfo->GetXaxis()->SetBinLabel(i_SetBinLabel, CutStepName[i_SetBinLabel-2].c_str());
     }
+    GenInfo = ssbfs->make<TH1D>("GenInfo","GenInfo",2,0,2);
+    GenInfo->GetXaxis()->SetBinLabel(1,"Number of Events");
+    GenInfo->GetXaxis()->SetBinLabel(2,"Sum GenWeight");
 }
 
 SSBConverter::~SSBConverter()
@@ -195,6 +202,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     isData = false;
     ChannelName = "Background";
     FillNTuple = true;
+    GenWeight = 1.0;
 
     Event = iEvent.id().event();
     Run = iEvent.id().run();
@@ -208,6 +216,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     ee_EventInfo->Fill(-0.5,1.0);
     mm_EventInfo->Fill(-0.5,1.0);
     em_EventInfo->Fill(-0.5,1.0);
+    GenInfo->Fill(0.5,1.0);
 
    /////////////////////////////////
    /// Only For MC Samples!!!!!! ///
@@ -226,6 +235,12 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
       
         ssbgeninfor->GenPar(iEvent, ssbtreeManager);
         ssbgeninfor->GenJet(iEvent, ssbtreeManager);
+
+        edm::Handle<cat::GenWeights> genWeight;
+        iEvent.getByToken(genWeightToken_, genWeight);
+        GenWeight = genWeight->genWeight();
+        GenInfo->Fill(1,GenWeight);
+
         ChannelName = ssbgeninfor->ReturnChannel(iEvent);
         if(Save_Channel != "ALL" && ChannelName.find(Save_Channel) == std::string::npos) FillNTuple = false;
         if(Save_Inversion) FillNTuple = !FillNTuple;
@@ -240,9 +255,11 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     // Primary Vertices Information ///
     ///////////////////////////////////
 
+    numPV = 0;
     edm::Handle<int> Num_PV;
     iEvent.getByToken( npvToken_, Num_PV );
-    ssbtreeManager->Fill( "PV_Count", (int)*Num_PV );
+    numPV = (int)*Num_PV;
+    ssbtreeManager->Fill( "PV_Count", numPV );
 
     //////////////////////////
     /// Pileup Information ///
@@ -267,6 +284,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }    
     }
+    ssbtreeManager->Fill( "Cut_Event_Filter", Cut_Event_Filter );
 
     /////////////////////////
     ///Trigger Information///
@@ -306,6 +324,9 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         Cut_m_Trigger  = true;
         Cut_em_Trigger = true;
     }
+    ssbtreeManager->Fill( "Cut_e_Trigger",  Cut_e_Trigger  );
+    ssbtreeManager->Fill( "Cut_m_Trigger",  Cut_m_Trigger  );
+    ssbtreeManager->Fill( "Cut_em_Trigger", Cut_em_Trigger );
 
     ///////////////////////////////
     /////// MET Information ///////
@@ -313,7 +334,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
     Cut_MET = false;
 
-    Handle<cat::METCollection> mets;
     iEvent.getByToken(metToken_, mets);
 
     const cat::MET &met = mets->at(0);
@@ -322,6 +342,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(met.pt() > METPt){
         Cut_MET = true;
     }
+    ssbtreeManager->Fill( "Cut_MET", Cut_MET );
 
     /////////////////////////
     /// Muon Information ////
@@ -337,7 +358,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Cut_m_Charge = true;
     Cut_m_MassVeto = true;
 
-    Handle<cat::MuonCollection> muons;
     iEvent.getByToken(muonToken_, muons);
 
     Index_Muon = 0; 
@@ -431,7 +451,13 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 */
 
-    ssbtreeManager->Fill( "Muon_Count", Index_Muon );
+    ssbtreeManager->Fill( "Muon_Count",     Index_Muon     );
+    ssbtreeManager->Fill( "Num_PlusMuon",   Num_PlusMuon   );
+    ssbtreeManager->Fill( "Num_MinusMuon",  Num_MinusMuon  );
+    ssbtreeManager->Fill( "Cut_m_Charge",   Cut_m_Charge   );
+    ssbtreeManager->Fill( "Cut_m_MuonVeto", Cut_m_MuonVeto );
+    ssbtreeManager->Fill( "Cut_e_MuonVeto", Cut_e_MuonVeto );
+//    ssbtreeManager->Fill( "Cut_m_MassVeto", Cut_m_MassVeto );
 
     ////////////////////////////
     /////// Electron infor//////
@@ -442,7 +468,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Cut_e_Charge = true;
     Cut_e_MassVeto = true;
 
-    Handle<cat::ElectronCollection> electrons;
     iEvent.getByToken(electronToken_, electrons);
 
     Index_Electron = 0;
@@ -557,8 +582,13 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
 */
 
-
-    ssbtreeManager->Fill( "Elec_Count" , Index_Electron );
+    ssbtreeManager->Fill( "Elec_Count" ,        Index_Electron     );
+    ssbtreeManager->Fill( "Num_PlusElectron",   Num_PlusElectron   );
+    ssbtreeManager->Fill( "Num_MinusElectron",  Num_MinusElectron  );
+    ssbtreeManager->Fill( "Cut_e_Charge",       Cut_e_Charge       );
+    ssbtreeManager->Fill( "Cut_e_ElectronVeto", Cut_e_ElectronVeto );
+    ssbtreeManager->Fill( "Cut_m_ElectronVeto", Cut_m_ElectronVeto );
+//    ssbtreeManager->Fill( "Cut_e_MassVeto",     Cut_e_MassVeto     );
 
     ///////////////////////////////
     /// All Lepton Information  ///
@@ -577,7 +607,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(Num_IsolatedElectron == 1 && Num_IsolatedMuon == 1) Cut_em_LeptonPair = true;
 
     Cut_LeptonMass = false;
-    if(LV_AllLepton.M() > InclusiveMass+InclusiveMassE || LV_AllLepton.M() < InclusiveMass-InclusiveMassE) Cut_LeptonMass = true;
+    if(LV_AllLepton.M() > InvariantMass+InvariantMassE || LV_AllLepton.M() < InvariantMass-InvariantMassE) Cut_LeptonMass = true;
 
     Cut_dl_Opposite = false;
     Cut_dl_Same = false;
@@ -586,6 +616,19 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if((LV_AllLepton.M() > 20) && (Num_PlusLepton == 1 && Num_MinusLepton == 1)) Cut_dl_Opposite = true;
     if((LV_AllLepton.M() > 8) && ((Num_PlusLepton == 2 && Num_MinusLepton == 0) || (Num_PlusLepton == 0 && Num_MinusLepton == 2))) Cut_dl_Same = true;
 
+//    ssbtreeManager->Fill( "Cut_ej_ElectronIso", Cut_ej_ElectronIso );
+//    ssbtreeManager->Fill( "Cut_mj_MuonIso",     Cut_mj_MuonIso     );
+    ssbtreeManager->Fill( "Cut_ee_LeptonPair",  Cut_ee_LeptonPair  );
+    ssbtreeManager->Fill( "Cut_mm_LeptonPair",  Cut_mm_LeptonPair  );
+    ssbtreeManager->Fill( "Cut_em_LeptonPair",  Cut_em_LeptonPair  );
+    ssbtreeManager->Fill( "Cut_LeptonMass",     Cut_LeptonMass     );
+    ssbtreeManager->Fill( "Cut_dl_Same",        Cut_dl_Same        );
+    ssbtreeManager->Fill( "Cut_dl_Opposite",    Cut_dl_Opposite    );
+    ssbtreeManager->Fill( "Num_PlusLepton",     Num_PlusLepton     );
+    ssbtreeManager->Fill( "Num_MinusLepton",    Num_MinusLepton    );
+    ssbtreeManager->Fill( "Cut_LeptonMass",     Cut_LeptonMass     );
+//    ssbtreeManager->Fill( "Cut_MT_min",         Cut_MT_min         );
+
     /////////////////////////
     /// Jets Information  ///
     /////////////////////////
@@ -593,9 +636,14 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Index_Jet = 0;
     Index_Cut_Jet = 0;
     Index_Cut_BJet = 0;
-    HT = 0;
+    Num_CleanedJet = 0;
+    Num_BJet = 0;
+    Index_CleanedJet.clear();
+    Index_BJet.clear();
+    LV_AllJet.SetPtEtaPhiE(0,0,0,0);
+    HT = 0.0;
+    HM = 0.0;
  
-    Handle<cat::JetCollection> jets;
     iEvent.getByToken(jetToken_, jets);
 
     for (const cat::Jet &jet : *jets) 
@@ -625,12 +673,15 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
 
         if(isJet && isCleanedJet && (jet.pt() > JetPt) && (std::abs(jet.eta()) < JetEta)){
+            LV_AllJet += LV_jet;
             HT += LV_jet.Et();
             ssbtreeManager->Fill( "Cut_Jet", jet.pt(), jet.eta(), jet.phi(), jet.energy(), Index_Cut_Jet );
             ssbtreeManager->Fill( "Cut_Jet_Index", Index_Jet );
+            Index_CleanedJet.push_back(Index_Jet);
             ++Index_Cut_Jet;
             if(bDiscriminator > bDiscCut) {
                 isBJet = true;
+                Index_BJet.push_back(Index_Jet);
                 ++Index_Cut_BJet;
             }
             ssbtreeManager->Fill( "Cut_Jet_bTag" , isBJet );
@@ -646,15 +697,23 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         ++Index_Jet;
     }
 
-    ssbtreeManager->Fill( "Jet_Count", Index_Jet );
-    ssbtreeManager->Fill( "Cut_Jet_Count",  Index_Cut_Jet );
+    Num_CleanedJet = Index_CleanedJet.size(); // same as Index_Cut_Jet
+    Num_BJet       = Index_BJet.size();       // same as Index_Cut_BJet
+    ssbtreeManager->Fill( "Jet_Count",      Index_Jet      );
+    ssbtreeManager->Fill( "Cut_Jet_Count",  Index_Cut_Jet  );
     ssbtreeManager->Fill( "Cut_BJet_Count", Index_Cut_BJet );
+    ssbtreeManager->Fill( "HT",             HT             );
+    if(Index_Cut_Jet>0) HM = LV_AllJet.M();
+    ssbtreeManager->Fill( "HM",             HM             );
 
     CutStep(); // CutStep.h
 
     /// Fill Ntuples at each event
     if(Cut_ee_Step[Save_CutStep] || Cut_mm_Step[Save_CutStep] || Cut_em_Step[Save_CutStep]) ssbtreeManager->FillNtuple();
-} // FillNTuple
+
+    FillHistogram(); // SSBFillHistogram.h : after CutStep()
+
+    } // FillNTuple
 }
 
 
@@ -665,12 +724,17 @@ SSBConverter::beginJob()
    ssbtree = ssbfs->make<TTree>("SSBTree", "Tree for Physics Analyses at CMS");
    ssbtreeManager = new SSBTreeManager();
    ssbtreeManager->Book(ssbtree);
+   ssbhist = ssbfs->make<TTree>("SSBHist", "Histograms for Physics Analyses at CMS");
+   ssbhistManager = new SSBHistManager(CutStepName);
+   ssbhistManager->Book(ssbhist);
+   ssbhistManager->InitializeHist();
 }
 
 // ------------ method called once each job just after ending the event loop  ------------
 void 
 SSBConverter::endJob() 
 {
+    ssbhistManager->FillHist();
 }
 
 // ------------ method called when starting to processes a run  ------------

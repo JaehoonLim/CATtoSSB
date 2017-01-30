@@ -38,37 +38,6 @@ SSBConverter::CutStep()
     if(Cut_em_Step["3"]  && Index_Cut_BJet >= 2){                  Cut_em_Step["4"]  = true; em_EventInfo->Fill(7.5,1.0);}
     if(Cut_em_Step["4"]  && HT>500){                               Cut_em_Step["5"]  = true; em_EventInfo->Fill(8.5,1.0);}
 
-
-    ssbtreeManager->Fill( "Cut_Event_Filter",   Cut_Event_Filter   );
-
-    ssbtreeManager->Fill( "Cut_e_Trigger",      Cut_e_Trigger      );
-    ssbtreeManager->Fill( "Cut_ee_LeptonPair",  Cut_ee_LeptonPair  );
-    ssbtreeManager->Fill( "Cut_e_Charge",       Cut_e_Charge       );
-    ssbtreeManager->Fill( "Cut_e_MuonVeto",     Cut_e_MuonVeto     );
-    ssbtreeManager->Fill( "Cut_e_ElectronVeto", Cut_e_ElectronVeto );
-    ssbtreeManager->Fill( "Num_PlusElectron",   Num_PlusElectron   );
-    ssbtreeManager->Fill( "Num_MinusElectron",  Num_MinusElectron  );
-
-    ssbtreeManager->Fill( "Cut_m_Trigger",      Cut_m_Trigger      );
-    ssbtreeManager->Fill( "Cut_mm_LeptonPair",  Cut_mm_LeptonPair  );
-    ssbtreeManager->Fill( "Cut_m_Charge",       Cut_m_Charge       );
-    ssbtreeManager->Fill( "Cut_m_MuonVeto",     Cut_m_MuonVeto     );
-    ssbtreeManager->Fill( "Cut_m_ElectronVeto", Cut_m_ElectronVeto );
-    ssbtreeManager->Fill( "Num_PlusMuon",       Num_PlusMuon       );
-    ssbtreeManager->Fill( "Num_MinusMuon",      Num_MinusMuon      );
-
-    ssbtreeManager->Fill( "Cut_em_Trigger",     Cut_em_Trigger     );
-    ssbtreeManager->Fill( "Cut_em_LeptonPair",  Cut_em_LeptonPair  );
-
-    ssbtreeManager->Fill( "Cut_dl_Same",        Cut_dl_Same        );
-    ssbtreeManager->Fill( "Cut_dl_Opposite",    Cut_dl_Opposite    );
-    ssbtreeManager->Fill( "Num_PlusLepton",     Num_PlusLepton     );
-    ssbtreeManager->Fill( "Num_MinusLepton",    Num_MinusLepton    );
-    ssbtreeManager->Fill( "Cut_LeptonMass",     Cut_LeptonMass     );
-    ssbtreeManager->Fill( "Cut_MT_min",         Cut_MT_min         );
-    ssbtreeManager->Fill( "Cut_MET",            Cut_MET            );
-    ssbtreeManager->Fill( "HT",                 HT                 );
-
     ssbtreeManager->Fill( "Cut_ee_Step0a",      Cut_ee_Step["0a"]  );
     ssbtreeManager->Fill( "Cut_ee_Step0b",      Cut_ee_Step["0b"]  );
     ssbtreeManager->Fill( "Cut_ee_Step0c",      Cut_ee_Step["0c"]  );

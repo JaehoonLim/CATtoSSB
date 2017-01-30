@@ -41,6 +41,7 @@
 #include "CATTools/DataFormats/interface/Electron.h"
 #include "CATTools/DataFormats/interface/Jet.h"
 #include "CATTools/DataFormats/interface/MET.h"
+#include "CATTools/DataFormats/interface/GenWeights.h"
 
 // root
 #include "TTree.h"
@@ -51,11 +52,14 @@
 #include "SSBTreeManager.h"
 // Generated Level Information
 #include "SSBGenInfor.h"
+// Managing Tree
+#include "SSBHistManager.h"
 
 using namespace std;
 
-class SSBTreeManager;
 class SSBGenInfor;
+class SSBTreeManager;
+class SSBHistManager;
  
 class SSBConverter : public edm::EDAnalyzer {
 
@@ -76,6 +80,7 @@ class SSBConverter : public edm::EDAnalyzer {
       virtual void endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&);
 
       virtual void CutStep();
+      virtual void FillHistogram();
       // ----------member data ---------------------------
      
       // Input from python
@@ -116,12 +121,13 @@ class SSBConverter : public edm::EDAnalyzer {
       std::string              JetBTag;
       double                   JetCleaningdR;
 
-      double                   InclusiveMass;
-      double                   InclusiveMassE;
+      double                   InvariantMass;
+      double                   InvariantMassE;
       double                   METPt;
 
       edm::EDGetTokenT<reco::GenParticleCollection> genParInfoTag;
       edm::EDGetTokenT<reco::GenJetCollection>      genJetInfoTag;
+      edm::EDGetTokenT<cat::GenWeights>             genWeightToken_;
       edm::EDGetTokenT<cat::MuonCollection>         muonToken_;
       edm::EDGetTokenT<cat::ElectronCollection>     electronToken_;
       edm::EDGetTokenT<cat::JetCollection>          jetToken_;
@@ -133,12 +139,13 @@ class SSBConverter : public edm::EDAnalyzer {
       // variables for NTuple
       TTree* ssbtree;
       SSBTreeManager* ssbtreeManager;
+      TTree* ssbhist;
+      SSBHistManager* ssbhistManager;
       edm::Service<TFileService> ssbfs;
-      TH1F* ejets_EventInfo;
-      TH1F* mjets_EventInfo;
-      TH1F* ee_EventInfo;
-      TH1F* mm_EventInfo;
-      TH1F* em_EventInfo;
+      TH1D* ee_EventInfo;
+      TH1D* mm_EventInfo;
+      TH1D* em_EventInfo;
+      TH1D* GenInfo;
       bool FillNTuple;
 
       // variables for Event info.
@@ -148,6 +155,7 @@ class SSBConverter : public edm::EDAnalyzer {
       int Lumi;
       bool isData;
       std::string ChannelName;
+      float GenWeight;
 
       // variables for Trigger
       unsigned int Num_e_Trigger;
@@ -203,6 +211,7 @@ class SSBConverter : public edm::EDAnalyzer {
       std::map<std::string,bool> Cut_em_Step;
 
       // variables for Muons 
+      edm::Handle<cat::MuonCollection> muons;
       int Index_Muon;
       int Num_IsolatedMuon;
       int Num_PlusMuon;
@@ -217,6 +226,7 @@ class SSBConverter : public edm::EDAnalyzer {
       std::vector<int> Index_VetoMuon;
 
       // variables for Electrons
+      edm::Handle<cat::ElectronCollection> electrons;
       int Index_Electron;
       int Num_IsolatedElectron;
       int Num_PlusElectron;
@@ -238,9 +248,12 @@ class SSBConverter : public edm::EDAnalyzer {
       std::vector<int> Index_VetoElectron;
 
       // variables for Jets
+      edm::Handle<cat::JetCollection> jets;
       int Index_Jet;
       int Index_Cut_Jet;
       int Index_Cut_BJet;
+      int Num_CleanedJet;
+      int Num_BJet;
       bool isJet;
       bool isCleanedJet;
       bool isBJet;
@@ -251,12 +264,18 @@ class SSBConverter : public edm::EDAnalyzer {
       TLorentzVector LV_jet;
       TLorentzVector LV_electron;
       TLorentzVector LV_muon;
+      TLorentzVector LV_AllJet;
       TLorentzVector LV_AllLepton;
       TLorentzVector LV_MET;
       TLorentzVector LV_Iso;
       TLorentzVector LV_Veto;
+      std::vector<int> Index_CleanedJet;
+      std::vector<int> Index_BJet;
 
+      edm::Handle<cat::METCollection> mets;
+      int numPV;
       double HT;
+      double HM;
 };
 
 #endif

@@ -18,7 +18,7 @@ SaveCutStep = "1a" # 0b, 0c, 1a, 1b, 2, 3, 4, 5
 MakeOthersSample = False
 
 #Number_of_Events = 20000
-Number_of_Events = 100
+Number_of_Events = -1
 
 FileNameSuffix = ""
 #FileNameSuffix = "_Other"
@@ -102,6 +102,7 @@ else :
                                          npvTag            = cms.InputTag("catVertex:nGoodPV"),
                                          triggerBitsTag    = cms.InputTag("TriggerResults::HLT"),
                                          EventFilterBitsTag= cms.InputTag("TriggerResults::PAT"),
+                                         genWeightLabel    = cms.InputTag("genWeight"),
                                          # Save Channel
                                          Save_Channel      = cms.untracked.string(ChannelName),
                                          Save_CutStep      = cms.untracked.string(SaveCutStep),

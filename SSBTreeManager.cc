@@ -286,6 +286,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("GenPar_pdgId", &VectorBox_Int["GenPar_pdgId"]);
     ssbtree->Branch("GenTop", "TClonesArray", &VariableBox_LorentzVector["GenTop"], 32000, 0);
     VariableBox_LorentzVector["GenTop"]->BypassStreamer();
+    ssbtree->Branch("HM", &VariableBox_Double["HM"], "HM/D");
     ssbtree->Branch("HT", &VariableBox_Double["HT"], "HT/D");
     ssbtree->Branch("Jet", "TClonesArray", &VariableBox_LorentzVector["Jet"], 32000, 0);
     VariableBox_LorentzVector["Jet"]->BypassStreamer();
@@ -411,6 +412,7 @@ void SSBTreeManager::InitializeVariables(){
     VectorBox_Int["GenPar_Status"].clear();
     VectorBox_Int["GenPar_pdgId"].clear();
     VariableBox_LorentzVector["GenTop"]->Clear();
+    VariableBox_Double["HM"] = 0;
     VariableBox_Double["HT"] = 0;
     VariableBox_LorentzVector["Jet"]->Clear();
     VariableBox_Int["Jet_Count"] = 0;
