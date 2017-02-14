@@ -83,12 +83,17 @@ METPt(               iConfig.getUntrackedParameter< double >(                   
 
     npvToken_        = consumes<int>                         (iConfig.getParameter<edm::InputTag>("npvTag"));
 
-    triggerBits_     = consumes<edm::TriggerResults>         (iConfig.getParameter<edm::InputTag>("triggerBitsTag"));
-    EventFilterBits_ = consumes<edm::TriggerResults>         (iConfig.getParameter<edm::InputTag>("EventFilterBitsTag"));
+    for(auto& trig : iConfig.getParameter<std::vector<edm::InputTag>>("triggerBitsTag")) {
+        triggerBits_.push_back(consumes<edm::TriggerResults>(trig));
+    }
+    for(auto& filt : iConfig.getParameter<std::vector<edm::InputTag>>("EventFilterBitsTag")) {
+        EventFilterBits_.push_back(consumes<edm::TriggerResults>(filt));
+    }
 
     ssbgeninfor = new SSBGenInfor(iConfig);
 
     //FIXME:When you change the cut steps
+    CutChannelName = {"ee","mm","em"};
     CutStepName = {"0a","0b","0c","1a","1b","2","3","4","5"};
 
     EventFilter = {"Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_goodVertices", "Flag_eeBadScFilter", "Flag_globalTightHalo2016Filter", "Flag_badPFMuon", "Flag_badChargedHadron"};
@@ -158,16 +163,13 @@ METPt(               iConfig.getUntrackedParameter< double >(                   
         cerr << endl << "BTag Error"<< endl << endl;
         bDiscCut = 1.00;
     }
-    ee_EventInfo = ssbfs->make<TH1D>("ee_EventInfo","ee Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
-    mm_EventInfo = ssbfs->make<TH1D>("mm_EventInfo","#mu#mu Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
-    em_EventInfo = ssbfs->make<TH1D>("em_EventInfo","e#mu Dilepton Event Information",CutStepName.size()+1,-1,CutStepName.size());
-    ee_EventInfo->GetXaxis()->SetBinLabel(1 ,"Number of Inclusive Samples");
-    mm_EventInfo->GetXaxis()->SetBinLabel(1 ,"Number of Inclusive Samples");
-    em_EventInfo->GetXaxis()->SetBinLabel(1 ,"Number of Inclusive Samples");
-    for(int i_SetBinLabel=2; i_SetBinLabel<(int)CutStepName.size()+2; ++i_SetBinLabel){
-        ee_EventInfo->GetXaxis()->SetBinLabel(i_SetBinLabel, CutStepName[i_SetBinLabel-2].c_str());
-        mm_EventInfo->GetXaxis()->SetBinLabel(i_SetBinLabel, CutStepName[i_SetBinLabel-2].c_str());
-        em_EventInfo->GetXaxis()->SetBinLabel(i_SetBinLabel, CutStepName[i_SetBinLabel-2].c_str());
+
+    for(int i_Channel=0; i_Channel<(int)CutChannelName.size(); ++i_Channel){
+        EventInfo[i_Channel] = ssbfs->make<TH1D>(Form("%s_EventInfo",CutChannelName[i_Channel].c_str()),Form("%s Dilepton Event Information",CutChannelName[i_Channel].c_str()),CutStepName.size()+1,-1,CutStepName.size());
+        EventInfo[i_Channel]->GetXaxis()->SetBinLabel(1 ,"Number of Inclusive Samples");
+        for(int i_SetBinLabel=2; i_SetBinLabel<(int)CutStepName.size()+2; ++i_SetBinLabel){
+            EventInfo[i_Channel]->GetXaxis()->SetBinLabel(i_SetBinLabel, CutStepName[i_SetBinLabel-2].c_str());
+        }
     }
     GenInfo = ssbfs->make<TH1D>("GenInfo","GenInfo",2,0,2);
     GenInfo->GetXaxis()->SetBinLabel(1,"Number of Events");
@@ -213,9 +215,9 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     ssbtreeManager->Fill( "Info_RunNumber"  , Run    ); 
     ssbtreeManager->Fill( "Info_Luminosity" , Lumi   ); 
     ssbtreeManager->Fill( "Info_isData"     , isData ); 
-    ee_EventInfo->Fill(-0.5,1.0);
-    mm_EventInfo->Fill(-0.5,1.0);
-    em_EventInfo->Fill(-0.5,1.0);
+    for(int i_Channel=0; i_Channel<(int)CutChannelName.size(); ++i_Channel){
+        EventInfo[i_Channel]->Fill(-0.5,1.0);
+    }
     GenInfo->Fill(0.5,1.0);
 
    /////////////////////////////////
@@ -271,7 +273,8 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     Cut_Event_Filter = true;
     edm::Handle<edm::TriggerResults> EventFilterBits;                                                                                        
-    iEvent.getByToken(EventFilterBits_, EventFilterBits);
+    for(auto EventFilterBits_i : EventFilterBits_) {
+    if(!iEvent.getByToken(EventFilterBits_i, EventFilterBits)) continue;
     const edm::TriggerNames &FilterNames = iEvent.triggerNames(*EventFilterBits);
     unsigned int Num_Filter = EventFilterBits->size();
 
@@ -284,6 +287,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }    
     }
+    } // auto
     ssbtreeManager->Fill( "Cut_Event_Filter", Cut_Event_Filter );
 
     /////////////////////////
@@ -294,7 +298,8 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Cut_m_Trigger  = false;
     Cut_em_Trigger = false;
     edm::Handle<edm::TriggerResults> triggerBits;                                                                                        
-    iEvent.getByToken(triggerBits_, triggerBits);                                                                                        
+    for(auto triggerBits_i : triggerBits_) {
+    if(!iEvent.getByToken(triggerBits_i, triggerBits)) continue;
     const edm::TriggerNames &trigNames = iEvent.triggerNames(*triggerBits);
     unsigned int Num_Trigger = triggerBits->size();
 
@@ -319,6 +324,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }
     }
+    } // auto
     if(!Try_Cut_Trigger){
         Cut_e_Trigger  = true;
         Cut_m_Trigger  = true;
@@ -486,7 +492,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
         isIsoElectronID = false;
         isVetoElectronID = false;
-
+/*
         if(IsolatedElectronID == "Veto")   isIsoElectronID = electron.electronID("cutBasedElectronID-Spring15-25ns-V1-standalone-veto");
         if(IsolatedElectronID == "Loose")  isIsoElectronID = electron.electronID("cutBasedElectronID-Spring15-25ns-V1-standalone-loose");
         if(IsolatedElectronID == "Medium") isIsoElectronID = electron.electronID("cutBasedElectronID-Spring15-25ns-V1-standalone-medium");
@@ -496,7 +502,8 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         if(VetoElectronID == "Loose")  isVetoElectronID = electron.electronID("cutBasedElectronID-Spring15-25ns-V1-standalone-loose");
         if(VetoElectronID == "Medium") isVetoElectronID = electron.electronID("cutBasedElectronID-Spring15-25ns-V1-standalone-medium");
         if(VetoElectronID == "Tight")  isVetoElectronID = electron.electronID("cutBasedElectronID-Spring15-25ns-V1-standalone-tight");
-/*
+*/
+//*
         if(IsolatedElectronID == "Veto")   isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
         if(IsolatedElectronID == "Loose")  isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
         if(IsolatedElectronID == "Medium") isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
@@ -506,7 +513,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         if(VetoElectronID == "Loose")  isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
         if(VetoElectronID == "Medium") isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
         if(VetoElectronID == "Tight")  isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
-*/
+//*/
         PFIsodbeta03 = electron.relIso(0.3);
         SuperClusterEta = electron.scEta();
         PassConversionVeto = electron.passConversionVeto();
@@ -656,6 +663,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         bDiscriminator     = jet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags");
         cDiscriminatorCvsL = jet.bDiscriminator("pfCombinedCvsLJetTags");
         cDiscriminatorCvsB = jet.bDiscriminator("pfCombinedCvsBJetTags");
+        qgLikelihood       = jet.qgLikelihood();
 
         if(JetID == "Loose") isJet = jet.LooseId();
         if(JetID == "Tight") isJet = jet.TightId();
@@ -688,11 +696,12 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
 
         ssbtreeManager->Fill( "Jet", jet.pt(), jet.eta(), jet.phi(), jet.energy(), Index_Jet );
-        ssbtreeManager->Fill( "Jet_isJetID"  , isJet     );
-        ssbtreeManager->Fill( "Jet_isCleanedJet" , isCleanedJet  );
-        ssbtreeManager->Fill( "Jet_bDisc"    , bDiscriminator      );
-        ssbtreeManager->Fill( "Jet_cDiscCvsL"    , cDiscriminatorCvsL      );
-        ssbtreeManager->Fill( "Jet_cDiscCvsB"    , cDiscriminatorCvsB      );
+        ssbtreeManager->Fill( "Jet_isJetID",      isJet              );
+        ssbtreeManager->Fill( "Jet_isCleanedJet", isCleanedJet       );
+        ssbtreeManager->Fill( "Jet_bDisc",        bDiscriminator     );
+        ssbtreeManager->Fill( "Jet_cDiscCvsL",    cDiscriminatorCvsL );
+        ssbtreeManager->Fill( "Jet_cDiscCvsB",    cDiscriminatorCvsB );
+        ssbtreeManager->Fill( "Jet_qgLikelihood", qgLikelihood       );
   
         ++Index_Jet;
     }
@@ -709,7 +718,11 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     CutStep(); // CutStep.h
 
     /// Fill Ntuples at each event
-    if(Cut_ee_Step[Save_CutStep] || Cut_mm_Step[Save_CutStep] || Cut_em_Step[Save_CutStep]) ssbtreeManager->FillNtuple();
+    FillNTuple = false;
+    for(int i_Channel=0; i_Channel<(int)CutChannelName.size(); ++i_Channel){
+        if(Cut_Step[CutChannelName[i_Channel]][Save_CutStep]) FillNTuple = true;
+    }
+    if(FillNTuple) ssbtreeManager->FillNtuple();
 
     FillHistogram(); // SSBFillHistogram.h : after CutStep()
 
@@ -724,8 +737,8 @@ SSBConverter::beginJob()
    ssbtree = ssbfs->make<TTree>("SSBTree", "Tree for Physics Analyses at CMS");
    ssbtreeManager = new SSBTreeManager();
    ssbtreeManager->Book(ssbtree);
-   ssbhist = ssbfs->make<TTree>("SSBHist", "Histograms for Physics Analyses at CMS");
-   ssbhistManager = new SSBHistManager(CutStepName);
+   ssbhist = ssbfs->mkdir("SSBHist", "Tree for Physics Analyses at CMS");
+   ssbhistManager = new SSBHistManager(CutChannelName,CutStepName);
    ssbhistManager->Book(ssbhist);
    ssbhistManager->InitializeHist();
 }
@@ -734,7 +747,7 @@ SSBConverter::beginJob()
 void 
 SSBConverter::endJob() 
 {
-    ssbhistManager->FillHist();
+    //ssbhistManager->FillHist();
 }
 
 // ------------ method called when starting to processes a run  ------------

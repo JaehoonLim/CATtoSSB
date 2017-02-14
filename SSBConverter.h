@@ -89,6 +89,7 @@ class SSBConverter : public edm::EDAnalyzer {
       bool                     Save_Inversion;
 
       std::vector<std::string> CutStepName;
+      std::vector<std::string> CutChannelName;
 
       std::vector<std::string> EventFilter;
 
@@ -133,18 +134,16 @@ class SSBConverter : public edm::EDAnalyzer {
       edm::EDGetTokenT<cat::JetCollection>          jetToken_;
       edm::EDGetTokenT<cat::METCollection>          metToken_;
       edm::EDGetTokenT<int>                         npvToken_;
-      edm::EDGetTokenT<edm::TriggerResults>         triggerBits_;
-      edm::EDGetTokenT<edm::TriggerResults>         EventFilterBits_;
+      std::vector<edm::EDGetTokenT<edm::TriggerResults>>         triggerBits_;
+      std::vector<edm::EDGetTokenT<edm::TriggerResults>>         EventFilterBits_;
 
       // variables for NTuple
       TTree* ssbtree;
       SSBTreeManager* ssbtreeManager;
-      TTree* ssbhist;
+      TFileDirectory ssbhist;
       SSBHistManager* ssbhistManager;
       edm::Service<TFileService> ssbfs;
-      TH1D* ee_EventInfo;
-      TH1D* mm_EventInfo;
-      TH1D* em_EventInfo;
+      TH1D* EventInfo[10];
       TH1D* GenInfo;
       bool FillNTuple;
 
@@ -206,9 +205,7 @@ class SSBConverter : public edm::EDAnalyzer {
       bool Cut_dl_Opposite;
       bool Cut_dl_Same;
 
-      std::map<std::string,bool> Cut_ee_Step;
-      std::map<std::string,bool> Cut_mm_Step;
-      std::map<std::string,bool> Cut_em_Step;
+      std::map<std::string,std::map<std::string,bool>> Cut_Step;
 
       // variables for Muons 
       edm::Handle<cat::MuonCollection> muons;
@@ -261,6 +258,7 @@ class SSBConverter : public edm::EDAnalyzer {
       double bDiscCut;
       double cDiscriminatorCvsL;
       double cDiscriminatorCvsB;
+      double qgLikelihood;
       TLorentzVector LV_jet;
       TLorentzVector LV_electron;
       TLorentzVector LV_muon;
