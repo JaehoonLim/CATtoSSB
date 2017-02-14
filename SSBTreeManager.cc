@@ -294,6 +294,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Jet_bDisc", &VectorBox_Double["Jet_bDisc"]);
     ssbtree->Branch("Jet_cDiscCvsB", &VectorBox_Double["Jet_cDiscCvsB"]);
     ssbtree->Branch("Jet_cDiscCvsL", &VectorBox_Double["Jet_cDiscCvsL"]);
+    ssbtree->Branch("Jet_qgLikelihood", &VectorBox_Double["Jet_qgLikelihood"]);
     ssbtree->Branch("Jet_isCleanedJet", &VectorBox_Bool["Jet_isCleanedJet"]);
     ssbtree->Branch("Jet_isJetID", &VectorBox_Bool["Jet_isJetID"]);
     ssbtree->Branch("MET", "TClonesArray", &VariableBox_LorentzVector["MET"], 32000, 0);
@@ -419,6 +420,7 @@ void SSBTreeManager::InitializeVariables(){
     VectorBox_Double["Jet_bDisc"].clear();
     VectorBox_Double["Jet_cDiscCvsB"].clear();
     VectorBox_Double["Jet_cDiscCvsL"].clear();
+    VectorBox_Double["Jet_qgLikelihood"].clear();
     VectorBox_Bool["Jet_isCleanedJet"].clear();
     VectorBox_Bool["Jet_isJetID"].clear();
     VariableBox_LorentzVector["MET"]->Clear();

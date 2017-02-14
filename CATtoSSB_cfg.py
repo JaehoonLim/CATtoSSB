@@ -1,10 +1,11 @@
-UseList = True # InputList
-#UseList = False # InputFile
+#UseList = True # InputList
+UseList = False # InputFile
 
 #InputList = './../data/dataset/dataset_TT_powheg.txt'
-InputList = './../test/TTTT.txt'
+InputList = 'TTTT.txt'
 
-InputFile = 'file:/xrootd/store/group/CAT/TTbarXSecSynchronization/v8-0-1/TT_TuneCUETP8M1_13TeV-powheg-pythia8__PUSpring16_80X_mcRun2_asymptotic_2016_v3_ext3-v1__1671FA99-240F-E611-BF05-00266CFAE464.root'
+#InputFile = 'file:/xrootd/store/group/CAT/DoubleEG/v8-0-3_Run2016B-23Sep2016-v3/161204_004831/0000/catTuple_2.root'
+InputFile = 'file:/xrootd/store/group/CAT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/v8-0-3_RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext3-v1/161207_135636/0000/catTuple_1.root'
 
 #ChannelName = "Electron+Jets"
 #ChannelName = "Muon+Jets"
@@ -17,7 +18,7 @@ SaveCutStep = "1a" # 0b, 0c, 1a, 1b, 2, 3, 4, 5
 #MakeOthersSample = True
 MakeOthersSample = False
 
-#Number_of_Events = 20000
+#Number_of_Events = 2000
 Number_of_Events = -1
 
 FileNameSuffix = ""
@@ -100,8 +101,10 @@ else :
                                          jetTag            = cms.InputTag("catJets"),
                                          metTag            = cms.InputTag("catMETs"),
                                          npvTag            = cms.InputTag("catVertex:nGoodPV"),
-                                         triggerBitsTag    = cms.InputTag("TriggerResults::HLT"),
-                                         EventFilterBitsTag= cms.InputTag("TriggerResults::PAT"),
+                                         triggerBitsTag      = cms.VInputTag(cms.InputTag("TriggerResults::HLT"),
+                                                                             cms.InputTag("TriggerResults::HLT2")),
+                                         EventFilterBitsTag = cms.VInputTag(cms.InputTag("TriggerResults::PAT"),
+                                                                            cms.InputTag("TriggerResults::RECO")),
                                          genWeightLabel    = cms.InputTag("genWeight"),
                                          # Save Channel
                                          Save_Channel      = cms.untracked.string(ChannelName),

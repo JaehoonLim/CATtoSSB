@@ -2,9 +2,11 @@ void
 SSBConverter::FillHistogram()
 {
 
-    ssbhistManager->GetCutStep(Cut_ee_Step,Cut_mm_Step,Cut_em_Step);
+    ssbhistManager->GetCutStep("ee",Cut_Step["ee"]);
+    ssbhistManager->GetCutStep("mm",Cut_Step["mm"]);
+    ssbhistManager->GetCutStep("em",Cut_Step["em"]);
 
-    ssbhistManager->Fill( "numPV", numPV    );
+    ssbhistManager->Fill( "numPV", numPV, GenWeight );
     const cat::MET &met = mets->at(0);
     ssbhistManager->Fill( "MET",   met.pt() );
 
@@ -52,6 +54,7 @@ SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Jet_1_Phi", CleanedJet.phi()    );
         ssbhistManager->Fill( "Jet_1_E",   CleanedJet.energy() );
         ssbhistManager->Fill( "Jet_1_CSV", CleanedJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+        ssbhistManager->Fill( "Jet_1_qg",  CleanedJet.qgLikelihood() );
     }
     if(Num_CleanedJet>1){
         const cat::Jet &CleanedJet = jets->at(Index_CleanedJet.at(1));
@@ -60,6 +63,7 @@ SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Jet_2_Phi", CleanedJet.phi()    );
         ssbhistManager->Fill( "Jet_2_E",   CleanedJet.energy() );
         ssbhistManager->Fill( "Jet_2_CSV", CleanedJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+        ssbhistManager->Fill( "Jet_2_qg",  CleanedJet.qgLikelihood() );
     }
     if(Num_CleanedJet>2){
         const cat::Jet &CleanedJet = jets->at(Index_CleanedJet.at(2));
@@ -68,6 +72,7 @@ SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Jet_3_Phi", CleanedJet.phi()    );
         ssbhistManager->Fill( "Jet_3_E",   CleanedJet.energy() );
         ssbhistManager->Fill( "Jet_3_CSV", CleanedJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+        ssbhistManager->Fill( "Jet_3_qg",  CleanedJet.qgLikelihood() );
     }
     if(Num_CleanedJet>3){
         const cat::Jet &CleanedJet = jets->at(Index_CleanedJet.at(3));
@@ -76,6 +81,7 @@ SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Jet_4_Phi", CleanedJet.phi()    );
         ssbhistManager->Fill( "Jet_4_E",   CleanedJet.energy() );
         ssbhistManager->Fill( "Jet_4_CSV", CleanedJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+        ssbhistManager->Fill( "Jet_4_qg",  CleanedJet.qgLikelihood() );
     }
 
     if(Num_BJet>0){
@@ -85,6 +91,7 @@ SSBConverter::FillHistogram()
         ssbhistManager->Fill( "BJet_1_Phi", BJet.phi()    );
         ssbhistManager->Fill( "BJet_1_E",   BJet.energy() );
         ssbhistManager->Fill( "BJet_1_CSV", BJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+        ssbhistManager->Fill( "BJet_1_qg",  BJet.qgLikelihood() );
     }
     if(Num_BJet>1){
         const cat::Jet &BJet = jets->at(Index_BJet.at(1));
@@ -93,6 +100,6 @@ SSBConverter::FillHistogram()
         ssbhistManager->Fill( "BJet_2_Phi", BJet.phi()    );
         ssbhistManager->Fill( "BJet_2_E",   BJet.energy() );
         ssbhistManager->Fill( "BJet_2_CSV", BJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
+        ssbhistManager->Fill( "BJet_2_qg",  BJet.qgLikelihood() );
     }
-
 }
