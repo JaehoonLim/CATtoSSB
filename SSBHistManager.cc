@@ -1,11 +1,6 @@
-// SSBHMMaker v1.10
+// SSBTMMaker v3.00
 
 #include "SSBHistManager.h"
-
-void SSBHistManager::FillHist(){
-
-
-}
 
 void SSBHistManager::GetCutStep(std::string input_Channel, std::map<std::string,bool> input_CutStep){
     for(unsigned int i_CutStep=0;i_CutStep<CutStepName.size();++i_CutStep){
@@ -13,62 +8,181 @@ void SSBHistManager::GetCutStep(std::string input_Channel, std::map<std::string,
     }
 }
 
+void SSBHistManager::SetWeight(std::string input_Channel, std::string input_Cutstep, double Weight){
+    AllWeight[input_Channel+"_"+input_Cutstep] = Weight;
+}
+
+void SSBHistManager::CheckData(bool isData){
+    DataCheck = isData;
+}
+
 void SSBHistManager::Fill(std::string VariableName, bool VariableBool, double Weight ){
+    if(DataCheck) Weight = 1.0;
     for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
         HistName = VariableName+"_"+AllCutName[i_hist];
-        if ((it_HistBox = HistBox.find(HistName.c_str())) != HistBox.end()){
-            if(AllCut[AllCutName[i_hist]]){ ( HistBox[HistName] )->Fill(VariableBool, Weight); }
+        if((it_HistBox = HistBox.find(HistName.c_str())) != HistBox.end()){
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox[HistName] )->Fill(VariableBool, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox[HistName] )->Fill(VariableBool, Weight);
+                }
+            }
         }
         else {
-            std::cout << "Fill_Bool Error : " << HistName << std::endl;
+            std::cout << "Hist_Bool Error : " << HistName << std::endl;
         }
     }
 }
 
 void SSBHistManager::Fill(std::string VariableName, int VariableInt, double Weight ){
+    if(DataCheck) Weight = 1.0;
     for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
         HistName = VariableName+"_"+AllCutName[i_hist];
         if ((it_HistBox = HistBox.find(HistName.c_str())) != HistBox.end()){
-            if(AllCut[AllCutName[i_hist]]){ ( HistBox[HistName] )->Fill(VariableInt, Weight); }
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox[HistName] )->Fill(VariableInt, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox[HistName] )->Fill(VariableInt, Weight);
+                }
+            }
         }
         else {
-            std::cout << "Fill_Int Error : " << HistName << std::endl;
+            std::cout << "Hist_Int Error : " << HistName << std::endl;
         }
     }
 }
 
 void SSBHistManager::Fill(std::string VariableName, unsigned int VariableUInt, double Weight ){
+    if(DataCheck) Weight = 1.0;
     for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
         HistName = VariableName+"_"+AllCutName[i_hist];
         if ((it_HistBox = HistBox.find(HistName.c_str())) != HistBox.end()){
-            if(AllCut[AllCutName[i_hist]]){ ( HistBox[HistName] )->Fill(VariableUInt, Weight); }
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox[HistName] )->Fill(VariableUInt, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox[HistName] )->Fill(VariableUInt, Weight);
+                }
+            }
         }
         else {
-            std::cout << "Fill_UInt Error : " << HistName << std::endl;
+            std::cout << "Hist_UInt Error : " << HistName << std::endl;
         }
     }
 }
 
 void SSBHistManager::Fill(std::string VariableName, float VariableFloat, double Weight ){
+    if(DataCheck) Weight = 1.0;
     for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
         HistName = VariableName+"_"+AllCutName[i_hist];
         if ((it_HistBox = HistBox.find(HistName.c_str())) != HistBox.end()){
-            if(AllCut[AllCutName[i_hist]]){ ( HistBox[HistName] )->Fill(VariableFloat, Weight); }
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox[HistName] )->Fill(VariableFloat, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox[HistName] )->Fill(VariableFloat, Weight);
+                }
+            }
         }
         else {
-            std::cout << "Fill_Float Error : " << HistName << std::endl;
+            std::cout << "Hist_Float Error : " << HistName << std::endl;
         }
     }
 }
 
 void SSBHistManager::Fill(std::string VariableName, double VariableDouble, double Weight ){
+    if(DataCheck) Weight = 1.0;
     for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
         HistName = VariableName+"_"+AllCutName[i_hist];
         if ((it_HistBox = HistBox.find(HistName.c_str())) != HistBox.end()){
-            if(AllCut[AllCutName[i_hist]]){ ( HistBox[HistName] )->Fill(VariableDouble, Weight); }
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox[HistName] )->Fill(VariableDouble, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox[HistName] )->Fill(VariableDouble, Weight);
+                }
+            }
         }
         else {
-            std::cout << "Fill_Double Error : " << HistName << std::endl;
+            std::cout << "Hist_Double Error : " << HistName << std::endl;
+        }
+    }
+}
+
+void SSBHistManager::Fill2D(std::string VariableName, int VariableIntX, int VariableIntY, double Weight ){
+    if(DataCheck) Weight = 1.0;
+    for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
+        HistName = VariableName+"_"+AllCutName[i_hist];
+        if ((it_HistBox2 = HistBox2.find(HistName.c_str())) != HistBox2.end()){
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox2[HistName] )->Fill(VariableIntX, VariableIntY, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox2[HistName] )->Fill(VariableIntX, VariableIntY, Weight);
+                }
+            }
+        }
+        else {
+            std::cout << "Hist_2D_Int Error : " << HistName << std::endl;
+        }
+    }
+}
+
+void SSBHistManager::Fill2D(std::string VariableName, unsigned int VariableUIntX, unsigned int VariableUIntY, double Weight ){
+    if(DataCheck) Weight = 1.0;
+    for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
+        HistName = VariableName+"_"+AllCutName[i_hist];
+        if ((it_HistBox2 = HistBox2.find(HistName.c_str())) != HistBox2.end()){
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox2[HistName] )->Fill(VariableUIntX, VariableUIntY, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox2[HistName] )->Fill(VariableUIntX, VariableUIntY, Weight);
+                }
+            }
+        }
+        else {
+            std::cout << "Hist_2D_UInt Error : " << HistName << std::endl;
+        }
+    }
+}
+
+void SSBHistManager::Fill2D(std::string VariableName, float VariableFloatX, float VariableFloatY, double Weight ){
+    if(DataCheck) Weight = 1.0;
+    for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
+        HistName = VariableName+"_"+AllCutName[i_hist];
+        if ((it_HistBox2 = HistBox2.find(HistName.c_str())) != HistBox2.end()){
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox2[HistName] )->Fill(VariableFloatX, VariableFloatY, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox2[HistName] )->Fill(VariableFloatX, VariableFloatY, Weight);
+                }
+            }
+        }
+        else {
+            std::cout << "Hist_2D_Float Error : " << HistName << std::endl;
+        }
+    }
+}
+
+void SSBHistManager::Fill2D(std::string VariableName, double VariableDoubleX, double VariableDoubleY, double Weight ){
+    if(DataCheck) Weight = 1.0;
+    for(unsigned int i_hist=0;i_hist<AllCutName.size();++i_hist){
+        HistName = VariableName+"_"+AllCutName[i_hist];
+        if ((it_HistBox2 = HistBox2.find(HistName.c_str())) != HistBox2.end()){
+            if(AllCut[AllCutName[i_hist]]){
+                if(Weight == -1.0){
+                    ( HistBox2[HistName] )->Fill(VariableDoubleX, VariableDoubleY, AllWeight[AllCutName[i_hist]]);
+                } else {
+                    ( HistBox2[HistName] )->Fill(VariableDoubleX, VariableDoubleY, Weight);
+                }
+            }
+        }
+        else {
+            std::cout << "Hist_2D_Double Error : " << HistName << std::endl;
         }
     }
 }
@@ -79,6 +193,7 @@ SSBHistManager::SSBHistManager(std::vector<std::string> Channel, std::vector<std
     CutStepName = CutStep;
     AllCutName.clear();
     AllCut.clear();
+    AllWeight.clear();
     HistName = "";
     for(unsigned int CutChannelInit=0;CutChannelInit<ChannelName.size();++CutChannelInit){
         for(unsigned int CutStepInit=0;CutStepInit<CutStepName.size();++CutStepInit){
@@ -116,8 +231,14 @@ void SSBHistManager::InitializeHist(){
         HistBox["numJets_"+AllCutName[i_hist]]->Sumw2();
         HistBox["numBJets_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("numBJets_%s",AllCutName[i_hist].c_str()),Form("numBJets_%s",AllCutName[i_hist].c_str()),30,0,30);
         HistBox["numBJets_"+AllCutName[i_hist]]->Sumw2();
-        HistBox["InvMass_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("InvMass_%s",AllCutName[i_hist].c_str()),Form("InvMass_%s",AllCutName[i_hist].c_str()),1000,0,1000);
-        HistBox["InvMass_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AllLepton_InvMass_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AllLepton_InvMass_%s",AllCutName[i_hist].c_str()),Form("AllLepton_InvMass_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["AllLepton_InvMass_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Di-Lepton_InvMass1_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Di-Lepton_InvMass1_%s",AllCutName[i_hist].c_str()),Form("Di-Lepton_InvMass1_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["Di-Lepton_InvMass1_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Di-Lepton_InvMass2_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Di-Lepton_InvMass2_%s",AllCutName[i_hist].c_str()),Form("Di-Lepton_InvMass2_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["Di-Lepton_InvMass2_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Di-Lepton_InvMass3_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Di-Lepton_InvMass3_%s",AllCutName[i_hist].c_str()),Form("Di-Lepton_InvMass3_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["Di-Lepton_InvMass3_"+AllCutName[i_hist]]->Sumw2();
         HistBox["Jet_1_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Jet_1_Pt_%s",AllCutName[i_hist].c_str()),Form("Jet_1_Pt_%s",AllCutName[i_hist].c_str()),2000,0,2000);
         HistBox["Jet_1_Pt_"+AllCutName[i_hist]]->Sumw2();
         HistBox["Jet_1_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Jet_1_Eta_%s",AllCutName[i_hist].c_str()),Form("Jet_1_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);
@@ -190,6 +311,18 @@ void SSBHistManager::InitializeHist(){
         HistBox["BJet_2_CSV_"+AllCutName[i_hist]]->Sumw2();
         HistBox["BJet_2_qg_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("BJet_2_qg_%s",AllCutName[i_hist].c_str()),Form("BJet_2_qg_%s",AllCutName[i_hist].c_str()),200,-1,1);
         HistBox["BJet_2_qg_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["BJet_3_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("BJet_3_Pt_%s",AllCutName[i_hist].c_str()),Form("BJet_3_Pt_%s",AllCutName[i_hist].c_str()),2000,0,2000);
+        HistBox["BJet_3_Pt_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["BJet_3_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("BJet_3_Eta_%s",AllCutName[i_hist].c_str()),Form("BJet_3_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);
+        HistBox["BJet_3_Eta_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["BJet_3_Phi_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("BJet_3_Phi_%s",AllCutName[i_hist].c_str()),Form("BJet_3_Phi_%s",AllCutName[i_hist].c_str()),1000,-3.14,3.14);
+        HistBox["BJet_3_Phi_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["BJet_3_E_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("BJet_3_E_%s",AllCutName[i_hist].c_str()),Form("BJet_3_E_%s",AllCutName[i_hist].c_str()),2000,0,2000);
+        HistBox["BJet_3_E_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["BJet_3_CSV_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("BJet_3_CSV_%s",AllCutName[i_hist].c_str()),Form("BJet_3_CSV_%s",AllCutName[i_hist].c_str()),200,-1,1);
+        HistBox["BJet_3_CSV_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["BJet_3_qg_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("BJet_3_qg_%s",AllCutName[i_hist].c_str()),Form("BJet_3_qg_%s",AllCutName[i_hist].c_str()),200,-1,1);
+        HistBox["BJet_3_qg_"+AllCutName[i_hist]]->Sumw2();
         HistBox["Elec_1_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Elec_1_Pt_%s",AllCutName[i_hist].c_str()),Form("Elec_1_Pt_%s",AllCutName[i_hist].c_str()),1000,0,1000);
         HistBox["Elec_1_Pt_"+AllCutName[i_hist]]->Sumw2();
         HistBox["Elec_1_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Elec_1_Eta_%s",AllCutName[i_hist].c_str()),Form("Elec_1_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);
@@ -222,6 +355,38 @@ void SSBHistManager::InitializeHist(){
         HistBox["Muon_2_Phi_"+AllCutName[i_hist]]->Sumw2();
         HistBox["Muon_2_E_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Muon_2_E_%s",AllCutName[i_hist].c_str()),Form("Muon_2_E_%s",AllCutName[i_hist].c_str()),1000,0,1000);
         HistBox["Muon_2_E_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Elec_3_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Elec_3_Pt_%s",AllCutName[i_hist].c_str()),Form("Elec_3_Pt_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["Elec_3_Pt_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Elec_3_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Elec_3_Eta_%s",AllCutName[i_hist].c_str()),Form("Elec_3_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);
+        HistBox["Elec_3_Eta_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Elec_3_Phi_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Elec_3_Phi_%s",AllCutName[i_hist].c_str()),Form("Elec_3_Phi_%s",AllCutName[i_hist].c_str()),1000,-3.14,3.14);
+        HistBox["Elec_3_Phi_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Elec_3_E_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Elec_3_E_%s",AllCutName[i_hist].c_str()),Form("Elec_3_E_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["Elec_3_E_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Muon_3_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Muon_3_Pt_%s",AllCutName[i_hist].c_str()),Form("Muon_3_Pt_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["Muon_3_Pt_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Muon_3_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Muon_3_Eta_%s",AllCutName[i_hist].c_str()),Form("Muon_3_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);
+        HistBox["Muon_3_Eta_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Muon_3_Phi_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Muon_3_Phi_%s",AllCutName[i_hist].c_str()),Form("Muon_3_Phi_%s",AllCutName[i_hist].c_str()),1000,-3.14,3.14);
+        HistBox["Muon_3_Phi_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["Muon_3_E_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Muon_3_E_%s",AllCutName[i_hist].c_str()),Form("Muon_3_E_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["Muon_3_E_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddElec_1_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddElec_1_Pt_%s",AllCutName[i_hist].c_str()),Form("AddElec_1_Pt_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["AddElec_1_Pt_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddElec_1_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddElec_1_Eta_%s",AllCutName[i_hist].c_str()),Form("AddElec_1_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);
+        HistBox["AddElec_1_Eta_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddElec_1_Phi_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddElec_1_Phi_%s",AllCutName[i_hist].c_str()),Form("AddElec_1_Phi_%s",AllCutName[i_hist].c_str()),1000,-3.14,3.14);
+        HistBox["AddElec_1_Phi_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddElec_1_E_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddElec_1_E_%s",AllCutName[i_hist].c_str()),Form("AddElec_1_E_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["AddElec_1_E_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddMuon_1_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddMuon_1_Pt_%s",AllCutName[i_hist].c_str()),Form("AddMuon_1_Pt_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["AddMuon_1_Pt_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddMuon_1_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddMuon_1_Eta_%s",AllCutName[i_hist].c_str()),Form("AddMuon_1_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);
+        HistBox["AddMuon_1_Eta_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddMuon_1_Phi_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddMuon_1_Phi_%s",AllCutName[i_hist].c_str()),Form("AddMuon_1_Phi_%s",AllCutName[i_hist].c_str()),1000,-3.14,3.14);
+        HistBox["AddMuon_1_Phi_"+AllCutName[i_hist]]->Sumw2();
+        HistBox["AddMuon_1_E_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AddMuon_1_E_%s",AllCutName[i_hist].c_str()),Form("AddMuon_1_E_%s",AllCutName[i_hist].c_str()),1000,0,1000);
+        HistBox["AddMuon_1_E_"+AllCutName[i_hist]]->Sumw2();
 
     }
 }

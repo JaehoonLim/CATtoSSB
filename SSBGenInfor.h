@@ -142,6 +142,10 @@ class SSBGenInfor : public edm::EDAnalyzer {
       int ChannelLeptonFinal;
       int ChannelLeptonP;
       int ChannelLeptonM;
+      int ChannelLeptonPE;
+      int ChannelLeptonME;
+      int ChannelLeptonPM;
+      int ChannelLeptonMM;
 
       // ----------member data ---------------------------
 

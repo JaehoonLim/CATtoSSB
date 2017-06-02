@@ -1,4 +1,4 @@
-// SSBTMMaker v2.11
+// SSBTMMaker v3.00
 
 #include "SSBTreeManager.h"
 
@@ -191,6 +191,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Info_Luminosity", &VariableBox_Int["Info_Luminosity"], "Info_Luminosity/I");
     ssbtree->Branch("Info_RunNumber", &VariableBox_Int["Info_RunNumber"], "Info_RunNumber/I");
     ssbtree->Branch("Info_isData", &VariableBox_Bool["Info_isData"], "Info_isData/B");
+    ssbtree->Branch("AddLepton_Weight", &VariableBox_Double["AddLepton_Weight"], "AddLepton_Weight/D");
     ssbtree->Branch("Channel_Idx", &VariableBox_Int["Channel_Idx"], "Channel_Idx/I");
     ssbtree->Branch("Channel_Idx_Final", &VariableBox_Int["Channel_Idx_Final"], "Channel_Idx_Final/I");
     ssbtree->Branch("Channel_Jets", &VariableBox_Int["Channel_Jets"], "Channel_Jets/I");
@@ -210,14 +211,23 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Cut_Jet_bTag", &VectorBox_Bool["Cut_Jet_bTag"]);
     ssbtree->Branch("Cut_LeptonMass", &VariableBox_Bool["Cut_LeptonMass"], "Cut_LeptonMass/B");
     ssbtree->Branch("Cut_MET", &VariableBox_Bool["Cut_MET"], "Cut_MET/B");
-    ssbtree->Branch("Cut_MT_min", &VariableBox_Bool["Cut_MT_min"], "Cut_MT_min/B");
     ssbtree->Branch("Cut_Muon", "TClonesArray", &VariableBox_LorentzVector["Cut_Muon"], 32000, 0);
     VariableBox_LorentzVector["Cut_Muon"]->BypassStreamer();
+    ssbtree->Branch("Cut_Tri_ExactlyThree", &VariableBox_Bool["Cut_Tri_ExactlyThree"], "Cut_Tri_ExactlyThree/B");
+    ssbtree->Branch("Cut_Tri_First_Opposite", &VariableBox_Bool["Cut_Tri_First_Opposite"], "Cut_Tri_First_Opposite/B");
+    ssbtree->Branch("Cut_Tri_First_Same", &VariableBox_Bool["Cut_Tri_First_Same"], "Cut_Tri_First_Same/B");
+    ssbtree->Branch("Cut_Tri_First_Zmass", &VariableBox_Bool["Cut_Tri_First_Zmass"], "Cut_Tri_First_Zmass/B");
+    ssbtree->Branch("Cut_Tri_Second_Zmass", &VariableBox_Bool["Cut_Tri_Second_Zmass"], "Cut_Tri_Second_Zmass/B");
+    ssbtree->Branch("Cut_Tri_add_Charge", &VariableBox_Bool["Cut_Tri_add_Charge"], "Cut_Tri_add_Charge/B");
+    ssbtree->Branch("Cut_Tri_add_e", &VariableBox_Bool["Cut_Tri_add_e"], "Cut_Tri_add_e/B");
+    ssbtree->Branch("Cut_Tri_add_m", &VariableBox_Bool["Cut_Tri_add_m"], "Cut_Tri_add_m/B");
+    ssbtree->Branch("Cut_Tri_ee", &VariableBox_Bool["Cut_Tri_ee"], "Cut_Tri_ee/B");
+    ssbtree->Branch("Cut_Tri_em", &VariableBox_Bool["Cut_Tri_em"], "Cut_Tri_em/B");
+    ssbtree->Branch("Cut_Tri_mm", &VariableBox_Bool["Cut_Tri_mm"], "Cut_Tri_mm/B");
     ssbtree->Branch("Cut_dl_Opposite", &VariableBox_Bool["Cut_dl_Opposite"], "Cut_dl_Opposite/B");
     ssbtree->Branch("Cut_dl_Same", &VariableBox_Bool["Cut_dl_Same"], "Cut_dl_Same/B");
     ssbtree->Branch("Cut_e_Charge", &VariableBox_Bool["Cut_e_Charge"], "Cut_e_Charge/B");
     ssbtree->Branch("Cut_e_ElectronVeto", &VariableBox_Bool["Cut_e_ElectronVeto"], "Cut_e_ElectronVeto/B");
-    ssbtree->Branch("Cut_e_MassVeto", &VariableBox_Bool["Cut_e_MassVeto"], "Cut_e_MassVeto/B");
     ssbtree->Branch("Cut_e_MuonVeto", &VariableBox_Bool["Cut_e_MuonVeto"], "Cut_e_MuonVeto/B");
     ssbtree->Branch("Cut_e_Trigger", &VariableBox_Bool["Cut_e_Trigger"], "Cut_e_Trigger/B");
     ssbtree->Branch("Cut_ee_LeptonPair", &VariableBox_Bool["Cut_ee_LeptonPair"], "Cut_ee_LeptonPair/B");
@@ -230,6 +240,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Cut_ee_Step3", &VariableBox_Bool["Cut_ee_Step3"], "Cut_ee_Step3/B");
     ssbtree->Branch("Cut_ee_Step4", &VariableBox_Bool["Cut_ee_Step4"], "Cut_ee_Step4/B");
     ssbtree->Branch("Cut_ee_Step5", &VariableBox_Bool["Cut_ee_Step5"], "Cut_ee_Step5/B");
+    ssbtree->Branch("Cut_ej_ElectronIso", &VariableBox_Bool["Cut_ej_ElectronIso"], "Cut_ej_ElectronIso/B");
     ssbtree->Branch("Cut_em_LeptonPair", &VariableBox_Bool["Cut_em_LeptonPair"], "Cut_em_LeptonPair/B");
     ssbtree->Branch("Cut_em_Step0a", &VariableBox_Bool["Cut_em_Step0a"], "Cut_em_Step0a/B");
     ssbtree->Branch("Cut_em_Step0b", &VariableBox_Bool["Cut_em_Step0b"], "Cut_em_Step0b/B");
@@ -243,9 +254,9 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Cut_em_Trigger", &VariableBox_Bool["Cut_em_Trigger"], "Cut_em_Trigger/B");
     ssbtree->Branch("Cut_m_Charge", &VariableBox_Bool["Cut_m_Charge"], "Cut_m_Charge/B");
     ssbtree->Branch("Cut_m_ElectronVeto", &VariableBox_Bool["Cut_m_ElectronVeto"], "Cut_m_ElectronVeto/B");
-    ssbtree->Branch("Cut_m_MassVeto", &VariableBox_Bool["Cut_m_MassVeto"], "Cut_m_MassVeto/B");
     ssbtree->Branch("Cut_m_MuonVeto", &VariableBox_Bool["Cut_m_MuonVeto"], "Cut_m_MuonVeto/B");
     ssbtree->Branch("Cut_m_Trigger", &VariableBox_Bool["Cut_m_Trigger"], "Cut_m_Trigger/B");
+    ssbtree->Branch("Cut_mj_MuonIso", &VariableBox_Bool["Cut_mj_MuonIso"], "Cut_mj_MuonIso/B");
     ssbtree->Branch("Cut_mm_LeptonPair", &VariableBox_Bool["Cut_mm_LeptonPair"], "Cut_mm_LeptonPair/B");
     ssbtree->Branch("Cut_mm_Step0a", &VariableBox_Bool["Cut_mm_Step0a"], "Cut_mm_Step0a/B");
     ssbtree->Branch("Cut_mm_Step0b", &VariableBox_Bool["Cut_mm_Step0b"], "Cut_mm_Step0b/B");
@@ -256,17 +267,27 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Cut_mm_Step3", &VariableBox_Bool["Cut_mm_Step3"], "Cut_mm_Step3/B");
     ssbtree->Branch("Cut_mm_Step4", &VariableBox_Bool["Cut_mm_Step4"], "Cut_mm_Step4/B");
     ssbtree->Branch("Cut_mm_Step5", &VariableBox_Bool["Cut_mm_Step5"], "Cut_mm_Step5/B");
+    ssbtree->Branch("Di-Lepton_InvMass1", &VariableBox_Double["Di-Lepton_InvMass1"], "Di-Lepton_InvMass1/D");
+    ssbtree->Branch("Di-Lepton_InvMass2", &VariableBox_Double["Di-Lepton_InvMass2"], "Di-Lepton_InvMass2/D");
+    ssbtree->Branch("Di-Lepton_InvMass3", &VariableBox_Double["Di-Lepton_InvMass3"], "Di-Lepton_InvMass3/D");
     ssbtree->Branch("Elec", "TClonesArray", &VariableBox_LorentzVector["Elec"], 32000, 0);
     VariableBox_LorentzVector["Elec"]->BypassStreamer();
     ssbtree->Branch("Elec_Charge", &VectorBox_Int["Elec_Charge"]);
     ssbtree->Branch("Elec_ChargeId_GsfCtfPx", &VectorBox_Bool["Elec_ChargeId_GsfCtfPx"]);
     ssbtree->Branch("Elec_Conversion", &VectorBox_Bool["Elec_Conversion"]);
     ssbtree->Branch("Elec_Count", &VariableBox_Int["Elec_Count"], "Elec_Count/I");
+    ssbtree->Branch("Elec_Cut_Additional", &VectorBox_Bool["Elec_Cut_Additional"]);
     ssbtree->Branch("Elec_Cut_Isolated", &VectorBox_Bool["Elec_Cut_Isolated"]);
     ssbtree->Branch("Elec_Cut_Veto", &VectorBox_Bool["Elec_Cut_Veto"]);
     ssbtree->Branch("Elec_PFIsodBeta03", &VectorBox_Double["Elec_PFIsodBeta03"]);
+    ssbtree->Branch("Elec_ScaleFactor", &VectorBox_Double["Elec_ScaleFactor"]);
     ssbtree->Branch("Elec_Supercluster_Eta", &VectorBox_Double["Elec_Supercluster_Eta"]);
+    ssbtree->Branch("Elec_isAddID", &VectorBox_Bool["Elec_isAddID"]);
     ssbtree->Branch("Elec_isIsoID", &VectorBox_Bool["Elec_isIsoID"]);
+    ssbtree->Branch("Elec_isLoose", &VectorBox_Bool["Elec_isLoose"]);
+    ssbtree->Branch("Elec_isMedium", &VectorBox_Bool["Elec_isMedium"]);
+    ssbtree->Branch("Elec_isTight", &VectorBox_Bool["Elec_isTight"]);
+    ssbtree->Branch("Elec_isVeto", &VectorBox_Bool["Elec_isVeto"]);
     ssbtree->Branch("Elec_isVetoID", &VectorBox_Bool["Elec_isVetoID"]);
     ssbtree->Branch("Elec_pdgId", &VectorBox_Int["Elec_pdgId"]);
     ssbtree->Branch("GenJet", "TClonesArray", &VariableBox_LorentzVector["GenJet"], 32000, 0);
@@ -286,6 +307,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("GenPar_pdgId", &VectorBox_Int["GenPar_pdgId"]);
     ssbtree->Branch("GenTop", "TClonesArray", &VariableBox_LorentzVector["GenTop"], 32000, 0);
     VariableBox_LorentzVector["GenTop"]->BypassStreamer();
+    ssbtree->Branch("GenWeight", &VariableBox_Double["GenWeight"], "GenWeight/D");
     ssbtree->Branch("HM", &VariableBox_Double["HM"], "HM/D");
     ssbtree->Branch("HT", &VariableBox_Double["HT"], "HT/D");
     ssbtree->Branch("Jet", "TClonesArray", &VariableBox_LorentzVector["Jet"], 32000, 0);
@@ -294,28 +316,41 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Jet_bDisc", &VectorBox_Double["Jet_bDisc"]);
     ssbtree->Branch("Jet_cDiscCvsB", &VectorBox_Double["Jet_cDiscCvsB"]);
     ssbtree->Branch("Jet_cDiscCvsL", &VectorBox_Double["Jet_cDiscCvsL"]);
-    ssbtree->Branch("Jet_qgLikelihood", &VectorBox_Double["Jet_qgLikelihood"]);
     ssbtree->Branch("Jet_isCleanedJet", &VectorBox_Bool["Jet_isCleanedJet"]);
     ssbtree->Branch("Jet_isJetID", &VectorBox_Bool["Jet_isJetID"]);
+    ssbtree->Branch("Jet_qgLikelihood", &VectorBox_Double["Jet_qgLikelihood"]);
+    ssbtree->Branch("Lepton_Weight", &VariableBox_Double["Lepton_Weight"], "Lepton_Weight/D");
     ssbtree->Branch("MET", "TClonesArray", &VariableBox_LorentzVector["MET"], 32000, 0);
     VariableBox_LorentzVector["MET"]->BypassStreamer();
     ssbtree->Branch("Muon", "TClonesArray", &VariableBox_LorentzVector["Muon"], 32000, 0);
     VariableBox_LorentzVector["Muon"]->BypassStreamer();
     ssbtree->Branch("Muon_Charge", &VectorBox_Int["Muon_Charge"]);
+    ssbtree->Branch("Muon_CorrectedPt", &VectorBox_Double["Muon_CorrectedPt"]);
+    ssbtree->Branch("Muon_CorrectedPtError", &VectorBox_Double["Muon_CorrectedPtError"]);
     ssbtree->Branch("Muon_Count", &VariableBox_Int["Muon_Count"], "Muon_Count/I");
+    ssbtree->Branch("Muon_Cut_Additional", &VectorBox_Bool["Muon_Cut_Additional"]);
     ssbtree->Branch("Muon_Cut_Isolated", &VectorBox_Bool["Muon_Cut_Isolated"]);
     ssbtree->Branch("Muon_Cut_Veto", &VectorBox_Bool["Muon_Cut_Veto"]);
     ssbtree->Branch("Muon_PFIsodBeta04", &VectorBox_Double["Muon_PFIsodBeta04"]);
+    ssbtree->Branch("Muon_ScaleFactor", &VectorBox_Double["Muon_ScaleFactor"]);
+    ssbtree->Branch("Muon_dPtOverPt", &VectorBox_Double["Muon_dPtOverPt"]);
+    ssbtree->Branch("Muon_isAddID", &VectorBox_Bool["Muon_isAddID"]);
     ssbtree->Branch("Muon_isIsoID", &VectorBox_Bool["Muon_isIsoID"]);
+    ssbtree->Branch("Muon_isLoose", &VectorBox_Bool["Muon_isLoose"]);
+    ssbtree->Branch("Muon_isMedium", &VectorBox_Bool["Muon_isMedium"]);
+    ssbtree->Branch("Muon_isSoft", &VectorBox_Bool["Muon_isSoft"]);
+    ssbtree->Branch("Muon_isTight", &VectorBox_Bool["Muon_isTight"]);
     ssbtree->Branch("Muon_isVetoID", &VectorBox_Bool["Muon_isVetoID"]);
     ssbtree->Branch("Muon_pdgId", &VectorBox_Int["Muon_pdgId"]);
     ssbtree->Branch("Num_MinusElectron", &VariableBox_Int["Num_MinusElectron"], "Num_MinusElectron/I");
     ssbtree->Branch("Num_MinusLepton", &VariableBox_Int["Num_MinusLepton"], "Num_MinusLepton/I");
     ssbtree->Branch("Num_MinusMuon", &VariableBox_Int["Num_MinusMuon"], "Num_MinusMuon/I");
+    ssbtree->Branch("Num_OppositeLepton", &VariableBox_Int["Num_OppositeLepton"], "Num_OppositeLepton/I");
     ssbtree->Branch("Num_PlusElectron", &VariableBox_Int["Num_PlusElectron"], "Num_PlusElectron/I");
     ssbtree->Branch("Num_PlusLepton", &VariableBox_Int["Num_PlusLepton"], "Num_PlusLepton/I");
     ssbtree->Branch("Num_PlusMuon", &VariableBox_Int["Num_PlusMuon"], "Num_PlusMuon/I");
     ssbtree->Branch("PV_Count", &VariableBox_Int["PV_Count"], "PV_Count/I");
+    ssbtree->Branch("PileUpWeight", &VariableBox_Double["PileUpWeight"], "PileUpWeight/D");
 
 }
 
@@ -325,6 +360,7 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Int["Info_Luminosity"] = 0;
     VariableBox_Int["Info_RunNumber"] = 0;
     VariableBox_Bool["Info_isData"] = false;
+    VariableBox_Double["AddLepton_Weight"] = 0;
     VariableBox_Int["Channel_Idx"] = 0;
     VariableBox_Int["Channel_Idx_Final"] = 0;
     VariableBox_Int["Channel_Jets"] = 0;
@@ -342,13 +378,22 @@ void SSBTreeManager::InitializeVariables(){
     VectorBox_Bool["Cut_Jet_bTag"].clear();
     VariableBox_Bool["Cut_LeptonMass"] = false;
     VariableBox_Bool["Cut_MET"] = false;
-    VariableBox_Bool["Cut_MT_min"] = false;
     VariableBox_LorentzVector["Cut_Muon"]->Clear();
+    VariableBox_Bool["Cut_Tri_ExactlyThree"] = false;
+    VariableBox_Bool["Cut_Tri_First_Opposite"] = false;
+    VariableBox_Bool["Cut_Tri_First_Same"] = false;
+    VariableBox_Bool["Cut_Tri_First_Zmass"] = false;
+    VariableBox_Bool["Cut_Tri_Second_Zmass"] = false;
+    VariableBox_Bool["Cut_Tri_add_Charge"] = false;
+    VariableBox_Bool["Cut_Tri_add_e"] = false;
+    VariableBox_Bool["Cut_Tri_add_m"] = false;
+    VariableBox_Bool["Cut_Tri_ee"] = false;
+    VariableBox_Bool["Cut_Tri_em"] = false;
+    VariableBox_Bool["Cut_Tri_mm"] = false;
     VariableBox_Bool["Cut_dl_Opposite"] = false;
     VariableBox_Bool["Cut_dl_Same"] = false;
     VariableBox_Bool["Cut_e_Charge"] = false;
     VariableBox_Bool["Cut_e_ElectronVeto"] = false;
-    VariableBox_Bool["Cut_e_MassVeto"] = false;
     VariableBox_Bool["Cut_e_MuonVeto"] = false;
     VariableBox_Bool["Cut_e_Trigger"] = false;
     VariableBox_Bool["Cut_ee_LeptonPair"] = false;
@@ -361,6 +406,7 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Bool["Cut_ee_Step3"] = false;
     VariableBox_Bool["Cut_ee_Step4"] = false;
     VariableBox_Bool["Cut_ee_Step5"] = false;
+    VariableBox_Bool["Cut_ej_ElectronIso"] = false;
     VariableBox_Bool["Cut_em_LeptonPair"] = false;
     VariableBox_Bool["Cut_em_Step0a"] = false;
     VariableBox_Bool["Cut_em_Step0b"] = false;
@@ -374,9 +420,9 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Bool["Cut_em_Trigger"] = false;
     VariableBox_Bool["Cut_m_Charge"] = false;
     VariableBox_Bool["Cut_m_ElectronVeto"] = false;
-    VariableBox_Bool["Cut_m_MassVeto"] = false;
     VariableBox_Bool["Cut_m_MuonVeto"] = false;
     VariableBox_Bool["Cut_m_Trigger"] = false;
+    VariableBox_Bool["Cut_mj_MuonIso"] = false;
     VariableBox_Bool["Cut_mm_LeptonPair"] = false;
     VariableBox_Bool["Cut_mm_Step0a"] = false;
     VariableBox_Bool["Cut_mm_Step0b"] = false;
@@ -387,16 +433,26 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Bool["Cut_mm_Step3"] = false;
     VariableBox_Bool["Cut_mm_Step4"] = false;
     VariableBox_Bool["Cut_mm_Step5"] = false;
+    VariableBox_Double["Di-Lepton_InvMass1"] = 0;
+    VariableBox_Double["Di-Lepton_InvMass2"] = 0;
+    VariableBox_Double["Di-Lepton_InvMass3"] = 0;
     VariableBox_LorentzVector["Elec"]->Clear();
     VectorBox_Int["Elec_Charge"].clear();
     VectorBox_Bool["Elec_ChargeId_GsfCtfPx"].clear();
     VectorBox_Bool["Elec_Conversion"].clear();
     VariableBox_Int["Elec_Count"] = 0;
+    VectorBox_Bool["Elec_Cut_Additional"].clear();
     VectorBox_Bool["Elec_Cut_Isolated"].clear();
     VectorBox_Bool["Elec_Cut_Veto"].clear();
     VectorBox_Double["Elec_PFIsodBeta03"].clear();
+    VectorBox_Double["Elec_ScaleFactor"].clear();
     VectorBox_Double["Elec_Supercluster_Eta"].clear();
+    VectorBox_Bool["Elec_isAddID"].clear();
     VectorBox_Bool["Elec_isIsoID"].clear();
+    VectorBox_Bool["Elec_isLoose"].clear();
+    VectorBox_Bool["Elec_isMedium"].clear();
+    VectorBox_Bool["Elec_isTight"].clear();
+    VectorBox_Bool["Elec_isVeto"].clear();
     VectorBox_Bool["Elec_isVetoID"].clear();
     VectorBox_Int["Elec_pdgId"].clear();
     VariableBox_LorentzVector["GenJet"]->Clear();
@@ -413,6 +469,7 @@ void SSBTreeManager::InitializeVariables(){
     VectorBox_Int["GenPar_Status"].clear();
     VectorBox_Int["GenPar_pdgId"].clear();
     VariableBox_LorentzVector["GenTop"]->Clear();
+    VariableBox_Double["GenWeight"] = 0;
     VariableBox_Double["HM"] = 0;
     VariableBox_Double["HT"] = 0;
     VariableBox_LorentzVector["Jet"]->Clear();
@@ -420,26 +477,39 @@ void SSBTreeManager::InitializeVariables(){
     VectorBox_Double["Jet_bDisc"].clear();
     VectorBox_Double["Jet_cDiscCvsB"].clear();
     VectorBox_Double["Jet_cDiscCvsL"].clear();
-    VectorBox_Double["Jet_qgLikelihood"].clear();
     VectorBox_Bool["Jet_isCleanedJet"].clear();
     VectorBox_Bool["Jet_isJetID"].clear();
+    VectorBox_Double["Jet_qgLikelihood"].clear();
+    VariableBox_Double["Lepton_Weight"] = 0;
     VariableBox_LorentzVector["MET"]->Clear();
     VariableBox_LorentzVector["Muon"]->Clear();
     VectorBox_Int["Muon_Charge"].clear();
+    VectorBox_Double["Muon_CorrectedPt"].clear();
+    VectorBox_Double["Muon_CorrectedPtError"].clear();
     VariableBox_Int["Muon_Count"] = 0;
+    VectorBox_Bool["Muon_Cut_Additional"].clear();
     VectorBox_Bool["Muon_Cut_Isolated"].clear();
     VectorBox_Bool["Muon_Cut_Veto"].clear();
     VectorBox_Double["Muon_PFIsodBeta04"].clear();
+    VectorBox_Double["Muon_ScaleFactor"].clear();
+    VectorBox_Double["Muon_dPtOverPt"].clear();
+    VectorBox_Bool["Muon_isAddID"].clear();
     VectorBox_Bool["Muon_isIsoID"].clear();
+    VectorBox_Bool["Muon_isLoose"].clear();
+    VectorBox_Bool["Muon_isMedium"].clear();
+    VectorBox_Bool["Muon_isSoft"].clear();
+    VectorBox_Bool["Muon_isTight"].clear();
     VectorBox_Bool["Muon_isVetoID"].clear();
     VectorBox_Int["Muon_pdgId"].clear();
     VariableBox_Int["Num_MinusElectron"] = 0;
     VariableBox_Int["Num_MinusLepton"] = 0;
     VariableBox_Int["Num_MinusMuon"] = 0;
+    VariableBox_Int["Num_OppositeLepton"] = 0;
     VariableBox_Int["Num_PlusElectron"] = 0;
     VariableBox_Int["Num_PlusLepton"] = 0;
     VariableBox_Int["Num_PlusMuon"] = 0;
     VariableBox_Int["PV_Count"] = 0;
+    VariableBox_Double["PileUpWeight"] = 0;
 
 }
 

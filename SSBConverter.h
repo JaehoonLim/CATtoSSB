@@ -54,12 +54,19 @@
 #include "SSBGenInfor.h"
 // Managing Tree
 #include "SSBHistManager.h"
+// Muon Pt Correction
+#include "CATTools/CatAnalyzer/src/rochcor2016.h"
+#include "CATTools/CatAnalyzer/src/RoccoR.h"
+// Lepton Scale Factor
+#include "SSBSF.h"
 
 using namespace std;
+using namespace cat;
 
 class SSBGenInfor;
 class SSBTreeManager;
 class SSBHistManager;
+class ScaleFactorEvaluator; 
  
 class SSBConverter : public edm::EDAnalyzer {
 
@@ -84,9 +91,13 @@ class SSBConverter : public edm::EDAnalyzer {
       // ----------member data ---------------------------
      
       // Input from python
+      bool                     debugcout;
+
       std::string              Save_Channel;
       std::string              Save_CutStep;
       bool                     Save_Inversion;
+
+      std::string              Channel;
 
       std::vector<std::string> CutStepName;
       std::vector<std::string> CutChannelName;
@@ -106,6 +117,16 @@ class SSBConverter : public edm::EDAnalyzer {
       std::string              IsolatedElectronID;
       double                   IsolatedElectronPt;
       double                   IsolatedElectronEta;
+
+      bool                     Try_Cut_Additional;
+      std::string              AdditionalMuonID;
+      double                   AdditionalMuonPt;
+      double                   AdditionalMuonEta;
+      double                   AdditionalMuonIso;
+
+      std::string              AdditionalElectronID;
+      double                   AdditionalElectronPt;
+      double                   AdditionalElectronEta;
 
       std::string              VetoMuonID;
       double                   VetoMuonPt;
@@ -129,11 +150,13 @@ class SSBConverter : public edm::EDAnalyzer {
       edm::EDGetTokenT<reco::GenParticleCollection> genParInfoTag;
       edm::EDGetTokenT<reco::GenJetCollection>      genJetInfoTag;
       edm::EDGetTokenT<cat::GenWeights>             genWeightToken_;
+      edm::EDGetTokenT<int>                         lumiMaskToken_;
       edm::EDGetTokenT<cat::MuonCollection>         muonToken_;
       edm::EDGetTokenT<cat::ElectronCollection>     electronToken_;
       edm::EDGetTokenT<cat::JetCollection>          jetToken_;
       edm::EDGetTokenT<cat::METCollection>          metToken_;
       edm::EDGetTokenT<int>                         npvToken_;
+      edm::EDGetTokenT<float>                       PUWeightToken_;
       std::vector<edm::EDGetTokenT<edm::TriggerResults>>         triggerBits_;
       std::vector<edm::EDGetTokenT<edm::TriggerResults>>         EventFilterBits_;
 
@@ -143,7 +166,7 @@ class SSBConverter : public edm::EDAnalyzer {
       TFileDirectory ssbhist;
       SSBHistManager* ssbhistManager;
       edm::Service<TFileService> ssbfs;
-      TH1D* EventInfo[10];
+      TH1D* EventInfo[20];
       TH1D* GenInfo;
       bool FillNTuple;
 
@@ -154,7 +177,6 @@ class SSBConverter : public edm::EDAnalyzer {
       int Lumi;
       bool isData;
       std::string ChannelName;
-      float GenWeight;
 
       // variables for Trigger
       unsigned int Num_e_Trigger;
@@ -177,12 +199,12 @@ class SSBConverter : public edm::EDAnalyzer {
       bool Cut_e_Charge;
       bool Cut_m_Charge;
 
-      bool Cut_e_MassVeto;
-      bool Cut_m_MassVeto;
+      //bool Cut_e_MassVeto;
+      //bool Cut_m_MassVeto;
 
       bool Cut_LeptonMass;
       bool Cut_MET;
-      bool Cut_MT_min;
+      //bool Cut_MT_min;
 
       bool Cut_ej_ElectronIso;
       bool Cut_ej_Step0c;
@@ -205,6 +227,23 @@ class SSBConverter : public edm::EDAnalyzer {
       bool Cut_dl_Opposite;
       bool Cut_dl_Same;
 
+      int TriLepton_First;
+      int TriLepton_Second;
+      int TriLepton_Third;
+
+      bool Cut_Tri_ee;
+      bool Cut_Tri_mm;
+      bool Cut_Tri_em;
+      bool Cut_Tri_First_Opposite;
+      bool Cut_Tri_First_Same;
+      bool Cut_Tri_First_Zmass;
+      bool Cut_Tri_ExactlyThree;
+      bool Cut_Tri_add_e;
+      bool Cut_Tri_add_m;
+      bool Cut_Tri_add_Charge;
+      bool Cut_Tri_Second_Zmass;
+      int Num_OppositeLepton;
+
       std::map<std::string,std::map<std::string,bool>> Cut_Step;
 
       // variables for Muons 
@@ -213,14 +252,22 @@ class SSBConverter : public edm::EDAnalyzer {
       int Num_IsolatedMuon;
       int Num_PlusMuon;
       int Num_MinusMuon;
+      int Num_AdditionalMuon;
       int Num_VetoMuon;
       bool isIsolatedMuon;
+      bool isAdditionalMuon;
       bool isVetoMuon;
       bool isIsoIDMuon;
+      bool isAddIDMuon;
       bool isVetoIDMuon;
       double PFIsodbeta04;
+      float MuonPtError;
       std::vector<int> Index_IsolatedMuon;
+      std::vector<int> Index_AdditionalMuon;
       std::vector<int> Index_VetoMuon;
+      rochcor2016 *MuonCorrection;
+      double SF_Muon;
+      std::vector<double> vSF_Muon;
 
       // variables for Electrons
       edm::Handle<cat::ElectronCollection> electrons;
@@ -228,21 +275,29 @@ class SSBConverter : public edm::EDAnalyzer {
       int Num_IsolatedElectron;
       int Num_PlusElectron;
       int Num_MinusElectron;
+      int Num_AdditionalElectron;
       int Num_VetoElectron;
       bool isIsolatedElectron;
+      bool isAdditionalElectron;
       bool isVetoElectron;
       bool isIsoElectronID;
+      bool isAddElectronID;
       bool isVetoElectronID;
       double PFIsodbeta03;
       double IsoCutLowEta;
       double IsoCutHighEta;
+      double AddCutLowEta;
+      double AddCutHighEta;
       double VetoCutLowEta;
       double VetoCutHighEta;
       double SuperClusterEta;
       bool PassConversionVeto;
       bool ChargeConsistent;
       std::vector<int> Index_IsolatedElectron;
+      std::vector<int> Index_AdditionalElectron;
       std::vector<int> Index_VetoElectron;
+      double SF_Electron;
+      std::vector<double> vSF_Elec;
 
       // variables for Jets
       edm::Handle<cat::JetCollection> jets;
@@ -263,17 +318,56 @@ class SSBConverter : public edm::EDAnalyzer {
       TLorentzVector LV_electron;
       TLorentzVector LV_muon;
       TLorentzVector LV_AllJet;
-      TLorentzVector LV_AllLepton;
       TLorentzVector LV_MET;
       TLorentzVector LV_Iso;
       TLorentzVector LV_Veto;
       std::vector<int> Index_CleanedJet;
       std::vector<int> Index_BJet;
 
+      // other variables
+      double GenWeight;
+      double PileUpWeight;
+      double LeptonWeight;
+      double AddLeptonWeight;
       edm::Handle<cat::METCollection> mets;
       int numPV;
       double HT;
       double HM;
+      double AllLeptonMass;
+      double DiLeptonMass1;
+      double DiLeptonMass2;
+      double DiLeptonMass3;
+
+      ScaleFactorEvaluator *MuonSFEval;
+      ScaleFactorEvaluator *ElectronSFEval;
+
+      TLorentzVector LV_AllLepton;
+      TLorentzVector LV_Tri_First;
+      TLorentzVector LV_Tri_Second;
+      TLorentzVector LV_Tri_Third;
+      TLorentzVector LV_Tri_Dilepton1;
+      TLorentzVector LV_Tri_Dilepton2;
+      TLorentzVector LV_Tri_Dilepton3;
+/*
+   string TriID[4]        = {"MMM","TMM","TTM","TTT"};
+   double Elec_IsoHigh[3] = {0.1590,0.1070,0.0821};
+   double Elec_IsoLow[3]  = {0.1750,0.0994,0.0695};
+   double Muon_Iso[3]     = {0.25,  0.20,  0.15  };
+   double Lep_Pt[3]       = {10,    20,    30    };
+
+   int    Cut1[10]        = {0,1,1,1,2,2,2,2,2,2};
+   int    Cut2[10]        = {0,0,1,1,0,1,1,2,2,2};
+   int    Cut3[10]        = {0,0,0,1,0,0,1,0,1,2};
+
+   int    CutTest[4][10][10][3];
+   float  pt = 0.0;
+   double sceta = 0.0;
+   double lep_iso = 0.0;
+   bool   CutID1 = false;
+   bool   CutID2 = false;
+   bool   CutID3 = false;
+*/
+
 };
 
 #endif

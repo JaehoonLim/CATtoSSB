@@ -1,3 +1,6 @@
-for FILE in SSB*;
-    do ln "$FILE" "$CMSSW_BASE/src/CATTools/CatAnalyzer/plugins/$FILE";
+for FILE in SSB*; do
+    if [ -f $CMSSW_BASE/src/CATTools/CatAnalyzer/plugins/$FILE ]; then
+        rm "$CMSSW_BASE/src/CATTools/CatAnalyzer/plugins/$FILE"
+    fi
+    ln "$FILE" "$CMSSW_BASE/src/CATTools/CatAnalyzer/plugins/$FILE";
 done
