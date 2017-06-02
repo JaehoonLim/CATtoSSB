@@ -151,6 +151,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
     InitializeGenPar(); /* initialize vector and map */
     isTop = false;
     NTop = 0;
+    //NBoson = 0;
     bool next_t    = false;
     bool next_tbar = false;
 
@@ -183,7 +184,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
         else if(itGenPar->pdgId() == -6 &&  next_tbar) {
                         ssbtreeManager->Fill( "GenTop", itGenPar->pt(), itGenPar->eta(), itGenPar->phi(), itGenPar->energy(), 3 );}
         } else {
-	    cerr << "!!!!! Top Sample : NTop Error : " << NTop << "! !!!!" << endl;
+	    cerr << "!!!!! Top Sample : NTop Error : " << NTop << " !!!!!" << endl;
 	    cout << "!!!!! Top Sample : NTop Error : " << NTop << " !!!!!" << endl;
         }
         }
@@ -204,12 +205,11 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	pdgId_status.push_back(itGenPar->pdgId());
 	pdgId_status.push_back(itGenPar->status());
 	AllParInfo[GenParIndex] = pdgId_status; /* make pdgid and status map */
-
-	if ( (itGenPar->status() > 20 && itGenPar->status() < 24) ) { /* without proton */
+	if ( (itGenPar->status() > 21 && itGenPar->status() < 24) ) { /* without proton */
 		TreePar.push_back(GenParIndex); /* get tree level particles */
-		if ( abs(itGenPar->pdgId()) == 6 || abs(itGenPar->pdgId()) == 24 ) {
+		if ( abs(itGenPar->pdgId()) == 6 ) {
                     if ( SelectedpdgId.find(itGenPar->pdgId()) == SelectedpdgId.end() ) {
-			SelectedpdgId[itGenPar->pdgId()] = GenParIndex; /* save index of top and W */
+			SelectedpdgId[itGenPar->pdgId()] = GenParIndex; /* save index of top */
 		    } else {
 			SelectedpdgId_FT[itGenPar->pdgId()] = GenParIndex; /* For four top sample */
 		    }
@@ -221,23 +221,46 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 		FinalPar.push_back(GenParIndex); /* put final state and intermediate lepton and neutrino*/
 	}
     }/* genpar loop end */
-
+/*
+    cout << endl << "TreePar : " << endl;
+        for (unsigned int i = 0; i < TreePar.size(); ++i){
+            cout << ParName[AllParInfo[TreePar.at(i)].at(0)] << " ";
+	}
+	cout << endl;
+	for (unsigned int i = 0; i < TreePar.size(); ++i){
+	    cout << TreePar.at(i) << " ";
+	}
+    cout << endl;
+*/
     if (isTop) {
-    for (unsigned int FinaltoTree = 0; FinaltoTree < FinalPar.size(); ++FinaltoTree){
-	if ( abs( AllParInfo[AllParMom[FinalPar.at(FinaltoTree)].at(0)].at(0) ) == 24){ /* when First Mother is W */
+    for (int FinaltoTree = 0; FinaltoTree < (int)FinalPar.size(); ++FinaltoTree){
+        int temp_boson = abs( AllParInfo[AllParMom[FinalPar.at(FinaltoTree)].at(0)].at(0) );
+	if ( temp_boson == 23 || temp_boson == 24 || temp_boson == 25 ){ /* when First Mother is W,Z,H */
 	    TreePar.push_back(FinalPar.at(FinaltoTree));
 	    FinalPar.erase(find(FinalPar.begin(), FinalPar.end(), FinalPar.at(FinaltoTree)));
 	    --FinaltoTree;
 	}
-    } /* Move final state particle (from W decay) */
-
+    } /* Move final state particle (from W,Z,H decay) */
+/*
+    cout << endl << "TreePar : " << endl;
+        for (unsigned int i = 0; i < TreePar.size(); ++i){
+            cout << ParName[AllParInfo[TreePar.at(i)].at(0)] << " ";
+	}
+	cout << endl;
+	for (unsigned int i = 0; i < TreePar.size(); ++i){
+	    cout << TreePar.at(i) << " ";
+	}
+    cout << endl;
+*/
     int temp_Windex, temp_Bindex, temp_index;
     vector<int> temp_lqindex;
 
-    SelectedPar.push_back(0);
-    SelectedPar.push_back(1);
+    //SelectedPar.push_back(0);
+    //SelectedPar.push_back(1);
     FillGenPar(0, -1, -1, -1, -1, itGenParBegin, ssbtreeManager);
     FillGenPar(1, -1, -1, -1, -1, itGenParBegin, ssbtreeManager);
+    FillGenPar(2, -1, -1, -1, -1, itGenParBegin, ssbtreeManager);
+    FillGenPar(3, -1, -1, -1, -1, itGenParBegin, ssbtreeManager);
 
     vector<int> AllTop;
     AllTop.clear();
@@ -260,9 +283,19 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
     SelectedPar.push_back( temp_Windex );	
     TreePar.erase(find(TreePar.begin(), TreePar.end(), temp_Windex));
     temp_Bindex = IndexLinker(AllParDau, AllTop.at(TopLoop), 0, -999, Bid, 23);
+    if(temp_Bindex == -1) {
+        cout << "Can not find  b-quark from top!" << endl;
+        cerr << "Can not find  b-quark from top!" << endl;
+        temp_Bindex = IndexLinker(AllParDau, AllTop.at(TopLoop), 0, -999, (int)Bid/5*3, 23);
+        if(temp_Bindex != -1) cout << "This Event is t to Ws" << endl;
+    }
+    if(temp_Bindex == -1) {
+        temp_Bindex = IndexLinker(AllParDau, AllTop.at(TopLoop), 0, -999, (int)Bid/3,   23);
+        if(temp_Bindex != -1) cout << "This Event is t to Wd" << endl;
+    }
     SelectedPar.push_back( temp_Bindex );
     TreePar.erase(find(TreePar.begin(), TreePar.end(), temp_Bindex));
-    for (unsigned int TreeLoop = 0; TreeLoop < TreePar.size(); ++TreeLoop){
+    for (int TreeLoop = 0; TreeLoop < (int)TreePar.size(); ++TreeLoop){
         temp_index = IndexLinker(AllParDau, temp_Windex, 0, TreePar.at(TreeLoop));
 	if( temp_index != -1 ) {
             temp_lqindex.push_back( temp_index );
@@ -278,120 +311,42 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
     FillGenPar(temp_lqindex.at(1), temp_Windex, -1, -1, -1, itGenParBegin, ssbtreeManager);
     } // if (AllTop.at(TopLoop) != -999)
     } // for (int TopLoop = 0; TopLoop < 4; ++TopLoop)
-
+    bool removeMom = false;
+    for (int TreeLoopM = 0; TreeLoopM < (int)TreePar.size(); ++TreeLoopM){
+        removeMom = false;
+        for (int TreeLoopD = 0; TreeLoopD < (int)TreePar.size(); ++TreeLoopD){
+            if(TreeLoopM != TreeLoopD){
+                temp_index = IndexLinker(AllParDau, TreePar.at(TreeLoopM), 0, TreePar.at(TreeLoopD));
+                if( temp_index != -1 ) {
+                    if(!removeMom) {
+                        removeMom = true;
+                        SelectedPar.push_back( TreePar.at(TreeLoopM) );
+                    }
+    	            SelectedPar.push_back( temp_index );
+                    TreePar.erase(find(TreePar.begin(), TreePar.end(), temp_index));
+                    --TreeLoopD;
+                    if(TreeLoopD<TreeLoopM) --TreeLoopM;
+                }
+            }
+        } // TreeLoopD
+        if(removeMom) {
+            TreePar.erase(find(TreePar.begin(), TreePar.end(), TreePar.at(TreeLoopM)));
+            --TreeLoopM;
+        }
+    } // TreeLoopM
     } // if (isTop) 
-
-#if 0
-
-    else if (isTop) { /* if Signal start //*/
-    for (unsigned int SelectedB = 0; SelectedB < TreePar.size(); ++SelectedB) {
-	if ( abs(AllParInfo[TreePar.at(SelectedB)].at(0)) == 5 && abs(AllParInfo[AllParMom[TreePar.at(SelectedB)].at(0)].at(0)) == 6) {
-	    SelectedpdgId[AllParInfo[TreePar.at(SelectedB)].at(0)] = TreePar.at(SelectedB);
-	} /* find b form top and save index */
-    } 
-
-    for (unsigned int FinaltoTree = 0; FinaltoTree < FinalPar.size(); ++FinaltoTree){
-	if ( abs( AllParInfo[AllParMom[FinalPar.at(FinaltoTree)].at(0)].at(0) ) == 24){ /* when First Mother is W */
-	    TreePar.push_back(FinalPar.at(FinaltoTree));
-	    FinalPar.erase(find(FinalPar.begin(), FinalPar.end(), FinalPar.at(FinaltoTree)));
-	    --FinaltoTree;
-	}
-    } /* Move final state particle (from W decay) */
-
-    SelectedPar.push_back(0);
-    SelectedPar.push_back(1);
-
-    SelectedPar.push_back(SelectedpdgId[6]);   	
-    SelectedPar.push_back(SelectedpdgId[-6]);  	
-    SelectedPar.push_back(SelectedpdgId[24]);   	
-    SelectedPar.push_back(SelectedpdgId[5]); 	
-    SelectedPar.push_back(SelectedpdgId[-24]);   	
-    SelectedPar.push_back(SelectedpdgId[-5]);
-
-    TreePar.erase(find(TreePar.begin(), TreePar.end(), SelectedpdgId[6]));
-    TreePar.erase(find(TreePar.begin(), TreePar.end(), SelectedpdgId[-6]));
-    TreePar.erase(find(TreePar.begin(), TreePar.end(), SelectedpdgId[24]));
-    TreePar.erase(find(TreePar.begin(), TreePar.end(), SelectedpdgId[-24]));
-    TreePar.erase(find(TreePar.begin(), TreePar.end(), SelectedpdgId[5]));
-    TreePar.erase(find(TreePar.begin(), TreePar.end(), SelectedpdgId[-5]));
-
-    for (unsigned int RemoveLowIndex = 0; RemoveLowIndex < TreePar.size(); ++RemoveLowIndex) {
-	if (TreePar.at(RemoveLowIndex) < 10) {
-	    TreePar.erase(find(TreePar.begin(), TreePar.end(), TreePar.at(RemoveLowIndex)));
-	    --RemoveLowIndex;
-	}
-    } /* remove tree level gluon form ttbar mother (IT NEED STUDY) */
-      /* + in MINIAOD, it will remove doughter of p+ */
-
-    int FromWplusSum = 0;
-    for (unsigned int FromWplus = 0; FromWplus < TreePar.size(); ++FromWplus){
-	if (FromWplusSum == 2) {
-	    break;
-	}
-	if (IndexLinker(AllParDau, SelectedpdgId[24], 0, TreePar.at(FromWplus)) != -1) {
-	    SelectedPar.push_back(TreePar.at(FromWplus));
-	    TreePar.erase(find(TreePar.begin(), TreePar.end(), TreePar.at(FromWplus)));
-	    --FromWplus;
-	    ++FromWplusSum;
-	}
-    } /* from w+ */
-
-    for (unsigned int FromWminus = 0; FromWminus < TreePar.size(); ++FromWminus){
-	//if (IndexLinker(AllParDau, SelectedpdgId[-24], 0, TreePar.at(FromWminus)) != -1) {
-   	    SelectedPar.push_back(TreePar.at(FromWminus));
-	//}
-    } /* from w- */
-
-    /* SelectedPar_MINI : {p+, p+, 
-			   0   1  
-			   t, tbar, w+, b, w-, bbar, w+_first_daughter, w+_second_daughter, w-_first_daughter, w-_second_daughter}
-			   2  3     4   5  6   7     8                  9                   10                 11 */
-
-    if (SelectedPar.size() != 12) {
-	cerr << "!!!!! Signal Sample : SelectedPar Error !!!!!" << endl;
-	cout << "!!!!! Signal Sample : SelectedPar Error !!!!!" << endl;
-	cout << endl << "SelectedPar : " << endl;
-	for (unsigned int i = 0; i < SelectedPar.size(); ++i){
-	    cout << ParName[AllParInfo[SelectedPar.at(i)].at(0)] << " ";
-	}
-	cout << endl;
-	for (unsigned int i = 0; i < SelectedPar.size(); ++i){
-	    cout << SelectedPar.at(i) << " ";
-	}
-	cout << endl;
-    }
-
-    FillGenPar(SelectedPar.at(0), -1, -1, SelectedPar.at(2), SelectedPar.at(3), itGenParBegin, ssbtreeManager);
-    FillGenPar(SelectedPar.at(1), -1, -1, SelectedPar.at(2), SelectedPar.at(3), itGenParBegin, ssbtreeManager);
-
-    FillGenPar(SelectedPar.at(2), SelectedPar.at(0), SelectedPar.at(1), SelectedPar.at(4), SelectedPar.at(5), itGenParBegin, ssbtreeManager);
-    FillGenPar(SelectedPar.at(3), SelectedPar.at(0), SelectedPar.at(1), SelectedPar.at(6), SelectedPar.at(7), itGenParBegin, ssbtreeManager);
-
-    FillGenPar(SelectedPar.at(4), SelectedPar.at(2), -1, SelectedPar.at(8), SelectedPar.at(9), itGenParBegin, ssbtreeManager);
-    FillGenPar(SelectedPar.at(5), SelectedPar.at(2), -1, -1, -1, itGenParBegin, ssbtreeManager);
- 
-    FillGenPar(SelectedPar.at(6), SelectedPar.at(3), -1, SelectedPar.at(10), SelectedPar.at(11), itGenParBegin, ssbtreeManager);
-    FillGenPar(SelectedPar.at(7), SelectedPar.at(3), -1, -1, -1, itGenParBegin, ssbtreeManager);
-
-    FillGenPar(SelectedPar.at(8), SelectedPar.at(4), -1, -1, -1, itGenParBegin, ssbtreeManager);
-    FillGenPar(SelectedPar.at(9), SelectedPar.at(4), -1, -1, -1, itGenParBegin, ssbtreeManager);
- 
-    FillGenPar(SelectedPar.at(10), SelectedPar.at(6), -1, -1, -1, itGenParBegin, ssbtreeManager);
-    FillGenPar(SelectedPar.at(11), SelectedPar.at(6), -1, -1, -1, itGenParBegin, ssbtreeManager);
-
-    } /* if Signal end */
-
-#endif
 
     else { /* if Background start */
     SelectedPar.push_back(0);
     SelectedPar.push_back(1);
-    for (unsigned int TreetoSel = 0; TreetoSel < TreePar.size(); ++TreetoSel){
+    SelectedPar.push_back(2);
+    SelectedPar.push_back(3);
+    for (int TreetoSel = 0; TreetoSel < (int)TreePar.size(); ++TreetoSel){
 	SelectedPar.push_back(TreePar.at(TreetoSel));
  	TreePar.erase(find(TreePar.begin(), TreePar.end(), TreePar.at(TreetoSel)));
 	--TreetoSel;
     }
-    for (unsigned int FinaltoTree = 0; FinaltoTree < FinalPar.size(); ++FinaltoTree){
+    for (int FinaltoTree = 0; FinaltoTree < (int)FinalPar.size(); ++FinaltoTree){
 	int MompdgId = abs(AllParInfo[AllParMom[FinalPar.at(FinaltoTree)].at(0)].at(0));
 	if ( MompdgId == 6 || MompdgId == 23 || MompdgId == 24 || MompdgId == 25 ){
 	    TreePar.push_back(FinalPar.at(FinaltoTree));
@@ -400,8 +355,8 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	}
     }
 
-    for (unsigned int TreetoSel = 0; TreetoSel < TreePar.size(); ++TreetoSel){
-	for (unsigned int SelectedSize = 0; SelectedSize < SelectedPar.size(); ++SelectedSize){
+    for (int TreetoSel = 0; TreetoSel < (int)TreePar.size(); ++TreetoSel){
+	for (int SelectedSize = 0; SelectedSize < (int)SelectedPar.size(); ++SelectedSize){
 	    int SelectedpdgId = abs(AllParInfo[SelectedPar.at(SelectedSize)].at(0));
 	    if ( SelectedpdgId == 6 || SelectedpdgId == 23 || SelectedpdgId == 24 || SelectedpdgId == 25 ) { /* Mother : top, Z, W, H */
 		if (IndexLinker(AllParMom, TreePar.at(TreetoSel), 0, SelectedPar.at(SelectedSize)) != -1 ) { /* when Mother is in SelectedPar */
@@ -414,7 +369,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	}
     } /* Move final state particle */
 
-    for (unsigned int AllSel = 0; AllSel < SelectedPar.size(); ++AllSel) {
+    for (int AllSel = 0; AllSel < (int)SelectedPar.size(); ++AllSel) {
 	int FM = -1;	
 	int SM = -1;	
 	int FD = -1;	
@@ -437,7 +392,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 
     } /* if Background end */
 
-    for (unsigned int RemoveTwo = 0; RemoveTwo < FinalPar.size(); ++RemoveTwo){
+    for (int RemoveTwo = 0; RemoveTwo < (int)FinalPar.size(); ++RemoveTwo){
 	if ( AllParInfo[FinalPar.at(RemoveTwo)].at(1) == 2 ) {
 	    //for (unsigned int RemoveTwoSub = 0; RemoveTwoSub < FinalPar.size(); ++RemoveTwoSub){
 		//if (RemoveTwo != RemoveTwoSub && IndexLinker(AllParDau, FinalPar.at(RemoveTwo), 0, FinalPar.at(RemoveTwoSub)) != -1) {
@@ -461,9 +416,13 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
     ChannelLeptonFinal = 0;
     ChannelLeptonP = 0;
     ChannelLeptonM = 0;
+    ChannelLeptonPE = 0;
+    ChannelLeptonME = 0;
+    ChannelLeptonPM = 0;
+    ChannelLeptonMM = 0;
     ChannelIndex = 0;
     int ChannelIndexFinal = 0;
-    for (unsigned int OnlyLepton = 0; OnlyLepton < SelectedPar.size(); ++OnlyLepton) {
+    for (int OnlyLepton = 0; OnlyLepton < (int)SelectedPar.size(); ++OnlyLepton) {
 	int Lepton_pdgId = abs(AllParInfo[SelectedPar.at(OnlyLepton)].at(0));
 	int Check_Charge = AllParInfo[SelectedPar.at(OnlyLepton)].at(0);
 	if (Lepton_pdgId == 11 || Lepton_pdgId == 13 || Lepton_pdgId == 15) {
@@ -476,14 +435,18 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	    } /* distinguish channel */
 	    if (Lepton_pdgId == Check_Charge) {
 		++ChannelLeptonP;
+                if(Lepton_pdgId == 11) ++ChannelLeptonPE;
+                if(Lepton_pdgId == 13) ++ChannelLeptonPM;
 	    }
 	    else {
 		++ChannelLeptonM;
+                if(Lepton_pdgId == 11) ++ChannelLeptonME;
+                if(Lepton_pdgId == 13) ++ChannelLeptonMM;
 	    }
 	//} /*check all particle's final state end */
 	    SelectedDau.clear();
 	    if (Lepton_pdgId == 15) { /* check only tau's final state start */
-	    for (unsigned int FinalCandidate = 0; FinalCandidate < FinalPar.size(); ++FinalCandidate) {
+	    for (int FinalCandidate = 0; FinalCandidate < (int)FinalPar.size(); ++FinalCandidate) {
 		if (IndexLinker(AllParDau, SelectedPar.at(OnlyLepton), 0, FinalPar.at(FinalCandidate)) != -1) {
 		    SelectedDau.push_back(FinalPar.at(FinalCandidate));
 		}
@@ -501,7 +464,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	int Lepton_Mom_pdgId = 0;
 	int Lepton_Dau_pdgId = 0;
 	int Lepton_Mom_flag = 0;
-	for (unsigned int DauIndex = 0; DauIndex < (FinaltoSel->second).size(); ++DauIndex) {
+	for (int DauIndex = 0; DauIndex < (int)(FinaltoSel->second).size(); ++DauIndex) {
 	    if(SelectedPar.end() == find(SelectedPar.begin(), SelectedPar.end(), (FinaltoSel->second).at(DauIndex))) { /* count just 1 time */
 		SelectedPar.push_back((FinaltoSel->second).at(DauIndex));
 		Lepton_Mom_pdgId = abs(AllParInfo[FinaltoSel->first].at(0));
@@ -525,6 +488,18 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	}
     }
 
+/*
+	cout << endl << endl << "SelectedPar : " << endl;
+	for (unsigned int i = 0; i < SelectedPar.size(); ++i){
+	    cout << ParName[AllParInfo[SelectedPar.at(i)].at(0)] << " ";
+	}
+	cout << endl;
+	for (unsigned int i = 0; i < SelectedPar.size(); ++i){
+	    cout << SelectedPar.at(i) << " ";
+	}
+	cout << endl;
+*/
+
     int ChannelJets = 0;
     int ChannelJetsAbs = 0;
     vector<int> temp_Channel;
@@ -534,8 +509,8 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
             int Channel_pdgId = 0;
             int First_Dau_pdgId = 99;
             int Second_Dau_pdgId = 99;
-            First_Dau_pdgId  = AllParInfo[SelectedPar.at(5*WIndex+5)].at(0);
-            Second_Dau_pdgId = AllParInfo[SelectedPar.at(5*WIndex+6)].at(0);
+            First_Dau_pdgId  = AllParInfo[SelectedPar.at(5*WIndex+3)].at(0);
+            Second_Dau_pdgId = AllParInfo[SelectedPar.at(5*WIndex+4)].at(0);
             if ( abs(First_Dau_pdgId) < 10) {
                 if ( First_Dau_pdgId > Second_Dau_pdgId ) Channel_pdgId = 10*abs(First_Dau_pdgId) + abs(Second_Dau_pdgId);
                 else Channel_pdgId = abs(First_Dau_pdgId) + 10*abs(Second_Dau_pdgId);
@@ -547,8 +522,8 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
         }
     }
     if ( ChannelJets > 0 ) {
-	for(unsigned int sort_i = 0; sort_i < temp_Channel.size(); ++sort_i) {
-	for(unsigned int sort_j = sort_i+1; sort_j < temp_Channel.size(); ++sort_j) {
+	for(int sort_i = 0; sort_i < (int)temp_Channel.size(); ++sort_i) {
+	for(int sort_j = sort_i+1; sort_j < (int)temp_Channel.size(); ++sort_j) {
 	    if(temp_Channel.at(sort_i) > temp_Channel.at(sort_j)) {
 		int temp_id = temp_Channel.at(sort_i);
 		temp_Channel.at(sort_i) = temp_Channel.at(sort_j);
@@ -556,7 +531,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	    }
 	}	
 	}
-	for(unsigned int i = 0; i < temp_Channel.size(); ++i) {
+	for(int i = 0; i < (int)temp_Channel.size(); ++i) {
 	    if ( i == 0 ) ChannelJetsAbs = temp_Channel.at(i);
             else ChannelJetsAbs = 100*ChannelJetsAbs + temp_Channel.at(i);
 	}
@@ -601,7 +576,7 @@ SSBGenInfor::IndexLinker(map_i IndexMap, int start_index, int target_depth, int 
     else {
 	++LoopDepth;
 	int IndexLinkerResult = -1;
-	for (unsigned int MapLoopIndex = 0; MapLoopIndex < IndexMap[start_index].size(); ++MapLoopIndex){
+	for (int MapLoopIndex = 0; MapLoopIndex < (int)IndexMap[start_index].size(); ++MapLoopIndex){
 	    if(IndexMap[start_index].at(MapLoopIndex) != -1) {
 		IndexLinkerResult = IndexLinker(IndexMap, IndexMap[start_index].at(MapLoopIndex), target_depth, target_index, target_pdgid, target_status, PrintError, LoopDepth);
 		if (IndexLinkerResult != -1){
@@ -788,8 +763,14 @@ SSBGenInfor::ReturnChannel(const edm::Event& iEvent) {
         else if(ChannelIndex == -30) ChannelName = "DoubleTau";
 
         else if(ChannelIndex == 133) ChannelName = "Trilepton_TripleElectron";
-        else if(ChannelIndex == 135) ChannelName = "Trilepton_DoubleElectronMuon";
-        else if(ChannelIndex == 137) ChannelName = "Trilepton_ElectronDoubleMuon";
+        else if(ChannelIndex == 135) {ChannelName = "Trilepton_DoubleElectronMuon";
+                                      if(ChannelLeptonPE == 1 && ChannelLeptonME == 1) ChannelCharge = "OP";
+                                      else ChannelCharge = "SS";
+                                     }
+        else if(ChannelIndex == 137) {ChannelName = "Trilepton_DoubleMuonElectron";
+                                      if(ChannelLeptonPM == 1 && ChannelLeptonMM == 1) ChannelCharge = "OP";
+                                      else ChannelCharge = "SS";
+                                     }
         else if(ChannelIndex == 139) ChannelName = "Trilepton_TripleMuon";
         else if(ChannelIndex == 107) ChannelName = "TauDoubleElectron";
         else if(ChannelIndex == 109) ChannelName = "TauElectronMuon";
@@ -801,11 +782,11 @@ SSBGenInfor::ReturnChannel(const edm::Event& iEvent) {
         else if(ChannelIndex == 144) ChannelName = "Tetralepton_QuadrupleElectron";
         else if(ChannelIndex == 146) ChannelName = "Tetralepton_TripleElectronMuon";
         else if(ChannelIndex == 148) ChannelName = "Tetralepton_DoubleElectronDoubleMuon";
-        else if(ChannelIndex == 150) ChannelName = "Tetralepton_ElectronTripleMuon";
+        else if(ChannelIndex == 150) ChannelName = "Tetralepton_TripleMuonElectron";
         else if(ChannelIndex == 152) ChannelName = "Tetralepton_QuadrupleMuon";
         else if(ChannelIndex == 118) ChannelName = "TauTripleElectron";
         else if(ChannelIndex == 120) ChannelName = "TauDoubleElectronMuon";
-        else if(ChannelIndex == 122) ChannelName = "TauElectronDoubleMuon";
+        else if(ChannelIndex == 122) ChannelName = "TauDoubleMuonElectron";
         else if(ChannelIndex == 124) ChannelName = "TauTripleMuon";
         else if(ChannelIndex ==  92) ChannelName = "DoubleTauDoubleElectron";
         else if(ChannelIndex ==  94) ChannelName = "DoubleTauElectronMuon";

@@ -1,4 +1,4 @@
-// SSBTMMaker v2.11
+// SSBTMMaker v3.00
 
 #ifndef SSBTreeManager_h
 #define SSBTreeManager_h 
