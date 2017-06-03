@@ -1,4 +1,4 @@
-// SSBTMMaker v3.000
+// SSBTMMaker v3.00
 
 #ifndef SSBHistManager_h
 #define SSBHistManager_h 

@@ -54,9 +54,6 @@
 #include "SSBGenInfor.h"
 // Managing Tree
 #include "SSBHistManager.h"
-// Muon Pt Correction
-#include "CATTools/CatAnalyzer/src/rochcor2016.h"
-#include "CATTools/CatAnalyzer/src/RoccoR.h"
 // Lepton Scale Factor
 #include "SSBSF.h"
 
@@ -265,7 +262,6 @@ class SSBConverter : public edm::EDAnalyzer {
       std::vector<int> Index_IsolatedMuon;
       std::vector<int> Index_AdditionalMuon;
       std::vector<int> Index_VetoMuon;
-      rochcor2016 *MuonCorrection;
       double SF_Muon;
       std::vector<double> vSF_Muon;
 
