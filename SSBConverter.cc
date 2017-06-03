@@ -110,7 +110,7 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
     const auto MuonSFParameter = iConfig.getParameter<edm::ParameterSet>("MuonSF");
     MuonSFEval = new ScaleFactorEvaluator();
     MuonSFEval->set(MuonSFParameter.getParameter<std::vector<double>>("pt_bins"),
-                   MuonSFParameter.getParameter<std::vector<double>>("abseta_bins"),
+                   MuonSFParameter.getParameter<std::vector<double>>("eta_bins"),
                    MuonSFParameter.getParameter<std::vector<double>>("values"),
                    MuonSFParameter.getParameter<std::vector<double>>("errors"));
     const auto ElecSFParameter = iConfig.getParameter<edm::ParameterSet>("ElectronSF");
@@ -121,7 +121,6 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
                        ElecSFParameter.getParameter<std::vector<double>>("errors"));
 
     ssbgeninfor = new SSBGenInfor(iConfig);
-    MuonCorrection = new rochcor2016();
 
     CutChannelName = {"ss_ee_e","os_ee_e","ss_ee_m","os_ee_m","ss_em_e","os_em_e","ss_em_m","os_em_m","ss_mm_e","os_mm_e","ss_mm_m","os_mm_m",
                       "eee","mmm","ss_eem","os_eem","eem","ss_emm","os_emm","emm"};
@@ -522,22 +521,11 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
          }
 */
-        SF_Muon = MuonSFEval->get(muon.pt(),std::abs(muon.eta()));
+        SF_Muon = MuonSFEval->get(muon.pt(),muon.eta());
         vSF_Muon.push_back(SF_Muon);
 
         MuonPtError = muon.pt()*muon.shiftedEn();
-        if(muon.eta()>2.4){
-            LV_muon.SetPtEtaPhiE(muon.pt(), 2.4, muon.phi(), muon.energy());
-        } else if(muon.eta()<-2.4){
-            LV_muon.SetPtEtaPhiE(muon.pt(), -2.4, muon.phi(), muon.energy());
-        } else {
-            LV_muon.SetPtEtaPhiE(muon.pt(), muon.eta(), muon.phi(), muon.energy());
-        }
-        if(isData){
-            MuonCorrection->momcor_data(LV_muon, (float)muon.charge(), 0, MuonPtError);
-        } else {
-            MuonCorrection->momcor_mc(LV_muon, (float)muon.charge(), muon.trackerLayersWithMeasurement(), MuonPtError);
-        }
+        LV_muon.SetPtEtaPhiE(muon.pt(), muon.eta(), muon.phi(), muon.energy());
 
         if(isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) && PFIsodbeta04 < IsolatedMuonIso){
             isIsolatedMuon = true;
@@ -570,7 +558,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         ssbtreeManager->Fill( "Muon_pdgId"            , muon.pdgId()         );
         ssbtreeManager->Fill( "Muon_Charge"           , muon.charge()        );
         ssbtreeManager->Fill( "Muon_ScaleFactor"      , SF_Muon              );
-        ssbtreeManager->Fill( "Muon_CorrectedPt"      , (double)LV_muon.Pt() );
+        //ssbtreeManager->Fill( "Muon_CorrectedPt"      , (double)LV_muon.Pt() );
         ssbtreeManager->Fill( "Muon_CorrectedPtError" , (double)MuonPtError  );
         ssbtreeManager->Fill( "Muon_dPtOverPt"        , (double)(MuonPtError/LV_muon.Pt()) );
 

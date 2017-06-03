@@ -2,21 +2,37 @@ void SSBConverter::FillHistogram()
 {
 
     ssbhistManager->CheckData(isData);
-    for(unsigned int CutChannelInit=0;CutChannelInit<CutChannelName.size();++CutChannelInit){
-        ssbhistManager->GetCutStep(CutChannelName[CutChannelInit],Cut_Step[CutChannelName[CutChannelInit]]);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0a", GenWeight*PileUpWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0b", GenWeight*PileUpWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0c", GenWeight*PileUpWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1",  GenWeight*PileUpWeight*LeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "2",  GenWeight*PileUpWeight*LeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "3",  GenWeight*PileUpWeight*LeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "4",  GenWeight*PileUpWeight*LeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "5",  GenWeight*PileUpWeight*LeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "6a", GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "6b", GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "7",  GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "8",  GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
-        ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "9",  GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
+    if(Channel == "FourTop Tri-Lepton"){
+        for(unsigned int CutChannelInit=0;CutChannelInit<CutChannelName.size();++CutChannelInit){
+            ssbhistManager->GetCutStep(CutChannelName[CutChannelInit],Cut_Step[CutChannelName[CutChannelInit]]);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0a", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0b", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0c", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "2",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "3",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "4",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "5",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "6a", GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "6b", GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "7",  GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "8",  GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "9",  GenWeight*PileUpWeight*LeptonWeight);//*AddLeptonWeight);
+        }
+    } // if(Channel == "FourTop Tri-Lepton")
+    else if(Channel == "FourTop SS Di-Lepton"){
+        for(unsigned int CutChannelInit=0;CutChannelInit<CutChannelName.size();++CutChannelInit){
+            ssbhistManager->GetCutStep(CutChannelName[CutChannelInit],Cut_Step[CutChannelName[CutChannelInit]]);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0a", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0b", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0c", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1a", GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1b", GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "2",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "3",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "4",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "5",  GenWeight*PileUpWeight*LeptonWeight);
+        }
     }
 
     ssbhistManager->Fill( "numPV", numPV);
@@ -155,4 +171,6 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "BJet_3_CSV", BJet.bDiscriminator("pfCombinedInclusiveSecondaryVertexV2BJetTags") );
         ssbhistManager->Fill( "BJet_3_qg",  BJet.qgLikelihood() );
     }
+
+
 }

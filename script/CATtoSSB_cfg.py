@@ -2,7 +2,7 @@
 UseList = False # InputFile
 
 #InputList = './../data/dataset/dataset_TT_powheg.txt'
-InputList = 'TTTT_v806.txt'
+InputList = './../data/dataset/dataset_TTTT.txt'
 
 #InputFile = 'file:/xrootd/store/group/CAT/DoubleEG/v8-0-3_Run2016B-23Sep2016-v3/161204_004831/0000/catTuple_2.root'
 #InputFile = 'file:/xrootd/store/group/CAT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/v8-0-3_RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext3-v1/161207_135636/0000/catTuple_1.root'
@@ -14,6 +14,7 @@ InputFile = 'file:/xrootd/store/group/CAT/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pyt
 
 SetAnalyzer = "FourTop SS Di-Lepton"
 #SetAnalyzer = "FourTop Tri-Lepton"
+
 ChannelName = "ALL"
 MakeOthersSample = False
 FileNameSuffix = ""
@@ -86,7 +87,7 @@ else :
                                          # Lepton
                                          ElectronID   = cms.untracked.string("Medium"),
                                          ElectronSF   = electronSFCutBasedIDMediumWP,
-                                         ElectronPt   = cms.untracked.double(20.0),
+                                         ElectronPt   = cms.untracked.double(25.0),
                                          ElectronEta  = cms.untracked.double(2.4),
                                          MuonID       = cms.untracked.string("Tight"),
                                          MuonSF       = muonSFTight,
@@ -96,11 +97,11 @@ else :
                                          # Additional Lepton Cut
                                          Do_Additional_Cut = cms.untracked.bool(True), 
                                          Add_ElectronID    = cms.untracked.string("Loose"),
-                                         Add_ElectronSF    = electronSFCutBasedIDMediumWP,
+                                         Add_ElectronSF    = electronSFCutBasedIDMediumWP, # FIX
                                          Add_ElectronPt    = cms.untracked.double(10.0),
                                          Add_ElectronEta   = cms.untracked.double(2.4),
                                          Add_MuonID        = cms.untracked.string("Medium"),
-                                         Add_MuonSF        = muonSFTight,
+                                         Add_MuonSF        = muonSFTight, # FIX
                                          Add_MuonPt        = cms.untracked.double(10.0),
                                          Add_MuonEta       = cms.untracked.double(2.4),
                                          Add_MuonIso       = cms.untracked.double(0.20),
@@ -119,7 +120,7 @@ else :
                                          CleaningdR   = cms.untracked.double(0.4),
                                          # B-Jet
                                          BTag         = cms.untracked.string("Medium"),
-                                         # All Lepton Invariant Mass (Dilepton : Z Mass Veto)
+                                         # All Lepton Invariant Mass (ex : Dilepton - Z Mass Veto)
                                          InvariantMass = cms.untracked.double(91.2),
                                          PlusMinus     = cms.untracked.double(15.0),
                                          # MET
