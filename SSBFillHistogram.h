@@ -34,6 +34,41 @@ void SSBConverter::FillHistogram()
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "5",  GenWeight*PileUpWeight*LeptonWeight);
         }
     }
+    else if(Channel == "Lepton+Jets"){
+        for(unsigned int CutChannelInit=0;CutChannelInit<CutChannelName.size();++CutChannelInit){
+            ssbhistManager->GetCutStep(CutChannelName[CutChannelInit],Cut_Step[CutChannelName[CutChannelInit]]);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0a", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0b", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0c", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1a", GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1b", GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "2",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "3",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "4",  GenWeight*PileUpWeight*LeptonWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "5",  GenWeight*PileUpWeight*LeptonWeight);
+        }
+    }
+    else if(Channel == "FourTop SUSY"){
+        for(unsigned int CutChannelInit=0;CutChannelInit<CutChannelName.size();++CutChannelInit){
+            ssbhistManager->GetCutStep(CutChannelName[CutChannelInit],Cut_Step[CutChannelName[CutChannelInit]]);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0a", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0b", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0c", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0d", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1a", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SRW", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR1", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR2", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR3", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR4", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR5", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR6", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1b", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR7", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR8", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SRZ", GenWeight*PileUpWeight);
+        }
+    }
 
     ssbhistManager->Fill( "numPV", numPV);
     const cat::MET &met = mets->at(0);
@@ -45,6 +80,11 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Elec_1_Eta", IsoElectron.eta()    );
         ssbhistManager->Fill( "Elec_1_Phi", IsoElectron.phi()    );
         ssbhistManager->Fill( "Elec_1_E",   IsoElectron.energy() );
+        ssbhistManager->Fill( "Elec_1_Iso03",    v_Elec_Iso03.at(Index_IsolatedElectron.at(0))    );
+        ssbhistManager->Fill( "Elec_1_Iso04",    v_Elec_Iso04.at(Index_IsolatedElectron.at(0))    );
+        ssbhistManager->Fill( "Elec_1_miniIso",  v_Elec_miniIso.at(Index_IsolatedElectron.at(0))  );
+        ssbhistManager->Fill( "Elec_1_Pt_rel",   v_Elec_Pt_rel.at(Index_IsolatedElectron.at(0))   );
+        ssbhistManager->Fill( "Elec_1_Pt_ratio", v_Elec_Pt_ratio.at(Index_IsolatedElectron.at(0)) );
     }
     if(Num_IsolatedElectron>1){
         const cat::Electron &IsoElectron = electrons->at(Index_IsolatedElectron.at(1));
@@ -52,6 +92,11 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Elec_2_Eta", IsoElectron.eta()    );
         ssbhistManager->Fill( "Elec_2_Phi", IsoElectron.phi()    );
         ssbhistManager->Fill( "Elec_2_E",   IsoElectron.energy() );
+        ssbhistManager->Fill( "Elec_2_Iso03",    v_Elec_Iso03.at(Index_IsolatedElectron.at(1))    );
+        ssbhistManager->Fill( "Elec_2_Iso04",    v_Elec_Iso04.at(Index_IsolatedElectron.at(1))    );
+        ssbhistManager->Fill( "Elec_2_miniIso",  v_Elec_miniIso.at(Index_IsolatedElectron.at(1))  );
+        ssbhistManager->Fill( "Elec_2_Pt_rel",   v_Elec_Pt_rel.at(Index_IsolatedElectron.at(1))   );
+        ssbhistManager->Fill( "Elec_2_Pt_ratio", v_Elec_Pt_ratio.at(Index_IsolatedElectron.at(1)) );
     }
     if(Num_IsolatedElectron>2){
         const cat::Electron &IsoElectron = electrons->at(Index_IsolatedElectron.at(2));
@@ -59,13 +104,23 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Elec_3_Eta", IsoElectron.eta()    );
         ssbhistManager->Fill( "Elec_3_Phi", IsoElectron.phi()    );
         ssbhistManager->Fill( "Elec_3_E",   IsoElectron.energy() );
+        ssbhistManager->Fill( "Elec_3_Iso03",    v_Elec_Iso03.at(Index_IsolatedElectron.at(2))    );
+        ssbhistManager->Fill( "Elec_3_Iso04",    v_Elec_Iso04.at(Index_IsolatedElectron.at(2))    );
+        ssbhistManager->Fill( "Elec_3_miniIso",  v_Elec_miniIso.at(Index_IsolatedElectron.at(2))  );
+        ssbhistManager->Fill( "Elec_3_Pt_rel",   v_Elec_Pt_rel.at(Index_IsolatedElectron.at(2))   );
+        ssbhistManager->Fill( "Elec_3_Pt_ratio", v_Elec_Pt_ratio.at(Index_IsolatedElectron.at(2)) );
     }
-    if(Num_AdditionalElectron>1){
+    if(Num_AdditionalElectron>0){
         const cat::Electron &IsoElectron = electrons->at(Index_AdditionalElectron.at(0));
         ssbhistManager->Fill( "AddElec_1_Pt",  IsoElectron.pt()     );
         ssbhistManager->Fill( "AddElec_1_Eta", IsoElectron.eta()    );
         ssbhistManager->Fill( "AddElec_1_Phi", IsoElectron.phi()    );
         ssbhistManager->Fill( "AddElec_1_E",   IsoElectron.energy() );
+        ssbhistManager->Fill( "AddElec_1_Iso03",    v_Elec_Iso03.at(Index_AdditionalElectron.at(0))    );
+        ssbhistManager->Fill( "AddElec_1_Iso04",    v_Elec_Iso04.at(Index_AdditionalElectron.at(0))    );
+        ssbhistManager->Fill( "AddElec_1_miniIso",  v_Elec_miniIso.at(Index_AdditionalElectron.at(0))  );
+        ssbhistManager->Fill( "AddElec_1_Pt_rel",   v_Elec_Pt_rel.at(Index_AdditionalElectron.at(0))   );
+        ssbhistManager->Fill( "AddElec_1_Pt_ratio", v_Elec_Pt_ratio.at(Index_AdditionalElectron.at(0)) );
     }
 
     if(Num_IsolatedMuon>0){
@@ -74,6 +129,11 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Muon_1_Eta", IsoMuon.eta()    );
         ssbhistManager->Fill( "Muon_1_Phi", IsoMuon.phi()    );
         ssbhistManager->Fill( "Muon_1_E",   IsoMuon.energy() );
+        ssbhistManager->Fill( "Muon_1_Iso03",    v_Muon_Iso03.at(Index_IsolatedMuon.at(0))    );
+        ssbhistManager->Fill( "Muon_1_Iso04",    v_Muon_Iso04.at(Index_IsolatedMuon.at(0))    );
+        ssbhistManager->Fill( "Muon_1_miniIso",  v_Muon_miniIso.at(Index_IsolatedMuon.at(0))  );
+        ssbhistManager->Fill( "Muon_1_Pt_rel",   v_Muon_Pt_rel.at(Index_IsolatedMuon.at(0))   );
+        ssbhistManager->Fill( "Muon_1_Pt_ratio", v_Muon_Pt_ratio.at(Index_IsolatedMuon.at(0)) );
     }
     if(Num_IsolatedMuon>1){
         const cat::Muon &IsoMuon = muons->at(Index_IsolatedMuon.at(1));
@@ -81,6 +141,11 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Muon_2_Eta", IsoMuon.eta()    );
         ssbhistManager->Fill( "Muon_2_Phi", IsoMuon.phi()    );
         ssbhistManager->Fill( "Muon_2_E",   IsoMuon.energy() );
+        ssbhistManager->Fill( "Muon_2_Iso03",    v_Muon_Iso03.at(Index_IsolatedMuon.at(1))    );
+        ssbhistManager->Fill( "Muon_2_Iso04",    v_Muon_Iso04.at(Index_IsolatedMuon.at(1))    );
+        ssbhistManager->Fill( "Muon_2_miniIso",  v_Muon_miniIso.at(Index_IsolatedMuon.at(1))  );
+        ssbhistManager->Fill( "Muon_2_Pt_rel",   v_Muon_Pt_rel.at(Index_IsolatedMuon.at(1))   );
+        ssbhistManager->Fill( "Muon_2_Pt_ratio", v_Muon_Pt_ratio.at(Index_IsolatedMuon.at(1)) );
     }
     if(Num_IsolatedMuon>2){
         const cat::Muon &IsoMuon = muons->at(Index_IsolatedMuon.at(2));
@@ -88,6 +153,11 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "Muon_3_Eta", IsoMuon.eta()    );
         ssbhistManager->Fill( "Muon_3_Phi", IsoMuon.phi()    );
         ssbhistManager->Fill( "Muon_3_E",   IsoMuon.energy() );
+        ssbhistManager->Fill( "Muon_3_Iso03",    v_Muon_Iso03.at(Index_IsolatedMuon.at(2))    );
+        ssbhistManager->Fill( "Muon_3_Iso04",    v_Muon_Iso04.at(Index_IsolatedMuon.at(2))    );
+        ssbhistManager->Fill( "Muon_3_miniIso",  v_Muon_miniIso.at(Index_IsolatedMuon.at(2))  );
+        ssbhistManager->Fill( "Muon_3_Pt_rel",   v_Muon_Pt_rel.at(Index_IsolatedMuon.at(2))   );
+        ssbhistManager->Fill( "Muon_3_Pt_ratio", v_Muon_Pt_ratio.at(Index_IsolatedMuon.at(2)) );
     }
     if(Num_AdditionalMuon>0){
         const cat::Muon &IsoMuon = muons->at(Index_AdditionalMuon.at(0));
@@ -95,12 +165,17 @@ void SSBConverter::FillHistogram()
         ssbhistManager->Fill( "AddMuon_1_Eta", IsoMuon.eta()    );
         ssbhistManager->Fill( "AddMuon_1_Phi", IsoMuon.phi()    );
         ssbhistManager->Fill( "AddMuon_1_E",   IsoMuon.energy() );
+        ssbhistManager->Fill( "AddMuon_1_Iso03",    v_Muon_Iso03.at(Index_AdditionalMuon.at(0))    );
+        ssbhistManager->Fill( "AddMuon_1_Iso04",    v_Muon_Iso04.at(Index_AdditionalMuon.at(0))    );
+        ssbhistManager->Fill( "AddMuon_1_miniIso",  v_Muon_miniIso.at(Index_AdditionalMuon.at(0))  );
+        ssbhistManager->Fill( "AddMuon_1_Pt_rel",   v_Muon_Pt_rel.at(Index_AdditionalMuon.at(0))   );
+        ssbhistManager->Fill( "AddMuon_1_Pt_ratio", v_Muon_Pt_ratio.at(Index_AdditionalMuon.at(0)) );
     }
 
     ssbhistManager->Fill( "AllLepton_InvMass",  LV_AllLepton.M() );
-    ssbhistManager->Fill( "Di-Lepton_InvMass1", DiLeptonMass1    );
-    ssbhistManager->Fill( "Di-Lepton_InvMass2", DiLeptonMass2    );
-    ssbhistManager->Fill( "Di-Lepton_InvMass3", DiLeptonMass3    );
+    ssbhistManager->Fill( "DiLepton_InvMass1", DiLeptonMass1    );
+    ssbhistManager->Fill( "DiLepton_InvMass2", DiLeptonMass2    );
+    ssbhistManager->Fill( "DiLepton_InvMass3", DiLeptonMass3    );
      
     ssbhistManager->Fill( "numJets",  Num_CleanedJet );
     ssbhistManager->Fill( "numBJets", Num_BJet       );

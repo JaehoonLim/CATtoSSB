@@ -114,8 +114,10 @@ class SSBConverter : public edm::EDAnalyzer {
       std::string              IsolatedElectronID;
       double                   IsolatedElectronPt;
       double                   IsolatedElectronEta;
+      std::string              IsolatedElectronIso;
 
       bool                     Try_Cut_Additional;
+      bool                     TightLooseMethod;
       std::string              AdditionalMuonID;
       double                   AdditionalMuonPt;
       double                   AdditionalMuonEta;
@@ -124,6 +126,7 @@ class SSBConverter : public edm::EDAnalyzer {
       std::string              AdditionalElectronID;
       double                   AdditionalElectronPt;
       double                   AdditionalElectronEta;
+      std::string              AdditionalElectronIso;
 
       std::string              VetoMuonID;
       double                   VetoMuonPt;
@@ -133,6 +136,7 @@ class SSBConverter : public edm::EDAnalyzer {
       std::string              VetoElectronID;
       double                   VetoElectronPt;
       double                   VetoElectronEta;
+      std::string              VetoElectronIso;
 
       std::string              JetID;
       double                   JetPt;
@@ -224,9 +228,14 @@ class SSBConverter : public edm::EDAnalyzer {
       bool Cut_dl_Opposite;
       bool Cut_dl_Same;
 
+      bool Cut_ee_TL;
+      bool Cut_mm_TL;
+      bool Cut_em_TL;
+
       int TriLepton_First;
       int TriLepton_Second;
       int TriLepton_Third;
+      int TriLepton_Other;
 
       bool Cut_Tri_ee;
       bool Cut_Tri_mm;
@@ -240,6 +249,7 @@ class SSBConverter : public edm::EDAnalyzer {
       bool Cut_Tri_add_Charge;
       bool Cut_Tri_Second_Zmass;
       int Num_OppositeLepton;
+      bool Cut_SUSY_SRZ;
 
       std::map<std::string,std::map<std::string,bool>> Cut_Step;
 
@@ -258,12 +268,21 @@ class SSBConverter : public edm::EDAnalyzer {
       bool isAddIDMuon;
       bool isVetoIDMuon;
       double PFIsodbeta04;
+      double muon_ClosestdR;
+      double muon_Pt_rel;
+      double muon_Pt_ratio;
       float MuonPtError;
       std::vector<int> Index_IsolatedMuon;
       std::vector<int> Index_AdditionalMuon;
       std::vector<int> Index_VetoMuon;
       double SF_Muon;
+      double MT_Muon;
       std::vector<double> vSF_Muon;
+      std::vector<double> v_Muon_Iso03;
+      std::vector<double> v_Muon_Iso04;
+      std::vector<double> v_Muon_miniIso;
+      std::vector<double> v_Muon_Pt_rel;
+      std::vector<double> v_Muon_Pt_ratio;
 
       // variables for Electrons
       edm::Handle<cat::ElectronCollection> electrons;
@@ -280,6 +299,9 @@ class SSBConverter : public edm::EDAnalyzer {
       bool isAddElectronID;
       bool isVetoElectronID;
       double PFIsodbeta03;
+      double electron_ClosestdR;
+      double electron_Pt_rel;
+      double electron_Pt_ratio;
       double IsoCutLowEta;
       double IsoCutHighEta;
       double AddCutLowEta;
@@ -293,7 +315,13 @@ class SSBConverter : public edm::EDAnalyzer {
       std::vector<int> Index_AdditionalElectron;
       std::vector<int> Index_VetoElectron;
       double SF_Electron;
+      double MT_Electron;
       std::vector<double> vSF_Elec;
+      std::vector<double> v_Elec_Iso03;
+      std::vector<double> v_Elec_Iso04;
+      std::vector<double> v_Elec_miniIso;
+      std::vector<double> v_Elec_Pt_rel;
+      std::vector<double> v_Elec_Pt_ratio;
 
       // variables for Jets
       edm::Handle<cat::JetCollection> jets;
@@ -333,6 +361,7 @@ class SSBConverter : public edm::EDAnalyzer {
       double DiLeptonMass1;
       double DiLeptonMass2;
       double DiLeptonMass3;
+      double DiLeptonMassOther;
 
       ScaleFactorEvaluator *MuonSFEval;
       ScaleFactorEvaluator *ElectronSFEval;
@@ -341,9 +370,11 @@ class SSBConverter : public edm::EDAnalyzer {
       TLorentzVector LV_Tri_First;
       TLorentzVector LV_Tri_Second;
       TLorentzVector LV_Tri_Third;
+      TLorentzVector LV_Tri_Other;
       TLorentzVector LV_Tri_Dilepton1;
       TLorentzVector LV_Tri_Dilepton2;
       TLorentzVector LV_Tri_Dilepton3;
+      TLorentzVector LV_Tri_DileptonOther;
 /*
    string TriID[4]        = {"MMM","TMM","TTM","TTT"};
    double Elec_IsoHigh[3] = {0.1590,0.1070,0.0821};

@@ -53,8 +53,10 @@ IsolatedMuonIso(       iConfig.getUntrackedParameter< double >(                 
 IsolatedElectronID(    iConfig.getUntrackedParameter< std::string >(              "ElectronID",         std::string("Medium") )), 
 IsolatedElectronPt(    iConfig.getUntrackedParameter< double >(                   "ElectronPt",         30.0                  )),
 IsolatedElectronEta(   iConfig.getUntrackedParameter< double >(                   "ElectronEta",        2.4                   )),
+IsolatedElectronIso(   iConfig.getUntrackedParameter< std::string >(              "ElectronIso",        std::string("Medium") )), 
 
 Try_Cut_Additional(    iConfig.getUntrackedParameter< bool >(                     "Do_Additional_Cut",  false                 )),
+TightLooseMethod(      iConfig.getUntrackedParameter< bool >(                     "Do_TightLoose",      false                 )),
 AdditionalMuonID(      iConfig.getUntrackedParameter< std::string >(              "Add_MuonID",         std::string("Tight")  )), 
 AdditionalMuonPt(      iConfig.getUntrackedParameter< double >(                   "Add_MuonPt",         26.0                  )),
 AdditionalMuonEta(     iConfig.getUntrackedParameter< double >(                   "Add_MuonEta",        2.1                   )),
@@ -63,6 +65,7 @@ AdditionalMuonIso(     iConfig.getUntrackedParameter< double >(                 
 AdditionalElectronID(  iConfig.getUntrackedParameter< std::string >(              "Add_ElectronID",     std::string("Medium") )), 
 AdditionalElectronPt(  iConfig.getUntrackedParameter< double >(                   "Add_ElectronPt",     30.0                  )),
 AdditionalElectronEta( iConfig.getUntrackedParameter< double >(                   "Add_ElectronEta",    2.4                   )),
+AdditionalElectronIso( iConfig.getUntrackedParameter< std::string >(              "Add_ElectronIso",    std::string("Medium") )), 
 
 VetoMuonID(            iConfig.getUntrackedParameter< std::string >(              "veto_MuonID",        std::string("Loose")  )), 
 VetoMuonPt(            iConfig.getUntrackedParameter< double >(                   "veto_MuonPt",        10.0                  )),
@@ -72,6 +75,7 @@ VetoMuonIso(           iConfig.getUntrackedParameter< double >(                 
 VetoElectronID(        iConfig.getUntrackedParameter< std::string >(              "veto_ElectronID",    std::string("Veto")   )), 
 VetoElectronPt(        iConfig.getUntrackedParameter< double >(                   "veto_ElectronPt",    10.0                  )),
 VetoElectronEta(       iConfig.getUntrackedParameter< double >(                   "veto_ElectronEta",   2.4                   )),
+VetoElectronIso(       iConfig.getUntrackedParameter< std::string >(              "veto_ElectronIso",   std::string("Veto")   )), 
 
 JetID(                 iConfig.getUntrackedParameter< std::string >(              "JetID",              std::string("Loose")  )),   
 JetPt(                 iConfig.getUntrackedParameter< double >(                   "JetPt",              30.0                  )),
@@ -122,16 +126,18 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
 
     ssbgeninfor = new SSBGenInfor(iConfig);
 
-    CutChannelName = {"ss_ee_e","os_ee_e","ss_ee_m","os_ee_m","ss_em_e","os_em_e","ss_em_m","os_em_m","ss_mm_e","os_mm_e","ss_mm_m","os_mm_m",
-                      "eee","mmm","ss_eem","os_eem","eem","ss_emm","os_emm","emm"};
-    CutStepName = {"0a","0b","0c","1","2","3","4","5","6a","6b","7","8","9"};
-    if(Channel == "FourTop SS Di-Lepton"){
-        CutChannelName = {"ee","mm","em"};
-        CutStepName = {"0a","0b","0c","1a","1b","2","3","4","5"};
+    CutChannelName = {"ee","mm","em"};
+    CutStepName = {"0a","0b","0c","1a","1b","2","3","4","5"};
+    if(Channel == "FourTop Tri-Lepton"){
+        CutChannelName = {"ss_ee_e","os_ee_e","ss_ee_m","os_ee_m","ss_em_e","os_em_e","ss_em_m","os_em_m","ss_mm_e","os_mm_e","ss_mm_m","os_mm_m",
+                          "eee","mmm","ss_eem","os_eem","eem","ss_emm","os_emm","emm"};
+        CutStepName = {"0a","0b","0c","1","2","3","4","5","6a","6b","7","8","9"};
     }
     if(Channel == "TTbar Di-Lepton"){
-        CutChannelName = {"ee","mm","em"};
         CutStepName = {"0a","0b","0c","1","2","3","4","5"};
+    }
+    if(Channel == "FourTop SUSY"){
+        CutStepName = {"0a","0b","0c","0d","1a","SRW","SR1","SR2","SR3","SR4","SR5","SR6","1b","SR7","SR8","SRZ"};
     }
 
     EventFilter = {"Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_goodVertices", "Flag_eeBadScFilter", "Flag_globalTightHalo2016Filter", "Flag_badPFMuon", "Flag_badChargedHadron"};
@@ -155,18 +161,21 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         cerr << endl << "VetoMuonID Error"<< endl << endl;
     }
 
-    if(IsolatedElectronID == "Loose"){
+    if(IsolatedElectronIso == "Loose"){
         IsoCutLowEta  = 0.0994;
         IsoCutHighEta = 0.1070;
-    } else if(IsolatedElectronID == "Medium"){
+    } else if(IsolatedElectronIso == "Medium"){
         IsoCutLowEta  = 0.0695;
         IsoCutHighEta = 0.0821;
-    } else if(IsolatedElectronID == "Tight"){
+    } else if(IsolatedElectronIso == "Tight"){
         IsoCutLowEta  = 0.0588;
         IsoCutHighEta = 0.0571;
-    } else if(IsolatedElectronID == "Veto"){
+    } else if(IsolatedElectronIso == "Veto"){
         IsoCutLowEta  = 0.175;
         IsoCutHighEta = 0.159;
+    } else if(IsolatedElectronIso == "TEMP"){
+        IsoCutLowEta  = 0.500;
+        IsoCutHighEta = 0.500;
     } else {
         cout << endl << "ElectronID Error"<< endl << endl;
         cerr << endl << "ElectronID Error"<< endl << endl;
@@ -174,18 +183,21 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         IsoCutHighEta = 0.0000;
     } 
 
-    if(AdditionalElectronID == "Loose"){
+    if(AdditionalElectronIso == "Loose"){
         AddCutLowEta  = 0.0994;
         AddCutHighEta = 0.1070;
-    } else if(AdditionalElectronID == "Medium"){
+    } else if(AdditionalElectronIso == "Medium"){
         AddCutLowEta  = 0.0695;
         AddCutHighEta = 0.0821;
-    } else if(AdditionalElectronID == "Tight"){
+    } else if(AdditionalElectronIso == "Tight"){
         AddCutLowEta  = 0.0588;
         AddCutHighEta = 0.0571;
-    } else if(AdditionalElectronID == "Veto"){
+    } else if(AdditionalElectronIso == "Veto"){
         AddCutLowEta  = 0.175;
         AddCutHighEta = 0.159;
+    } else if(AdditionalElectronIso == "TEMP"){
+        AddCutLowEta  = 0.500;
+        AddCutHighEta = 0.500;
     } else {
         cout << endl << "AddElectronID Error"<< endl << endl;
         cerr << endl << "AddElectronID Error"<< endl << endl;
@@ -193,18 +205,21 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         AddCutHighEta = 0.0000;
     } 
 
-    if(VetoElectronID == "Loose"){
+    if(VetoElectronIso == "Loose"){
         VetoCutLowEta  = 0.0994;
         VetoCutHighEta = 0.1070;
-    } else if(VetoElectronID == "Medium"){
+    } else if(VetoElectronIso == "Medium"){
         VetoCutLowEta  = 0.0695;
         VetoCutHighEta = 0.0821;
-    } else if(VetoElectronID == "Tight"){
+    } else if(VetoElectronIso == "Tight"){
         VetoCutLowEta  = 0.0588;
         VetoCutHighEta = 0.0571;
-    } else if(VetoElectronID == "Veto"){
+    } else if(VetoElectronIso == "Veto"){
         VetoCutLowEta  = 0.175;
         VetoCutHighEta = 0.159;
+    } else if(VetoElectronIso == "TEMP"){
+        VetoCutLowEta  = 0.500;
+        VetoCutHighEta = 0.500;
     } else {
         cout << endl << "VetoElectronID Error"<< endl << endl;
         cerr << endl << "VetoElectronID Error"<< endl << endl;
@@ -440,17 +455,27 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     }
     ssbtreeManager->Fill( "Cut_MET", Cut_MET );
 
-    /////////////////////////
-    /// Muon Information ////
-    /////////////////////////
+    /////////////////////
+    /// Lepton Start ////
+    /////////////////////
 
     if(debugcout) cout << "Muon Information" << endl;
     Num_PlusLepton = 0;
     Num_MinusLepton = 0;
     LV_AllLepton.SetPtEtaPhiE(0,0,0,0);
     //Cut_MT_min = true;
+    iEvent.getByToken(jetToken_, jets);
+
+    /////////////////////////
+    /// Muon Information ////
+    /////////////////////////
 
     vSF_Muon.clear();
+    v_Muon_Iso03.clear();
+    v_Muon_Iso04.clear();
+    v_Muon_miniIso.clear();
+    v_Muon_Pt_rel.clear();
+    v_Muon_Pt_ratio.clear();
 
     Cut_e_MuonVeto = false;
     Cut_m_MuonVeto = false;
@@ -470,6 +495,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_VetoMuon = 0;
 
     SF_Muon = 1.0;
+    MT_Muon = 0.0;
 
     //memset(CutTest, 0, sizeof(CutTest));
 
@@ -501,6 +527,34 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         // error: 'const class cat::Muon' has no member named 'isHighPtMuon'
 
         PFIsodbeta04 = muon.relIso(0.4);
+        v_Muon_Iso04.push_back(PFIsodbeta04);
+        v_Muon_Iso03.push_back(muon.relIso(0.3));
+        v_Muon_miniIso.push_back(muon.miniRelIso());
+        LV_muon = muon.tlv();
+        if(LV_MET.Phi() > -1 * TMath::Pi() && LV_MET.Phi() < TMath::Pi()){
+            MT_Muon = sqrt(2.0*muon.pt()*met.pt()*(1-cos(LV_muon.DeltaPhi(LV_MET))));
+        } else {
+            MT_Muon = -999.9;
+        }
+        muon_ClosestdR = 999.9;
+        muon_Pt_rel = -999.9;
+        muon_Pt_ratio = -999.9;
+        for (const cat::Jet &jet : *jets){ 
+            LV_jet = jet.tlv();
+            if(LV_muon.DeltaR(LV_jet) < muon_ClosestdR) {
+                muon_ClosestdR = LV_muon.DeltaR(LV_jet);
+                muon_Pt_ratio = LV_muon.Pt() / LV_jet.Pt();
+                muon_Pt_rel = ((LV_jet.Vect() - LV_muon.Vect()).Cross(LV_muon.Vect())).Mag() / (LV_jet.Vect() - LV_muon.Vect()).Mag();
+            }
+        }
+        v_Muon_Pt_rel.push_back(muon_Pt_rel);
+        v_Muon_Pt_ratio.push_back(muon_Pt_ratio);
+
+        SF_Muon = MuonSFEval->get(muon.pt(),muon.eta());
+        vSF_Muon.push_back(SF_Muon);
+
+        MuonPtError = muon.pt()*muon.shiftedEn();
+
 /*
          pt = muon.pt();
          lep_iso = PFIsodbeta04;
@@ -521,22 +575,44 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
          }
 */
-        SF_Muon = MuonSFEval->get(muon.pt(),muon.eta());
-        vSF_Muon.push_back(SF_Muon);
 
-        MuonPtError = muon.pt()*muon.shiftedEn();
-        LV_muon.SetPtEtaPhiE(muon.pt(), muon.eta(), muon.phi(), muon.energy());
-
-        if(isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) && PFIsodbeta04 < IsolatedMuonIso){
+        if(!Try_Cut_Additional && isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) && PFIsodbeta04 < IsolatedMuonIso){
             isIsolatedMuon = true;
-            ++Num_IsolatedMuon;
             Index_IsolatedMuon.push_back(Index_Muon);
             if(MuonPtError/LV_muon.Pt()>0.3) Cut_m_Charge = false;
+            ssbtreeManager->Fill( "Cut_Muon", muon.pt(), muon.eta(), muon.phi(), muon.energy(), Num_IsolatedMuon );
+            ++Num_IsolatedMuon;
+            ssbtreeManager->Fill( "Cut_Muon_PFIsodBeta03" , (double)muon.relIso(0.3) );
+            ssbtreeManager->Fill( "Cut_Muon_PFIsodBeta04" , PFIsodbeta04      );
+            ssbtreeManager->Fill( "Cut_Muon_miniRelIso"   , (double)muon.miniRelIso() );
+            ssbtreeManager->Fill( "Cut_Muon_ClosestJetdR" , muon_ClosestdR    );
+            ssbtreeManager->Fill( "Cut_Muon_Pt_rel"       , muon_Pt_rel       );
+            ssbtreeManager->Fill( "Cut_Muon_Pt_rat"       , muon_Pt_ratio     );
+            ssbtreeManager->Fill( "Cut_Muon_dxy"          , (double)muon.dxy() );
+            ssbtreeManager->Fill( "Cut_Muon_dz"           , (double)muon.dz() );
+            ssbtreeManager->Fill( "Cut_Muon_MT"           , MT_Muon           );
         } else if(Try_Cut_Additional && isAddIDMuon && (muon.pt() > AdditionalMuonPt) && (std::abs(muon.eta()) < AdditionalMuonEta) && PFIsodbeta04 < AdditionalMuonIso){
-            isAdditionalMuon = true;
-            ++Num_AdditionalMuon;
-            Index_AdditionalMuon.push_back(Index_Muon);
-            if(MuonPtError/LV_muon.Pt()>0.3) Cut_m_Charge = false;
+            if(isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) && PFIsodbeta04 < IsolatedMuonIso){
+                isIsolatedMuon = true;
+                Index_IsolatedMuon.push_back(Index_Muon);
+                if(MuonPtError/LV_muon.Pt()>0.3) Cut_m_Charge = false;
+                ssbtreeManager->Fill( "Cut_Muon", muon.pt(), muon.eta(), muon.phi(), muon.energy(), Num_IsolatedMuon );
+                ++Num_IsolatedMuon;
+                ssbtreeManager->Fill( "Cut_Muon_PFIsodBeta03" , (double)muon.relIso(0.3)  );
+                ssbtreeManager->Fill( "Cut_Muon_PFIsodBeta04" , PFIsodbeta04      );
+                ssbtreeManager->Fill( "Cut_Muon_miniRelIso"   , (double)muon.miniRelIso() );
+                ssbtreeManager->Fill( "Cut_Muon_ClosestJetdR" , muon_ClosestdR    );
+                ssbtreeManager->Fill( "Cut_Muon_Pt_rel"       , muon_Pt_rel       );
+                ssbtreeManager->Fill( "Cut_Muon_Pt_rat"       , muon_Pt_ratio     );
+                ssbtreeManager->Fill( "Cut_Muon_dxy"          , (double)muon.dxy() );
+                ssbtreeManager->Fill( "Cut_Muon_dz"           , (double)muon.dz() );
+                ssbtreeManager->Fill( "Cut_Muon_MT"           , MT_Muon           );
+            } else {
+                isAdditionalMuon = true;
+                ++Num_AdditionalMuon;
+                Index_AdditionalMuon.push_back(Index_Muon);
+                //if(MuonPtError/LV_muon.Pt()>0.3) Cut_m_Charge = false;
+            }
         } else if(isVetoIDMuon && (muon.pt() > VetoMuonPt) && (std::abs(muon.eta()) < VetoMuonEta) && PFIsodbeta04 < VetoMuonIso){
             isVetoMuon = true;
             ++Num_VetoMuon;
@@ -554,23 +630,35 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         ssbtreeManager->Fill( "Muon_isIsoID"          , isIsoIDMuon          ); 
         ssbtreeManager->Fill( "Muon_isAddID"          , isAddIDMuon          ); 
         ssbtreeManager->Fill( "Muon_isVetoID"         , isVetoIDMuon         );
+        ssbtreeManager->Fill( "Muon_PFIsodBeta03"     , (double)muon.relIso(0.3)  );
         ssbtreeManager->Fill( "Muon_PFIsodBeta04"     , PFIsodbeta04         );
+        ssbtreeManager->Fill( "Muon_miniRelIso"       , (double)muon.miniRelIso() );
+        ssbtreeManager->Fill( "Muon_ClosestJetdR"     , muon_ClosestdR       );
+        ssbtreeManager->Fill( "Muon_Pt_rel"           , muon_Pt_rel          );
+        ssbtreeManager->Fill( "Muon_Pt_rat"           , muon_Pt_ratio        );
+        ssbtreeManager->Fill( "Muon_dxy"              , (double)muon.dxy()   );
+        ssbtreeManager->Fill( "Muon_dz"               , (double)muon.dz()    );
         ssbtreeManager->Fill( "Muon_pdgId"            , muon.pdgId()         );
         ssbtreeManager->Fill( "Muon_Charge"           , muon.charge()        );
         ssbtreeManager->Fill( "Muon_ScaleFactor"      , SF_Muon              );
         //ssbtreeManager->Fill( "Muon_CorrectedPt"      , (double)LV_muon.Pt() );
         ssbtreeManager->Fill( "Muon_CorrectedPtError" , (double)MuonPtError  );
         ssbtreeManager->Fill( "Muon_dPtOverPt"        , (double)(MuonPtError/LV_muon.Pt()) );
+        ssbtreeManager->Fill( "Muon_MT"               , MT_Muon              );
 
         ++Index_Muon;
     } // Muon Loop
+
+    if(TightLooseMethod){
+       Index_IsolatedMuon.insert(Index_IsolatedMuon.end(), Index_AdditionalMuon.begin(), Index_AdditionalMuon.end());
+       Num_IsolatedMuon = Index_IsolatedMuon.size();
+    }
 
     for(int muon_i = 0; muon_i < Num_IsolatedMuon; ++muon_i){
         const cat::Muon &IsoMuon = muons->at(Index_IsolatedMuon.at(muon_i));
         if(IsoMuon.charge() > 0) ++Num_PlusMuon;
         if(IsoMuon.charge() < 0) ++Num_MinusMuon;
-        ssbtreeManager->Fill( "Cut_Muon", IsoMuon.pt(), IsoMuon.eta(), IsoMuon.phi(), IsoMuon.energy(), muon_i );
-        LV_muon.SetPtEtaPhiE(IsoMuon.pt(), IsoMuon.eta(), IsoMuon.phi(), IsoMuon.energy());
+        LV_muon = IsoMuon.tlv();
         LV_AllLepton += LV_muon;
         //if(sqrt( pow(LV_muon.Et()-LV_MET.Et(),2) + pow(LV_muon.Px()-LV_MET.Px(),2) + pow(LV_muon.Py()-LV_MET.Py(),2) ) < 120) Cut_MT_min = false;
         //if((IsoMuon.bestTrack()->ptError() / IsoMuon.bestTrack()->pt()) > 0.3) Cut_m_Charge = false;
@@ -585,7 +673,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_VetoMuon = Index_VetoMuon.size();
     if(Num_VetoMuon == 0) {
         Cut_m_MuonVeto = true;
-        if(Num_IsolatedMuon == 0) Cut_e_MuonVeto = true;
+        if(Num_IsolatedMuon == 0 && (!Try_Cut_Additional || (Try_Cut_Additional && Num_AdditionalMuon == 0 ))) Cut_e_MuonVeto = true;
     }
 
 /*
@@ -615,6 +703,11 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
     if(debugcout) cout << "Electron infor" << endl;
     vSF_Elec.clear();
+    v_Elec_Iso03.clear();
+    v_Elec_Iso04.clear();
+    v_Elec_miniIso.clear();
+    v_Elec_Pt_rel.clear();
+    v_Elec_Pt_ratio.clear();
 
     Cut_m_ElectronVeto = false;
     Cut_e_ElectronVeto = false;
@@ -634,6 +727,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_VetoElectron = 0;
 
     SF_Electron = 1.0;
+    MT_Electron = 0.0;
 
     for (const cat::Electron &electron : *electrons)
     {
@@ -660,7 +754,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
         if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
         if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
-
+  
         ///// 0: fails,
         ///// 1: passes electron ID only,
         ///// 2: passes electron Isolation only,
@@ -672,6 +766,9 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         ///// result : only 0 and 1
 
         PFIsodbeta03 = electron.relIso(0.3);
+        v_Elec_Iso03.push_back(PFIsodbeta03);
+        v_Elec_Iso04.push_back(electron.relIso(0.4));
+        v_Elec_miniIso.push_back(electron.miniRelIso());
         SF_Electron = ElectronSFEval->get(electron.pt(),electron.eta());
         vSF_Elec.push_back(SF_Electron);
         SuperClusterEta = electron.scEta();
@@ -681,6 +778,26 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         // Combinatorial Track Finder (CTF) Track
         // Silicon Pixel Detector (ScPix)
         // error: 'const class cat::Electron' has no member named 'isGsfScPixChargeConsistent'
+
+        LV_electron = electron.tlv();
+        if(LV_MET.Phi() > -1 * TMath::Pi() && LV_MET.Phi() < TMath::Pi()){
+            MT_Electron = sqrt(2.0*electron.pt()*met.pt()*(1-cos(LV_electron.DeltaPhi(LV_MET))));
+        } else {
+            MT_Electron = -999.9;
+        }
+        electron_ClosestdR = 999.9;
+        electron_Pt_rel = -999.9;
+        electron_Pt_ratio = -999.9;
+        for (const cat::Jet &jet : *jets){ 
+            LV_jet = jet.tlv();
+            if(LV_electron.DeltaR(LV_jet) < electron_ClosestdR) {
+                electron_ClosestdR = LV_electron.DeltaR(LV_jet);
+                electron_Pt_ratio = LV_electron.Pt() / LV_jet.Pt();
+                electron_Pt_rel = ((LV_jet.Vect() - LV_electron.Vect()).Cross(LV_electron.Vect())).Mag() / (LV_jet.Vect() - LV_electron.Vect()).Mag();
+            }
+        }
+        v_Elec_Pt_rel.push_back(electron_Pt_rel);
+        v_Elec_Pt_ratio.push_back(electron_Pt_ratio);
 
 /*
          pt      = electron.pt();
@@ -710,32 +827,47 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          }
 */
 
-        if((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta)){
-            if(isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta)){
-                if(PassConversionVeto){
-                    isIsolatedElectron = true;
-                    ++Num_IsolatedElectron;
-                    Index_IsolatedElectron.push_back(Index_Electron);
-                    if(!ChargeConsistent) Cut_e_Charge = false;
-                }
+        if(!Try_Cut_Additional && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta)) && isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta) && PassConversionVeto){
+            isIsolatedElectron = true;
+            Index_IsolatedElectron.push_back(Index_Electron);
+            if(!ChargeConsistent) Cut_e_Charge = false;
+            ssbtreeManager->Fill( "Cut_Elec", electron.pt(), electron.eta(), electron.phi(), electron.energy(), Num_IsolatedElectron );
+            ++Num_IsolatedElectron;
+            ssbtreeManager->Fill( "Cut_Elec_PFIsodBeta03" , PFIsodbeta03          );
+            ssbtreeManager->Fill( "Cut_Elec_PFIsodBeta04" , (double)electron.relIso(0.4) );
+            ssbtreeManager->Fill( "Cut_Elec_miniRelIso"   , (double)electron.miniRelIso() );
+            ssbtreeManager->Fill( "Cut_Elec_ClosestJetdR" , electron_ClosestdR    );
+            ssbtreeManager->Fill( "Cut_Elec_Pt_rel"       , electron_Pt_rel       );
+            ssbtreeManager->Fill( "Cut_Elec_Pt_rat"       , electron_Pt_ratio     );
+            ssbtreeManager->Fill( "Cut_Elec_dxy"          , (double)electron.dxy() );
+            ssbtreeManager->Fill( "Cut_Elec_dz"           , (double)electron.dz() );
+            ssbtreeManager->Fill( "Cut_Elec_MT"           , MT_Electron           );
+        } else if(Try_Cut_Additional && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < AddCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < AddCutHighEta)) && isAddElectronID && (electron.pt() > AdditionalElectronPt) && (std::abs(electron.eta()) < AdditionalElectronEta) && PassConversionVeto){
+            if(((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta)) && isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta) && PassConversionVeto){
+                isIsolatedElectron = true;
+                Index_IsolatedElectron.push_back(Index_Electron);
+                if(!ChargeConsistent) Cut_e_Charge = false;
+                ssbtreeManager->Fill( "Cut_Elec", electron.pt(), electron.eta(), electron.phi(), electron.energy(), Num_IsolatedElectron );
+                ++Num_IsolatedElectron;
+                ssbtreeManager->Fill( "Cut_Elec_PFIsodBeta03" , PFIsodbeta03          );
+                ssbtreeManager->Fill( "Cut_Elec_PFIsodBeta04" , (double)electron.relIso(0.4) );
+                ssbtreeManager->Fill( "Cut_Elec_miniRelIso"   , (double)electron.miniRelIso() );
+                ssbtreeManager->Fill( "Cut_Elec_ClosestJetdR" , electron_ClosestdR    );
+                ssbtreeManager->Fill( "Cut_Elec_Pt_rel"       , electron_Pt_rel       );
+                ssbtreeManager->Fill( "Cut_Elec_Pt_rat"       , electron_Pt_ratio     );
+                ssbtreeManager->Fill( "Cut_Elec_dxy"          , (double)electron.dxy() );
+                ssbtreeManager->Fill( "Cut_Elec_dz"           , (double)electron.dz() );
+                ssbtreeManager->Fill( "Cut_Elec_MT"           , MT_Electron           );
+            } else {
+                isAdditionalElectron = true;
+                ++Num_AdditionalElectron;
+                Index_AdditionalElectron.push_back(Index_Electron);
+                //if(!ChargeConsistent) Cut_e_Charge = false;
             }
-        } else if(Try_Cut_Additional && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < AddCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < AddCutHighEta))){
-            if(isAddElectronID && (electron.pt() > AdditionalElectronPt) && (std::abs(electron.eta()) < AdditionalElectronEta)){
-                if(PassConversionVeto){
-                    isAdditionalElectron = true;
-                    ++Num_AdditionalElectron;
-                    Index_AdditionalElectron.push_back(Index_Electron);
-                    if(!ChargeConsistent) Cut_e_Charge = false;
-                }
-            }
-        } else if((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < VetoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < VetoCutHighEta)){
-            if(isVetoElectronID && (electron.pt() > VetoElectronPt) && (std::abs(electron.eta()) < VetoElectronEta)){
-                if(PassConversionVeto){
+        } else if(((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < VetoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < VetoCutHighEta)) && isVetoElectronID && (electron.pt() > VetoElectronPt) && (std::abs(electron.eta()) < VetoElectronEta) && PassConversionVeto){
                     isVetoElectron = true;
                     ++Num_VetoElectron;
                     Index_VetoElectron.push_back(Index_Electron);
-                }
-            }
         }
 
         ssbtreeManager->Fill( "Elec", electron.pt(), electron.eta(), electron.phi(), electron.energy(), Index_Electron );
@@ -750,22 +882,34 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         ssbtreeManager->Fill( "Elec_isAddID"           , isAddElectronID    );
         ssbtreeManager->Fill( "Elec_isVetoID"          , isVetoElectronID   );
         ssbtreeManager->Fill( "Elec_PFIsodBeta03"      , PFIsodbeta03       );
+        ssbtreeManager->Fill( "Elec_PFIsodBeta04"      , (double)electron.relIso(0.4) );
+        ssbtreeManager->Fill( "Elec_miniRelIso"        , (double)electron.miniRelIso() );
+        ssbtreeManager->Fill( "Elec_ClosestJetdR"      , electron_ClosestdR );
+        ssbtreeManager->Fill( "Elec_Pt_rel"            , electron_Pt_rel    );
+        ssbtreeManager->Fill( "Elec_Pt_rat"            , electron_Pt_ratio  );
+        ssbtreeManager->Fill( "Elec_dxy"               , (double)electron.dxy() );
+        ssbtreeManager->Fill( "Elec_dz"                , (double)electron.dz() );
         ssbtreeManager->Fill( "Elec_pdgId"             , electron.pdgId()   );
         ssbtreeManager->Fill( "Elec_Charge"            , electron.charge()  );
         ssbtreeManager->Fill( "Elec_ScaleFactor"       , SF_Electron        );
         ssbtreeManager->Fill( "Elec_Conversion"        , PassConversionVeto );
         ssbtreeManager->Fill( "Elec_Supercluster_Eta"  , SuperClusterEta    );
         ssbtreeManager->Fill( "Elec_ChargeId_GsfCtfPx" , ChargeConsistent   );
+        ssbtreeManager->Fill( "Elec_MT"                , MT_Electron        );
 
         ++Index_Electron;
+    }
+
+    if(TightLooseMethod){
+       Index_IsolatedElectron.insert(Index_IsolatedElectron.end(), Index_AdditionalElectron.begin(), Index_AdditionalElectron.end());
+       Num_IsolatedElectron = Index_IsolatedElectron.size();
     }
 
     for(int elec_i = 0; elec_i < Num_IsolatedElectron; ++elec_i){
         const cat::Electron &IsoElectron = electrons->at(Index_IsolatedElectron.at(elec_i));
         if(IsoElectron.charge() > 0) ++Num_PlusElectron;
         if(IsoElectron.charge() < 0) ++Num_MinusElectron;
-        ssbtreeManager->Fill( "Cut_Elec", IsoElectron.pt(), IsoElectron.eta(), IsoElectron.phi(), IsoElectron.energy(), elec_i );
-        LV_electron.SetPtEtaPhiE(IsoElectron.pt(), IsoElectron.eta(), IsoElectron.phi(), IsoElectron.energy());
+        LV_electron = IsoElectron.tlv();
         LV_AllLepton += LV_electron;
         //if(sqrt( pow(LV_electron.Et()-LV_MET.Et(),2) + pow(LV_electron.Px()-LV_MET.Px(),2) + pow(LV_electron.Py()-LV_MET.Py(),2) ) < 120) Cut_MT_min = false;
         /*auto elec_a = std::find(Index_VetoElectron.begin(), Index_VetoElectron.end(), Index_IsolatedElectron.at(elec_i));
@@ -779,7 +923,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_VetoElectron = Index_VetoElectron.size();
     if(Num_VetoElectron == 0) {
         Cut_e_ElectronVeto = true;
-        if(Num_IsolatedElectron == 0) Cut_m_ElectronVeto = true;
+        if(Num_IsolatedElectron == 0 && (!Try_Cut_Additional || (Try_Cut_Additional && Num_AdditionalElectron == 0 ))) Cut_m_ElectronVeto = true;
     }
 
 /*
@@ -825,6 +969,19 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(Num_IsolatedElectron == 0 && Num_IsolatedMuon == 2) Cut_mm_LeptonPair = true;
     if(Num_IsolatedElectron == 1 && Num_IsolatedMuon == 1) Cut_em_LeptonPair = true;
 
+    Cut_ee_TL = false;
+    Cut_mm_TL = false;
+    Cut_em_TL = false;
+    if(!TightLooseMethod){
+        Cut_ee_TL = true;
+        Cut_mm_TL = true;
+        Cut_em_TL = true;
+    } else {
+        if(Num_AdditionalElectron > 0) Cut_ee_TL = true;
+        if(Num_AdditionalMuon > 0) Cut_mm_TL = true;
+        if(Num_AdditionalElectron > 0 || Num_AdditionalMuon > 0) Cut_em_TL = true;
+    }
+
     Cut_LeptonMass = false;
     AllLeptonMass = LV_AllLepton.M();
     if(AllLeptonMass > InvariantMass+InvariantMassE || AllLeptonMass < InvariantMass-InvariantMassE) Cut_LeptonMass = true;
@@ -834,7 +991,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_PlusLepton = Num_PlusMuon + Num_PlusElectron;
     Num_MinusLepton = Num_MinusMuon + Num_MinusElectron;
     if((AllLeptonMass > 20) && (Num_PlusLepton == 1 && Num_MinusLepton == 1)) Cut_dl_Opposite = true;
-    if((AllLeptonMass > 8) && ((Num_PlusLepton == 2 && Num_MinusLepton == 0) || (Num_PlusLepton == 0 && Num_MinusLepton == 2))) Cut_dl_Same = true;
+    if((AllLeptonMass > 12) && ((Num_PlusLepton == 2 && Num_MinusLepton == 0) || (Num_PlusLepton == 0 && Num_MinusLepton == 2))) Cut_dl_Same = true;
 
     TriLepton_First  = 0;
     TriLepton_Second = 0;
@@ -873,7 +1030,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Cut_Tri_ee = false;
     Cut_Tri_mm = false;
     Cut_Tri_em = false;
-    Cut_Tri_First_Zmass = false;
+    Cut_Tri_First_Zmass = true;
     LV_Tri_First.SetPtEtaPhiE(0,0,0,0);
     LV_Tri_Second.SetPtEtaPhiE(0,0,0,0);
     LV_Tri_Dilepton1.SetPtEtaPhiE(0,0,0,0);
@@ -912,14 +1069,14 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         }
     }
     DiLeptonMass1 = LV_Tri_Dilepton1.M();
-    if((Cut_Tri_ee || Cut_Tri_mm) && Cut_Tri_First_Opposite && (DiLeptonMass1 > InvariantMass+InvariantMassE || DiLeptonMass1 < InvariantMass-InvariantMassE)) Cut_Tri_First_Zmass = true;
+    if((Cut_Tri_ee || Cut_Tri_mm) && Cut_Tri_First_Opposite && (DiLeptonMass1 > InvariantMass-InvariantMassE && DiLeptonMass1 < InvariantMass+InvariantMassE)) Cut_Tri_First_Zmass = false;
 
     Cut_Tri_ExactlyThree = false;
     if(Num_IsolatedElectron + Num_IsolatedMuon + Num_AdditionalElectron + Num_AdditionalMuon == 3) Cut_Tri_ExactlyThree = true;
 
+    map<double,int> pt_order_check;
+    pt_order_check.clear();
     if(TriLepton_Third == 0 && Num_AdditionalElectron + Num_AdditionalMuon > 0){
-        map<double,int> pt_order_check;
-        pt_order_check.clear();
         for(int elec_i = 0; elec_i < Num_AdditionalElectron; ++elec_i){
             const cat::Electron &IsoElectron = electrons->at(Index_AdditionalElectron.at(elec_i));
             pt_order_check[IsoElectron.pt()] = (1100+Index_AdditionalElectron.at(elec_i))*IsoElectron.charge();
@@ -951,12 +1108,13 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(TriLepton_First*TriLepton_Second < 0 && TriLepton_Third != 0) Cut_Tri_add_Charge = true;
     else if(TriLepton_First > 0 && TriLepton_Third < 0) Cut_Tri_add_Charge = true;
     else if(TriLepton_First < 0 && TriLepton_Third > 0) Cut_Tri_add_Charge = true;
+    // Posibility of TriLepton_X = 0
 
     Num_OppositeLepton = 0;
     if(abs(TriLepton_Third)/100 == abs(TriLepton_First)/100  && TriLepton_Third*TriLepton_First  < 0) Num_OppositeLepton = 5;
     if(abs(TriLepton_Third)/100 == abs(TriLepton_Second)/100 && TriLepton_Third*TriLepton_Second < 0) Num_OppositeLepton += 15;
 
-    Cut_Tri_Second_Zmass = false;
+    Cut_Tri_Second_Zmass = true;
     LV_Tri_Dilepton2.SetPtEtaPhiE(0,0,0,0);
     LV_Tri_Dilepton3.SetPtEtaPhiE(0,0,0,0);
     if(Num_OppositeLepton%10 == 5){
@@ -965,13 +1123,13 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             LV_Tri_Dilepton2 += LV_Tri_Third;
             LV_Tri_Dilepton3 += LV_Tri_Second;
             LV_Tri_Dilepton3 += LV_Tri_Third;
-            if(LV_Tri_Dilepton2.M() > InvariantMass+InvariantMassE || LV_Tri_Dilepton2.M() < InvariantMass-InvariantMassE) Cut_Tri_Second_Zmass = true;
+            if(LV_Tri_Dilepton2.M() > InvariantMass-InvariantMassE && LV_Tri_Dilepton2.M() < InvariantMass+InvariantMassE) Cut_Tri_Second_Zmass = false;
         } else {
             LV_Tri_Dilepton2 += LV_Tri_Second;
             LV_Tri_Dilepton2 += LV_Tri_Third;
             LV_Tri_Dilepton3 += LV_Tri_First;
             LV_Tri_Dilepton3 += LV_Tri_Third;
-            if(LV_Tri_Dilepton2.M() > InvariantMass+InvariantMassE || LV_Tri_Dilepton2.M() < InvariantMass-InvariantMassE) Cut_Tri_Second_Zmass = true;
+            if(LV_Tri_Dilepton2.M() > InvariantMass-InvariantMassE && LV_Tri_Dilepton2.M() < InvariantMass+InvariantMassE) Cut_Tri_Second_Zmass = false;
         }
     } else {
             LV_Tri_Dilepton2 += LV_Tri_First;
@@ -979,8 +1137,8 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             LV_Tri_Dilepton3 += LV_Tri_Second;
             LV_Tri_Dilepton3 += LV_Tri_Third;
             if(Num_OppositeLepton == 20){
-                if( (LV_Tri_Dilepton2.M() > InvariantMass+InvariantMassE || LV_Tri_Dilepton2.M() < InvariantMass-InvariantMassE) &&
-                    (LV_Tri_Dilepton3.M() > InvariantMass+InvariantMassE || LV_Tri_Dilepton3.M() < InvariantMass-InvariantMassE) ) Cut_Tri_Second_Zmass = true;
+                if( (LV_Tri_Dilepton2.M() > InvariantMass-InvariantMassE && LV_Tri_Dilepton2.M() < InvariantMass+InvariantMassE) ||
+                    (LV_Tri_Dilepton3.M() > InvariantMass-InvariantMassE && LV_Tri_Dilepton3.M() < InvariantMass+InvariantMassE) ) Cut_Tri_Second_Zmass = false;
             }
     }
     DiLeptonMass2 = LV_Tri_Dilepton2.M();
@@ -988,6 +1146,37 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     
     if(Num_OppositeLepton == 5 || Num_OppositeLepton == 15) Num_OppositeLepton = 1;
     if(Num_OppositeLepton == 20) Num_OppositeLepton = 2;
+
+
+    Cut_SUSY_SRZ = false;
+    if(TriLepton_Third == 0 && Num_AdditionalElectron + Num_AdditionalMuon > 0){
+        for(std::map<double,int>::reverse_iterator AdditionalLep = pt_order_check.rbegin();AdditionalLep != pt_order_check.rend();++AdditionalLep){
+            TriLepton_Other = AdditionalLep->second;
+            LV_Tri_Other.SetPtEtaPhiE(0,0,0,0);
+            if(abs(TriLepton_Other)/100 == 13){
+                const cat::Muon &IsoMuon_Other = muons->at(abs(TriLepton_Other)%100);
+                LV_Tri_Other = IsoMuon_Other.tlv();
+            } else if(abs(TriLepton_Other)/100 == 11){
+                const cat::Electron &IsoElectron_Other = electrons->at(abs(TriLepton_Other)%100);
+                LV_Tri_Other = IsoElectron_Other.tlv();
+            }
+            if(abs(TriLepton_Other)/100 == abs(TriLepton_First)/100  && TriLepton_Other*TriLepton_First  < 0){
+                LV_Tri_DileptonOther = LV_Tri_Other;
+                LV_Tri_DileptonOther += LV_Tri_First;
+                if(LV_Tri_DileptonOther.M() > InvariantMass-InvariantMassE && LV_Tri_DileptonOther.M() < InvariantMass+InvariantMassE) Cut_SUSY_SRZ = true;
+            }
+            if(abs(TriLepton_Other)/100 == abs(TriLepton_Second)/100  && TriLepton_Other*TriLepton_Second  < 0){
+                LV_Tri_DileptonOther = LV_Tri_Other;
+                LV_Tri_DileptonOther += LV_Tri_Second;
+                if(LV_Tri_DileptonOther.M() > InvariantMass-InvariantMassE && LV_Tri_DileptonOther.M() < InvariantMass+InvariantMassE) Cut_SUSY_SRZ = true;
+            }
+        }
+    }
+
+
+
+
+
 
     ssbtreeManager->Fill( "Cut_ej_ElectronIso",     Cut_ej_ElectronIso     );
     ssbtreeManager->Fill( "Cut_mj_MuonIso",         Cut_mj_MuonIso         );
@@ -1012,9 +1201,9 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     ssbtreeManager->Fill( "Cut_Tri_add_Charge",     Cut_Tri_add_Charge     );
     ssbtreeManager->Fill( "Cut_Tri_Second_Zmass",   Cut_Tri_Second_Zmass   );
     ssbtreeManager->Fill( "Num_OppositeLepton",     Num_OppositeLepton     );
-    ssbtreeManager->Fill( "Di-Lepton_InvMass1",     DiLeptonMass1          );
-    ssbtreeManager->Fill( "Di-Lepton_InvMass2",     DiLeptonMass2          );
-    ssbtreeManager->Fill( "Di-Lepton_InvMass3",     DiLeptonMass3          );
+    ssbtreeManager->Fill( "DiLepton_InvMass1",     DiLeptonMass1          );
+    ssbtreeManager->Fill( "DiLepton_InvMass2",     DiLeptonMass2          );
+    ssbtreeManager->Fill( "DiLepton_InvMass3",     DiLeptonMass3          );
 
     ////////////////////////
     /// Jets Information ///
@@ -1032,7 +1221,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     HT = 0.0;
     HM = 0.0;
  
-    iEvent.getByToken(jetToken_, jets);
 
     for (const cat::Jet &jet : *jets) 
     {
@@ -1049,15 +1237,15 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         if(JetID == "Loose") isJet = jet.LooseId();
         if(JetID == "Tight") isJet = jet.TightId();
 
-        LV_jet.SetPtEtaPhiE(jet.pt(), jet.eta(), jet.phi(), jet.energy());
+        LV_jet = jet.tlv();
         for(int muon_i = 0; (muon_i < Num_IsolatedMuon) && isCleanedJet; ++muon_i){
             const cat::Muon &IsoMuon = muons->at(Index_IsolatedMuon.at(muon_i));
-            LV_muon.SetPtEtaPhiE(IsoMuon.pt(), IsoMuon.eta(), IsoMuon.phi(), IsoMuon.energy());
+            LV_muon = IsoMuon.tlv();
             if(LV_muon.DeltaR(LV_jet) < JetCleaningdR) isCleanedJet = false;
         }
         for(int elec_i = 0; (elec_i < Num_IsolatedElectron) && isCleanedJet; ++elec_i){
             const cat::Electron &IsoElectron = electrons->at(Index_IsolatedElectron.at(elec_i));
-            LV_electron.SetPtEtaPhiE(IsoElectron.pt(), IsoElectron.eta(), IsoElectron.phi(), IsoElectron.energy());
+            LV_electron = IsoElectron.tlv();
             if(LV_electron.DeltaR(LV_jet) < JetCleaningdR) isCleanedJet = false;
         }
 
