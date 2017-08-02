@@ -49,11 +49,19 @@ IsolatedMuonID(        iConfig.getUntrackedParameter< std::string >(            
 IsolatedMuonPt(        iConfig.getUntrackedParameter< double >(                   "MuonPt",             26.0                  )),
 IsolatedMuonEta(       iConfig.getUntrackedParameter< double >(                   "MuonEta",            2.1                   )),
 IsolatedMuonIso(       iConfig.getUntrackedParameter< double >(                   "MuonIso",            0.15                  )),
+IsolatedMuonMultiIso(  iConfig.getUntrackedParameter< bool >(                     "Do_Muon_MultiIso",   false                 )),
+IsolatedMuonMiniIso(   iConfig.getUntrackedParameter< double >(                   "MuonMiniIso",        0.4                   )),
+IsolatedMuonPtRatio(   iConfig.getUntrackedParameter< double >(                   "MuonPtRatio",        0.0                   )),
+IsolatedMuonPtRel(     iConfig.getUntrackedParameter< double >(                   "MuonPtRel",          0.0                   )),
 
 IsolatedElectronID(    iConfig.getUntrackedParameter< std::string >(              "ElectronID",         std::string("Medium") )), 
 IsolatedElectronPt(    iConfig.getUntrackedParameter< double >(                   "ElectronPt",         30.0                  )),
 IsolatedElectronEta(   iConfig.getUntrackedParameter< double >(                   "ElectronEta",        2.4                   )),
 IsolatedElectronIso(   iConfig.getUntrackedParameter< std::string >(              "ElectronIso",        std::string("Medium") )), 
+IsolatedElectronMultiIso(  iConfig.getUntrackedParameter< bool >(                 "Do_Elec_MultiIso",   false                 )),
+IsolatedElectronMiniIso(   iConfig.getUntrackedParameter< double >(               "ElectronMiniIso",    0.4                   )),
+IsolatedElectronPtRatio(   iConfig.getUntrackedParameter< double >(               "ElectronPtRatio",    0.0                   )),
+IsolatedElectronPtRel(     iConfig.getUntrackedParameter< double >(               "ElectronPtRel",      0.0                   )),
 
 Try_Cut_Additional(    iConfig.getUntrackedParameter< bool >(                     "Do_Additional_Cut",  false                 )),
 TightLooseMethod(      iConfig.getUntrackedParameter< bool >(                     "Do_TightLoose",      false                 )),
@@ -61,21 +69,37 @@ AdditionalMuonID(      iConfig.getUntrackedParameter< std::string >(            
 AdditionalMuonPt(      iConfig.getUntrackedParameter< double >(                   "Add_MuonPt",         26.0                  )),
 AdditionalMuonEta(     iConfig.getUntrackedParameter< double >(                   "Add_MuonEta",        2.1                   )),
 AdditionalMuonIso(     iConfig.getUntrackedParameter< double >(                   "Add_MuonIso",        0.15                  )),
+AdditionalMuonMultiIso(iConfig.getUntrackedParameter< bool >(                     "Do_Add_Muon_MultiIso",   false                 )),
+AdditionalMuonMiniIso( iConfig.getUntrackedParameter< double >(                   "Add_MuonMiniIso",    0.4                   )),
+AdditionalMuonPtRatio( iConfig.getUntrackedParameter< double >(                   "Add_MuonPtRatio",    0.0                   )),
+AdditionalMuonPtRel(   iConfig.getUntrackedParameter< double >(                   "Add_MuonPtRel",      0.0                   )),
 
 AdditionalElectronID(  iConfig.getUntrackedParameter< std::string >(              "Add_ElectronID",     std::string("Medium") )), 
 AdditionalElectronPt(  iConfig.getUntrackedParameter< double >(                   "Add_ElectronPt",     30.0                  )),
 AdditionalElectronEta( iConfig.getUntrackedParameter< double >(                   "Add_ElectronEta",    2.4                   )),
 AdditionalElectronIso( iConfig.getUntrackedParameter< std::string >(              "Add_ElectronIso",    std::string("Medium") )), 
+AdditionalElectronMultiIso(  iConfig.getUntrackedParameter< bool >(               "Do_Add_Elec_MultiIso",   false                 )),
+AdditionalElectronMiniIso(   iConfig.getUntrackedParameter< double >(             "Add_ElectronMiniIso",0.4                   )),
+AdditionalElectronPtRatio(   iConfig.getUntrackedParameter< double >(             "Add_ElectronPtRatio",0.0                   )),
+AdditionalElectronPtRel(     iConfig.getUntrackedParameter< double >(             "Add_ElectronPtRel",  0.0                   )),
 
 VetoMuonID(            iConfig.getUntrackedParameter< std::string >(              "veto_MuonID",        std::string("Loose")  )), 
 VetoMuonPt(            iConfig.getUntrackedParameter< double >(                   "veto_MuonPt",        10.0                  )),
 VetoMuonEta(           iConfig.getUntrackedParameter< double >(                   "veto_MuonEta",       2.4                   )),
 VetoMuonIso(           iConfig.getUntrackedParameter< double >(                   "veto_MuonIso",       0.25                  )),
+VetoMuonMultiIso(      iConfig.getUntrackedParameter< bool >(                     "Do_veto_Muon_MultiIso",   false                 )),
+VetoMuonMiniIso(       iConfig.getUntrackedParameter< double >(                   "veto_MuonMiniIso",    0.4                   )),
+VetoMuonPtRatio(       iConfig.getUntrackedParameter< double >(                   "veto_MuonPtRatio",    0.0                   )),
+VetoMuonPtRel(         iConfig.getUntrackedParameter< double >(                   "veto_MuonPtRel",      0.0                   )),
 
 VetoElectronID(        iConfig.getUntrackedParameter< std::string >(              "veto_ElectronID",    std::string("Veto")   )), 
 VetoElectronPt(        iConfig.getUntrackedParameter< double >(                   "veto_ElectronPt",    10.0                  )),
 VetoElectronEta(       iConfig.getUntrackedParameter< double >(                   "veto_ElectronEta",   2.4                   )),
 VetoElectronIso(       iConfig.getUntrackedParameter< std::string >(              "veto_ElectronIso",   std::string("Veto")   )), 
+VetoElectronMultiIso(  iConfig.getUntrackedParameter< bool >(                     "Do_veto_Elec_MultiIso",   false            )),
+VetoElectronMiniIso(   iConfig.getUntrackedParameter< double >(                   "veto_ElectronMiniIso",    0.4              )),
+VetoElectronPtRatio(   iConfig.getUntrackedParameter< double >(                   "veto_ElectronPtRatio",    0.0              )),
+VetoElectronPtRel(     iConfig.getUntrackedParameter< double >(                   "veto_ElectronPtRel",      0.0              )),
 
 JetID(                 iConfig.getUntrackedParameter< std::string >(              "JetID",              std::string("Loose")  )),   
 JetPt(                 iConfig.getUntrackedParameter< double >(                   "JetPt",              30.0                  )),
@@ -137,7 +161,7 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         CutStepName = {"0a","0b","0c","1","2","3","4","5"};
     }
     if(Channel == "FourTop SUSY"){
-        CutStepName = {"0a","0b","0c","0d","1a","SRW","SR1","SR2","SR3","SR4","SR5","SR6","1b","SR7","SR8","SRZ"};
+        CutStepName = {"0a","0b","0c","0d","1a","BL","SRW","SR1","SR2","SR3","SR4","SR5","SR6","1b","SR7","SR8","SRZ"};
     }
 
     EventFilter = {"Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_goodVertices", "Flag_eeBadScFilter", "Flag_globalTightHalo2016Filter", "Flag_badPFMuon", "Flag_badChargedHadron"};
@@ -174,8 +198,8 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         IsoCutLowEta  = 0.175;
         IsoCutHighEta = 0.159;
     } else if(IsolatedElectronIso == "TEMP"){
-        IsoCutLowEta  = 0.500;
-        IsoCutHighEta = 0.500;
+        IsoCutLowEta  = 10.000;
+        IsoCutHighEta = 10.000;
     } else {
         cout << endl << "ElectronID Error"<< endl << endl;
         cerr << endl << "ElectronID Error"<< endl << endl;
@@ -196,8 +220,8 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         AddCutLowEta  = 0.175;
         AddCutHighEta = 0.159;
     } else if(AdditionalElectronIso == "TEMP"){
-        AddCutLowEta  = 0.500;
-        AddCutHighEta = 0.500;
+        AddCutLowEta  = 10.000;
+        AddCutHighEta = 10.000;
     } else {
         cout << endl << "AddElectronID Error"<< endl << endl;
         cerr << endl << "AddElectronID Error"<< endl << endl;
@@ -218,8 +242,8 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         VetoCutLowEta  = 0.175;
         VetoCutHighEta = 0.159;
     } else if(VetoElectronIso == "TEMP"){
-        VetoCutLowEta  = 0.500;
-        VetoCutHighEta = 0.500;
+        VetoCutLowEta  = 10.000;
+        VetoCutHighEta = 10.000;
     } else {
         cout << endl << "VetoElectronID Error"<< endl << endl;
         cerr << endl << "VetoElectronID Error"<< endl << endl;
@@ -446,12 +470,16 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Cut_MET = false;
 
     iEvent.getByToken(metToken_, mets);
-
     const cat::MET &met = mets->at(0);
-    LV_MET.SetPtEtaPhiE(met.pt(), met.eta(), met.phi(), met.energy());
-    ssbtreeManager->Fill( "MET" , met.pt(), 0, met.phi(), 0, 0 );
-    if(met.pt() > METPt){
-        Cut_MET = true;
+    if(met.pt() != met.pt()){ // Check -NaN
+        LV_MET.SetPtEtaPhiE(0, 0, 0, 0);
+        ssbtreeManager->Fill( "MET" , 0, 0, 0, 0, 0 );
+    } else {
+        LV_MET.SetPtEtaPhiE(met.pt(), met.eta(), met.phi(), met.energy());
+        ssbtreeManager->Fill( "MET" , met.pt(), 0, met.phi(), 0, 0 );
+        if(met.pt() > METPt){
+            Cut_MET = true;
+        }
     }
     ssbtreeManager->Fill( "Cut_MET", Cut_MET );
 
@@ -532,7 +560,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         v_Muon_miniIso.push_back(muon.miniRelIso());
         LV_muon = muon.tlv();
         if(LV_MET.Phi() > -1 * TMath::Pi() && LV_MET.Phi() < TMath::Pi()){
-            MT_Muon = sqrt(2.0*muon.pt()*met.pt()*(1-cos(LV_muon.DeltaPhi(LV_MET))));
+            MT_Muon = sqrt(2.0*LV_muon.Pt()*LV_MET.Pt()*(1-cos(LV_muon.DeltaPhi(LV_MET))));
         } else {
             MT_Muon = -999.9;
         }
@@ -576,7 +604,14 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          }
 */
 
-        if(!Try_Cut_Additional && isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) && PFIsodbeta04 < IsolatedMuonIso){
+        if(!Try_Cut_Additional && isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) &&
+            ((!IsolatedMuonMultiIso && PFIsodbeta04 < IsolatedMuonIso) ||
+                (IsolatedMuonMultiIso &&
+                ( (double)muon.miniRelIso() < IsolatedMuonMiniIso && (muon_Pt_rel > IsolatedMuonPtRel || muon_Pt_ratio > IsolatedMuonPtRatio) )
+                )
+            )
+        ){
+
             isIsolatedMuon = true;
             Index_IsolatedMuon.push_back(Index_Muon);
             if(MuonPtError/LV_muon.Pt()>0.3) Cut_m_Charge = false;
@@ -591,8 +626,22 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             ssbtreeManager->Fill( "Cut_Muon_dxy"          , (double)muon.dxy() );
             ssbtreeManager->Fill( "Cut_Muon_dz"           , (double)muon.dz() );
             ssbtreeManager->Fill( "Cut_Muon_MT"           , MT_Muon           );
-        } else if(Try_Cut_Additional && isAddIDMuon && (muon.pt() > AdditionalMuonPt) && (std::abs(muon.eta()) < AdditionalMuonEta) && PFIsodbeta04 < AdditionalMuonIso){
-            if(isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) && PFIsodbeta04 < IsolatedMuonIso){
+        } else if(Try_Cut_Additional && isAddIDMuon && (muon.pt() > AdditionalMuonPt) && (std::abs(muon.eta()) < AdditionalMuonEta) &&
+            ((!AdditionalMuonMultiIso && PFIsodbeta04 < AdditionalMuonIso) ||
+                (AdditionalMuonMultiIso &&
+                ((double)muon.miniRelIso() < AdditionalMuonMiniIso && (muon_Pt_rel > AdditionalMuonPtRel || muon_Pt_ratio > AdditionalMuonPtRatio) )
+                )
+            )
+        ){
+
+            if(isIsoIDMuon && (muon.pt() > IsolatedMuonPt) && (std::abs(muon.eta()) < IsolatedMuonEta) &&
+                ((!IsolatedMuonMultiIso && PFIsodbeta04 < IsolatedMuonIso) ||
+                    (IsolatedMuonMultiIso &&
+                    ( (double)muon.miniRelIso() < IsolatedMuonMiniIso && (muon_Pt_rel > IsolatedMuonPtRel || muon_Pt_ratio > IsolatedMuonPtRatio) )
+                    )
+                )
+            ){
+
                 isIsolatedMuon = true;
                 Index_IsolatedMuon.push_back(Index_Muon);
                 if(MuonPtError/LV_muon.Pt()>0.3) Cut_m_Charge = false;
@@ -613,7 +662,13 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 Index_AdditionalMuon.push_back(Index_Muon);
                 //if(MuonPtError/LV_muon.Pt()>0.3) Cut_m_Charge = false;
             }
-        } else if(isVetoIDMuon && (muon.pt() > VetoMuonPt) && (std::abs(muon.eta()) < VetoMuonEta) && PFIsodbeta04 < VetoMuonIso){
+        } else if(isVetoIDMuon && (muon.pt() > VetoMuonPt) && (std::abs(muon.eta()) < VetoMuonEta) &&
+            ((!VetoMuonMultiIso && PFIsodbeta04 < VetoMuonIso) ||
+                (VetoMuonMultiIso &&
+                ( (double)muon.miniRelIso() < VetoMuonMiniIso && (muon_Pt_rel > VetoMuonPtRel || muon_Pt_ratio > VetoMuonPtRatio) )
+                )
+            )
+        ){
             isVetoMuon = true;
             ++Num_VetoMuon;
             Index_VetoMuon.push_back(Index_Muon);
@@ -740,21 +795,43 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         isAddElectronID = false;
         isVetoElectronID = false;
 
-        if(IsolatedElectronID == "Veto")     isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
-        if(IsolatedElectronID == "Loose")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
-        if(IsolatedElectronID == "Medium")   isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
-        if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
 
-        if(AdditionalElectronID == "Veto")   isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
-        if(AdditionalElectronID == "Loose")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
-        if(AdditionalElectronID == "Medium") isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
-        if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+        if(!IsolatedElectronMultiIso){
+            if(IsolatedElectronID == "Veto")     isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
+            if(IsolatedElectronID == "Loose")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
+            if(IsolatedElectronID == "Medium")   isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
+            if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+        } else {
+            if(IsolatedElectronID == "Veto")     isIsoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
+            if(IsolatedElectronID == "Loose")    isIsoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
+            if(IsolatedElectronID == "Medium")   isIsoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+            if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+        }
 
-        if(VetoElectronID == "Veto")         isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
-        if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
-        if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
-        if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
-  
+        if(!AdditionalElectronMultiIso){
+            if(AdditionalElectronID == "Veto")   isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
+            if(AdditionalElectronID == "Loose")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
+            if(AdditionalElectronID == "Medium") isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
+            if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+        } else {
+            if(AdditionalElectronID == "Veto")   isAddElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
+            if(AdditionalElectronID == "Loose")  isAddElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
+            if(AdditionalElectronID == "Medium") isAddElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+            if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+        }
+
+        if(!VetoElectronMultiIso){
+            if(VetoElectronID == "Veto")         isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
+            if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
+            if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
+            if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+        } else {
+            if(VetoElectronID == "Veto")         isVetoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
+            if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
+            if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+            if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+        } 
+
         ///// 0: fails,
         ///// 1: passes electron ID only,
         ///// 2: passes electron Isolation only,
@@ -781,7 +858,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
         LV_electron = electron.tlv();
         if(LV_MET.Phi() > -1 * TMath::Pi() && LV_MET.Phi() < TMath::Pi()){
-            MT_Electron = sqrt(2.0*electron.pt()*met.pt()*(1-cos(LV_electron.DeltaPhi(LV_MET))));
+            MT_Electron = sqrt(2.0*LV_electron.Pt()*LV_MET.Pt()*(1-cos(LV_electron.DeltaPhi(LV_MET))));
         } else {
             MT_Electron = -999.9;
         }
@@ -827,7 +904,14 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
          }
 */
 
-        if(!Try_Cut_Additional && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta)) && isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta) && PassConversionVeto){
+        if(!Try_Cut_Additional && isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta) && PassConversionVeto &&
+            ((!IsolatedElectronMultiIso && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta))) ||
+                (IsolatedElectronMultiIso &&
+                ( (double)electron.miniRelIso() < IsolatedElectronMiniIso && (electron_Pt_rel > IsolatedElectronPtRel || electron_Pt_ratio > IsolatedElectronPtRatio) )
+                )
+            )
+        ){
+
             isIsolatedElectron = true;
             Index_IsolatedElectron.push_back(Index_Electron);
             if(!ChargeConsistent) Cut_e_Charge = false;
@@ -842,8 +926,21 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             ssbtreeManager->Fill( "Cut_Elec_dxy"          , (double)electron.dxy() );
             ssbtreeManager->Fill( "Cut_Elec_dz"           , (double)electron.dz() );
             ssbtreeManager->Fill( "Cut_Elec_MT"           , MT_Electron           );
-        } else if(Try_Cut_Additional && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < AddCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < AddCutHighEta)) && isAddElectronID && (electron.pt() > AdditionalElectronPt) && (std::abs(electron.eta()) < AdditionalElectronEta) && PassConversionVeto){
-            if(((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta)) && isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta) && PassConversionVeto){
+        } else if(Try_Cut_Additional && isAddElectronID && (electron.pt() > AdditionalElectronPt) && (std::abs(electron.eta()) < AdditionalElectronEta) && PassConversionVeto &&
+            ((!AdditionalElectronMultiIso && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < AddCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < AddCutHighEta))) ||
+                (AdditionalElectronMultiIso &&
+                ( (double)electron.miniRelIso() < AdditionalElectronMiniIso && (electron_Pt_rel > AdditionalElectronPtRel || electron_Pt_ratio > AdditionalElectronPtRatio) )
+                )
+            )
+        ){
+            if(isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta) && PassConversionVeto &&
+                ((!IsolatedElectronMultiIso && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta))) ||
+                    (IsolatedElectronMultiIso &&
+                    ( (double)electron.miniRelIso() < IsolatedElectronMiniIso && (electron_Pt_rel > IsolatedElectronPtRel || electron_Pt_ratio > IsolatedElectronPtRatio) )
+                    )
+                )
+            ){
+
                 isIsolatedElectron = true;
                 Index_IsolatedElectron.push_back(Index_Electron);
                 if(!ChargeConsistent) Cut_e_Charge = false;
@@ -864,7 +961,13 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
                 Index_AdditionalElectron.push_back(Index_Electron);
                 //if(!ChargeConsistent) Cut_e_Charge = false;
             }
-        } else if(((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < VetoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < VetoCutHighEta)) && isVetoElectronID && (electron.pt() > VetoElectronPt) && (std::abs(electron.eta()) < VetoElectronEta) && PassConversionVeto){
+        } else if(isVetoElectronID && (electron.pt() > VetoElectronPt) && (std::abs(electron.eta()) < VetoElectronEta) && PassConversionVeto &&
+            ((!VetoElectronMultiIso && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < VetoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < VetoCutHighEta))) ||
+                (VetoElectronMultiIso &&
+                ( (double)electron.miniRelIso() < VetoElectronMiniIso && (electron_Pt_rel > VetoElectronPtRel || electron_Pt_ratio > VetoElectronPtRatio) )
+                )
+            )
+        ){
                     isVetoElectron = true;
                     ++Num_VetoElectron;
                     Index_VetoElectron.push_back(Index_Electron);
@@ -991,7 +1094,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_PlusLepton = Num_PlusMuon + Num_PlusElectron;
     Num_MinusLepton = Num_MinusMuon + Num_MinusElectron;
     if((AllLeptonMass > 20) && (Num_PlusLepton == 1 && Num_MinusLepton == 1)) Cut_dl_Opposite = true;
-    if((AllLeptonMass > 12) && ((Num_PlusLepton == 2 && Num_MinusLepton == 0) || (Num_PlusLepton == 0 && Num_MinusLepton == 2))) Cut_dl_Same = true;
+    if((AllLeptonMass > 8) && ((Num_PlusLepton == 2 && Num_MinusLepton == 0) || (Num_PlusLepton == 0 && Num_MinusLepton == 2))) Cut_dl_Same = true;
 
     TriLepton_First  = 0;
     TriLepton_Second = 0;

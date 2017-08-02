@@ -22,7 +22,7 @@ SetAnalyzer = "FourTop SUSY"
 ChannelName = "ALL"
 MakeOthersSample = False
 FileNameSuffix = ""
-#Number_of_Events = -1
+Number_of_Events = -1
 OnlyGeneratedLevel = False
 
 #ChannelName = "Electron+Jets"
@@ -39,7 +39,7 @@ OnlyGeneratedLevel = False
 
 #MakeOthersSample = True
 #FileNameSuffix = "_Other"
-Number_of_Events = 10000
+#Number_of_Events = 1000
 #OnlyGeneratedLevel = True
 
 SaveCutStep = "0d"
@@ -88,35 +88,58 @@ else :
                                                                                    'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v'),
                                          # Reco Level Cut Variables
                                          # Lepton
-                                         #ElectronID   = cms.untracked.string("Medium"),
-                                         ElectronID   = cms.untracked.string("Loose"),
+                                         ElectronID   = cms.untracked.string("Medium"),
+                                         #ElectronID   = cms.untracked.string("Loose"),
                                          ElectronSF   = electronSFCutBasedIDMediumWP, # NEED FIX
                                          ElectronPt   = cms.untracked.double(20.0),
                                          ElectronEta  = cms.untracked.double(2.4),
                                          ElectronIso  = cms.untracked.string("TEMP"), # TEMP 0.50
+                                         Do_Elec_MultiIso = cms.untracked.bool(True), # Switch to MVA ID
+                                         #Do_Elec_MultiIso  = cms.untracked.bool(False),
+                                         ElectronMiniIso  = cms.untracked.double(0.12),
+                                         ElectronPtRatio  = cms.untracked.double(0.80),
+                                         ElectronPtRel    = cms.untracked.double(7.2),
                                          #MuonID       = cms.untracked.string("Tight"),
                                          MuonID       = cms.untracked.string("Medium"),
+                                         #MuonID       = cms.untracked.string("Loose"),
                                          MuonSF       = muonSFTight, # NEED FIX
                                          MuonPt       = cms.untracked.double(20.0),
                                          MuonEta      = cms.untracked.double(2.4),
                                          #MuonIso      = cms.untracked.double(0.15),
-                                         MuonIso      = cms.untracked.double(0.50), # TEMP
+                                         MuonIso      = cms.untracked.double(10.0), # TEMP
+                                         Do_Muon_MultiIso = cms.untracked.bool(True),
+                                         #Do_Muon_MultiIso  = cms.untracked.bool(False),
+                                         MuonMiniIso  = cms.untracked.double(0.16),
+                                         MuonPtRatio  = cms.untracked.double(0.76),
+                                         MuonPtRel    = cms.untracked.double(7.2),
 
                                          # Additional Lepton Cut
                                          Do_Additional_Cut = cms.untracked.bool(True), 
                                          #Do_TightLoose     = cms.untracked.bool(True), 
                                          #Do_Additional_Cut = cms.untracked.bool(False), 
                                          Do_TightLoose     = cms.untracked.bool(False), 
-                                         Add_ElectronID    = cms.untracked.string("Loose"),
+                                         Add_ElectronID    = cms.untracked.string("Medium"),
+                                         #Add_ElectronID    = cms.untracked.string("Loose"),
                                          Add_ElectronSF    = electronSFCutBasedIDMediumWP, # NEED FIX
                                          Add_ElectronPt    = cms.untracked.double(5.0),
                                          Add_ElectronEta   = cms.untracked.double(2.4),
                                          Add_ElectronIso   = cms.untracked.string("TEMP"), # TEMP 0.50
+                                         Do_Add_Elec_MultiIso = cms.untracked.bool(True), # Switch to MVA ID
+                                         #Do_Add_Elec_MultiIso  = cms.untracked.bool(False),
+                                         Add_ElectronMiniIso  = cms.untracked.double(0.12),
+                                         Add_ElectronPtRatio  = cms.untracked.double(0.80),
+                                         Add_ElectronPtRel    = cms.untracked.double(7.2),
                                          Add_MuonID        = cms.untracked.string("Medium"),
+                                         #Add_MuonID        = cms.untracked.string("Loose"),
                                          Add_MuonSF        = muonSFTight, # NEED FIX
                                          Add_MuonPt        = cms.untracked.double(5.0),
                                          Add_MuonEta       = cms.untracked.double(2.4),
-                                         Add_MuonIso       = cms.untracked.double(0.50), # TEMP
+                                         Add_MuonIso       = cms.untracked.double(10.0), # TEMP
+                                         Do_Add_Muon_MultiIso = cms.untracked.bool(True),
+                                         #Do_Add_Muon_MultiIso  = cms.untracked.bool(False),
+                                         Add_MuonMiniIso  = cms.untracked.double(0.16),
+                                         Add_MuonPtRatio  = cms.untracked.double(0.76),
+                                         Add_MuonPtRel    = cms.untracked.double(7.2),
 
                                          # Veto Lepton
                                          veto_ElectronID  = cms.untracked.string("Veto"),
@@ -124,11 +147,21 @@ else :
                                          veto_ElectronEta = cms.untracked.double(2.4),
                                          #veto_ElectronIso = cms.untracked.string("Veto"),
                                          veto_ElectronIso = cms.untracked.string("TEMP"), # TEMP 0.50
+                                         Do_veto_Elec_MultiIso = cms.untracked.bool(True), # Switch to MVA ID
+                                         #Do_veto_Elec_MultiIso  = cms.untracked.bool(False),
+                                         veto_ElectronMiniIso  = cms.untracked.double(0.12),
+                                         veto_ElectronPtRatio  = cms.untracked.double(0.80),
+                                         veto_ElectronPtRel    = cms.untracked.double(7.2),
                                          veto_MuonID      = cms.untracked.string("Loose"),
                                          veto_MuonPt      = cms.untracked.double(5.0),
                                          veto_MuonEta     = cms.untracked.double(2.4),
                                          #veto_MuonIso      = cms.untracked.double(0.25),
-                                         veto_MuonIso      = cms.untracked.double(0.50), # TEMP
+                                         veto_MuonIso      = cms.untracked.double(10.0), # TEMP
+                                         Do_veto_Muon_MultiIso = cms.untracked.bool(True),
+                                         #Do_veto_Muon_MultiIso  = cms.untracked.bool(False),
+                                         veto_MuonMiniIso  = cms.untracked.double(0.16),
+                                         veto_MuonPtRatio  = cms.untracked.double(0.76),
+                                         veto_MuonPtRel    = cms.untracked.double(7.2),
 
                                          # Jet
                                          JetID        = cms.untracked.string("Loose"),
