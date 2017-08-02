@@ -248,6 +248,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Cut_e_ElectronVeto", &VariableBox_Bool["Cut_e_ElectronVeto"], "Cut_e_ElectronVeto/B");
     ssbtree->Branch("Cut_e_MuonVeto", &VariableBox_Bool["Cut_e_MuonVeto"], "Cut_e_MuonVeto/B");
     ssbtree->Branch("Cut_e_Trigger", &VariableBox_Bool["Cut_e_Trigger"], "Cut_e_Trigger/B");
+    ssbtree->Branch("Cut_ee_BaseLine", &VariableBox_Bool["Cut_ee_BaseLine"], "Cut_ee_BaseLine/B");
     ssbtree->Branch("Cut_ee_LeptonPair", &VariableBox_Bool["Cut_ee_LeptonPair"], "Cut_ee_LeptonPair/B");
     ssbtree->Branch("Cut_ee_SR1", &VariableBox_Bool["Cut_ee_SR1"], "Cut_ee_SR1/B");
     ssbtree->Branch("Cut_ee_SR2", &VariableBox_Bool["Cut_ee_SR2"], "Cut_ee_SR2/B");
@@ -266,6 +267,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Cut_ee_Step1a", &VariableBox_Bool["Cut_ee_Step1a"], "Cut_ee_Step1a/B");
     ssbtree->Branch("Cut_ee_Step1b", &VariableBox_Bool["Cut_ee_Step1b"], "Cut_ee_Step1b/B");
     ssbtree->Branch("Cut_ej_ElectronIso", &VariableBox_Bool["Cut_ej_ElectronIso"], "Cut_ej_ElectronIso/B");
+    ssbtree->Branch("Cut_em_BaseLine", &VariableBox_Bool["Cut_em_BaseLine"], "Cut_em_BaseLine/B");
     ssbtree->Branch("Cut_em_LeptonPair", &VariableBox_Bool["Cut_em_LeptonPair"], "Cut_em_LeptonPair/B");
     ssbtree->Branch("Cut_em_SR1", &VariableBox_Bool["Cut_em_SR1"], "Cut_em_SR1/B");
     ssbtree->Branch("Cut_em_SR2", &VariableBox_Bool["Cut_em_SR2"], "Cut_em_SR2/B");
@@ -288,6 +290,7 @@ void SSBTreeManager::Book(TTree* tree){
     ssbtree->Branch("Cut_m_MuonVeto", &VariableBox_Bool["Cut_m_MuonVeto"], "Cut_m_MuonVeto/B");
     ssbtree->Branch("Cut_m_Trigger", &VariableBox_Bool["Cut_m_Trigger"], "Cut_m_Trigger/B");
     ssbtree->Branch("Cut_mj_MuonIso", &VariableBox_Bool["Cut_mj_MuonIso"], "Cut_mj_MuonIso/B");
+    ssbtree->Branch("Cut_mm_BaseLine", &VariableBox_Bool["Cut_mm_BaseLine"], "Cut_mm_BaseLine/B");
     ssbtree->Branch("Cut_mm_LeptonPair", &VariableBox_Bool["Cut_mm_LeptonPair"], "Cut_mm_LeptonPair/B");
     ssbtree->Branch("Cut_mm_SR1", &VariableBox_Bool["Cut_mm_SR1"], "Cut_mm_SR1/B");
     ssbtree->Branch("Cut_mm_SR2", &VariableBox_Bool["Cut_mm_SR2"], "Cut_mm_SR2/B");
@@ -467,6 +470,7 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Bool["Cut_e_ElectronVeto"] = false;
     VariableBox_Bool["Cut_e_MuonVeto"] = false;
     VariableBox_Bool["Cut_e_Trigger"] = false;
+    VariableBox_Bool["Cut_ee_BaseLine"] = false;
     VariableBox_Bool["Cut_ee_LeptonPair"] = false;
     VariableBox_Bool["Cut_ee_SR1"] = false;
     VariableBox_Bool["Cut_ee_SR2"] = false;
@@ -485,6 +489,7 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Bool["Cut_ee_Step1a"] = false;
     VariableBox_Bool["Cut_ee_Step1b"] = false;
     VariableBox_Bool["Cut_ej_ElectronIso"] = false;
+    VariableBox_Bool["Cut_em_BaseLine"] = false;
     VariableBox_Bool["Cut_em_LeptonPair"] = false;
     VariableBox_Bool["Cut_em_SR1"] = false;
     VariableBox_Bool["Cut_em_SR2"] = false;
@@ -507,6 +512,7 @@ void SSBTreeManager::InitializeVariables(){
     VariableBox_Bool["Cut_m_MuonVeto"] = false;
     VariableBox_Bool["Cut_m_Trigger"] = false;
     VariableBox_Bool["Cut_mj_MuonIso"] = false;
+    VariableBox_Bool["Cut_mm_BaseLine"] = false;
     VariableBox_Bool["Cut_mm_LeptonPair"] = false;
     VariableBox_Bool["Cut_mm_SR1"] = false;
     VariableBox_Bool["Cut_mm_SR2"] = false;

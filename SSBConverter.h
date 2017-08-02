@@ -110,11 +110,19 @@ class SSBConverter : public edm::EDAnalyzer {
       double                   IsolatedMuonPt;
       double                   IsolatedMuonEta;
       double                   IsolatedMuonIso;
+      bool                     IsolatedMuonMultiIso;
+      double                   IsolatedMuonMiniIso;
+      double                   IsolatedMuonPtRatio;
+      double                   IsolatedMuonPtRel;
 
       std::string              IsolatedElectronID;
       double                   IsolatedElectronPt;
       double                   IsolatedElectronEta;
       std::string              IsolatedElectronIso;
+      bool                     IsolatedElectronMultiIso;
+      double                   IsolatedElectronMiniIso;
+      double                   IsolatedElectronPtRatio;
+      double                   IsolatedElectronPtRel;
 
       bool                     Try_Cut_Additional;
       bool                     TightLooseMethod;
@@ -122,21 +130,37 @@ class SSBConverter : public edm::EDAnalyzer {
       double                   AdditionalMuonPt;
       double                   AdditionalMuonEta;
       double                   AdditionalMuonIso;
+      bool                     AdditionalMuonMultiIso;
+      double                   AdditionalMuonMiniIso;
+      double                   AdditionalMuonPtRatio;
+      double                   AdditionalMuonPtRel;
 
       std::string              AdditionalElectronID;
       double                   AdditionalElectronPt;
       double                   AdditionalElectronEta;
       std::string              AdditionalElectronIso;
+      bool                     AdditionalElectronMultiIso;
+      double                   AdditionalElectronMiniIso;
+      double                   AdditionalElectronPtRatio;
+      double                   AdditionalElectronPtRel;
 
       std::string              VetoMuonID;
       double                   VetoMuonPt;
       double                   VetoMuonEta;
       double                   VetoMuonIso;
+      bool                     VetoMuonMultiIso;
+      double                   VetoMuonMiniIso;
+      double                   VetoMuonPtRatio;
+      double                   VetoMuonPtRel;
 
       std::string              VetoElectronID;
       double                   VetoElectronPt;
       double                   VetoElectronEta;
       std::string              VetoElectronIso;
+      bool                     VetoElectronMultiIso;
+      double                   VetoElectronMiniIso;
+      double                   VetoElectronPtRatio;
+      double                   VetoElectronPtRel;
 
       std::string              JetID;
       double                   JetPt;
