@@ -2,7 +2,7 @@
 
 TH1D* GetHist(TFile* f_test, std::string HistName, double CrossSection, double Luminosity, bool isData=false){
 
-    CrossSection *= 1000;
+    CrossSection *= 1000; //
     //TFile* f_test = new TFile(FileName.c_str());
     TH1D* h_gen = (TH1D*)f_test->Get("SSBAnalyzer/GenInfo");
     double NumEvents = (double)h_gen->GetBinContent(1);

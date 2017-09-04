@@ -90,9 +90,10 @@ class SSBConverter : public edm::EDAnalyzer {
       // Input from python
       bool                     debugcout;
 
-      std::string              Save_Channel;
+      std::vector<std::string> Save_Channel;
       std::string              Save_CutStep;
       bool                     Save_Inversion;
+      std::vector<std::string> CheckBG;
 
       std::string              Channel;
 

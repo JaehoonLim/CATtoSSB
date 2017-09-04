@@ -20,8 +20,8 @@
 #include "SSBGenInfor.h"
 
 SSBGenInfor::SSBGenInfor(const edm::ParameterSet& iConfig)
-//:
-//isMC(iConfig.getParameter<bool>("isMCTag")),
+:
+CheckBG(iConfig.getUntrackedParameter< std::vector<std::string> >( "CheckBG" ))
 {
     //now do what ever initialization is needed
     //if (isMC == true) 
@@ -140,6 +140,8 @@ SSBGenInfor::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
 void
 SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 
+    debug_cout = false;
+    
     ////////////////////////////////////////////
     /// Generator Level Particle Information ///
     ////////////////////////////////////////////
@@ -163,7 +165,9 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	cands.push_back(&*itGenParIndex);
         if(itGenParIndex->status() == 62 && (itGenParIndex->pdgId() == 6 || itGenParIndex->pdgId() == -6)) ++NTop; 
     } /* use for mother and daughter index */
-    if ( NTop > 0) isTop = true;
+    for(auto CheckBG_i : CheckBG){
+        if ( CheckBG_i != "ALL" && NTop > 0) isTop = true;
+    }
 
     for ( GenParticleCollection::const_iterator itGenPar = genParticles->begin(); itGenPar != genParticles->end(); itGenPar++ )
     {
@@ -172,6 +176,15 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
         } else if(NTop ==  2){
         if(itGenPar->pdgId() ==  6) ssbtreeManager->Fill( "GenTop", itGenPar->pt(), itGenPar->eta(), itGenPar->phi(), itGenPar->energy(), 0 );
         if(itGenPar->pdgId() == -6) ssbtreeManager->Fill( "GenTop", itGenPar->pt(), itGenPar->eta(), itGenPar->phi(), itGenPar->energy(), 1 );
+        } else if(NTop ==  3){
+        if(itGenPar->pdgId() ==  6 && !next_t) {
+                        ssbtreeManager->Fill( "GenTop", itGenPar->pt(), itGenPar->eta(), itGenPar->phi(), itGenPar->energy(), 0 );
+                        next_t = true;}
+        else if(itGenPar->pdgId() == -6 && !next_tbar) { 
+                        ssbtreeManager->Fill( "GenTop", itGenPar->pt(), itGenPar->eta(), itGenPar->phi(), itGenPar->energy(), 1 );
+                        next_tbar = true;}
+        else if((itGenPar->pdgId() ==  6 &&  next_t) || (itGenPar->pdgId() == -6 && !next_tbar)) {
+                        ssbtreeManager->Fill( "GenTop", itGenPar->pt(), itGenPar->eta(), itGenPar->phi(), itGenPar->energy(), 2 );}
         } else if(NTop ==  4){
         if(itGenPar->pdgId() ==  6 && !next_t) {
                         ssbtreeManager->Fill( "GenTop", itGenPar->pt(), itGenPar->eta(), itGenPar->phi(), itGenPar->energy(), 0 );
@@ -221,8 +234,9 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 		FinalPar.push_back(GenParIndex); /* put final state and intermediate lepton and neutrino*/
 	}
     }/* genpar loop end */
-/*
-    cout << endl << "TreePar : " << endl;
+
+    if(debug_cout){
+    cout << endl << "line 235 TreePar : " << endl;
         for (unsigned int i = 0; i < TreePar.size(); ++i){
             cout << ParName[AllParInfo[TreePar.at(i)].at(0)] << " ";
 	}
@@ -231,7 +245,8 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	    cout << TreePar.at(i) << " ";
 	}
     cout << endl;
-*/
+    }
+
     if (isTop) {
     for (int FinaltoTree = 0; FinaltoTree < (int)FinalPar.size(); ++FinaltoTree){
         int temp_boson = abs( AllParInfo[AllParMom[FinalPar.at(FinaltoTree)].at(0)].at(0) );
@@ -241,8 +256,9 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	    --FinaltoTree;
 	}
     } /* Move final state particle (from W,Z,H decay) */
-/*
-    cout << endl << "TreePar : " << endl;
+
+    if(debug_cout){
+    cout << endl << "line 257 TreePar : " << endl;
         for (unsigned int i = 0; i < TreePar.size(); ++i){
             cout << ParName[AllParInfo[TreePar.at(i)].at(0)] << " ";
 	}
@@ -251,7 +267,8 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	    cout << TreePar.at(i) << " ";
 	}
     cout << endl;
-*/
+    }
+
     int temp_Windex, temp_Bindex, temp_index;
     vector<int> temp_lqindex;
 
@@ -488,8 +505,8 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	}
     }
 
-/*
-	cout << endl << endl << "SelectedPar : " << endl;
+        if(debug_cout){
+	cout << endl << endl << "line 505 SelectedPar : " << endl;
 	for (unsigned int i = 0; i < SelectedPar.size(); ++i){
 	    cout << ParName[AllParInfo[SelectedPar.at(i)].at(0)] << " ";
 	}
@@ -498,7 +515,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	    cout << SelectedPar.at(i) << " ";
 	}
 	cout << endl;
-*/
+        }
 
     int ChannelJets = 0;
     int ChannelJetsAbs = 0;
@@ -547,8 +564,8 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
     ssbtreeManager->Fill( "Channel_Lepton_Plus"        , ChannelLeptonP );
     ssbtreeManager->Fill( "Channel_Lepton_Minus"       , ChannelLeptonM );
 
-/*
-	cout << endl << endl << "SelectedPar : " << endl;
+        if(debug_cout){
+	cout << endl << endl << "line 564 SelectedPar : " << endl;
 	for (unsigned int i = 0; i < SelectedPar.size(); ++i){
 	    cout << ParName[AllParInfo[SelectedPar.at(i)].at(0)] << " ";
 	}
@@ -557,7 +574,7 @@ SSBGenInfor::GenPar(const edm::Event& iEvent, SSBTreeManager* ssbtreeManager) {
 	    cout << SelectedPar.at(i) << " ";
 	}
 	cout << endl;
-*/
+        }
 }
 
 int

@@ -56,6 +56,7 @@ void SSBConverter::FillHistogram()
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0c", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0d", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1a", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "BL", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SRW", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR1", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR2", GenWeight*PileUpWeight);
@@ -64,6 +65,7 @@ void SSBConverter::FillHistogram()
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR5", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR6", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1b", GenWeight*PileUpWeight);
+            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "BL2", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR7", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SR8", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SRZ", GenWeight*PileUpWeight);
