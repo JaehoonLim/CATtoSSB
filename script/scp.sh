@@ -1,5 +1,11 @@
 if [ ${1} ]; then
-rm -rf Output/${1}/${1}_ControlPlots.tar
-tar -cf Output/${1}/${1}_ControlPlots.tar Output/${1}/ControlPlots 
-scp Output/${1}/${1}_ControlPlots.tar abc@def.ghi:/jkl/.
+    if [ ${2} ]; then
+        rm -rf Output/${1}/${2}/${2}_ControlPlots.tar
+        tar -cf Output/${1}/${2}/${2}_ControlPlots.tar Output/${1}/${2}/ControlPlots/*
+        scp Output/${1}/${2}/${2}_ControlPlots.tar aaa@bbb
+    else
+        rm -rf Output/${1}/${1}_ControlPlots.tar
+        tar -cf Output/${1}/${1}_ControlPlots.tar Output/${1}/ControlPlots/*
+        scp Output/${1}/${1}_ControlPlots.tar aaa@bbb
+    fi
 fi

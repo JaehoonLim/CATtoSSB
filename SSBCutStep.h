@@ -499,65 +499,71 @@ SSBConverter::CutStep()
 
     else if(Channel == "FourTop SUSY"){
 
-                                                                      Cut_Step["ee"]["0a"] = true; EventInfo[0]->Fill(0.5,1.0);
-    if(Cut_Step["ee"]["0a"] && Cut_e_Trigger){                        Cut_Step["ee"]["0b"] = true; EventInfo[0]->Fill(1.5,1.0);}
-    if(Cut_Step["ee"]["0b"] && Cut_Event_Filter){                     Cut_Step["ee"]["0c"] = true; EventInfo[0]->Fill(2.5,1.0);}
-    if(Cut_Step["ee"]["0c"] && Cut_Tri_ee){                           Cut_Step["ee"]["0d"] = true; EventInfo[0]->Fill(3.5,1.0);}
-    if(Cut_Step["ee"]["0d"] && Cut_ee_LeptonPair && Cut_dl_Same && Cut_e_Charge){                                   Cut_Step["ee"]["1a"] = true; EventInfo[0]->Fill(4.5,1.0);}
-    if(Cut_Step["ee"]["1a"] && Cut_MET && HT > 300){                                                                Cut_Step["ee"]["BL"] = true; EventInfo[0]->Fill(5.5,1.0);}
-    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet <= 5 && !Cut_SUSY_SRZ){                         Cut_Step["ee"]["SRW"] = true; EventInfo[0]->Fill(6.5,1.0);}
-    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 6 && !Cut_SUSY_SRZ){                         Cut_Step["ee"]["SR1"] = true; EventInfo[0]->Fill(7.5,1.0);}
-    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 7 && !Cut_SUSY_SRZ){                         Cut_Step["ee"]["SR2"] = true; EventInfo[0]->Fill(8.5,1.0);}
-    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 8 && !Cut_SUSY_SRZ){                         Cut_Step["ee"]["SR3"] = true; EventInfo[0]->Fill(9.5,1.0);}
-    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 3 && (Index_Cut_Jet == 5 || Index_Cut_Jet == 6) && !Cut_SUSY_SRZ){ Cut_Step["ee"]["SR4"] = true; EventInfo[0]->Fill(10.5,1.0);}
-    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 3 && Index_Cut_Jet >= 7 && !Cut_SUSY_SRZ){                         Cut_Step["ee"]["SR5"] = true; EventInfo[0]->Fill(11.5,1.0);}
-    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet >= 4 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ){                         Cut_Step["ee"]["SR6"] = true; EventInfo[0]->Fill(12.5,1.0);}
-    if(Cut_Step["ee"]["0d"] && Cut_Tri_ee && Num_IsolatedElectron + Num_IsolatedMuon == 3 && Cut_Tri_add_Charge){                            Cut_Step["ee"]["1b"] = true; EventInfo[0]->Fill(13.5,1.0);}
-    if(Cut_Step["ee"]["1b"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){   Cut_Step["ee"]["SR7"] = true; EventInfo[0]->Fill(14.5,1.0);}
-    if(Cut_Step["ee"]["1b"] && Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){   Cut_Step["ee"]["SR8"] = true; EventInfo[0]->Fill(15.5,1.0);}
-    if((Cut_Step["ee"]["1a"] && Cut_SUSY_SRZ) || (Cut_Step["ee"]["1b"] && (!Cut_Tri_First_Zmass || !Cut_Tri_Second_Zmass || Cut_SUSY_SRZ))){ Cut_Step["ee"]["SRZ"] = true; EventInfo[0]->Fill(16.5,1.0);}
+                                                                                                                                             Cut_Step["ee"]["0a"] = true; EventInfo[0]->Fill(0.5,1.0);
+    if(Cut_Step["ee"]["0a"] && Cut_e_Trigger){                                                                                               Cut_Step["ee"]["0b"] = true; EventInfo[0]->Fill(1.5,1.0);}
+    if(Cut_Step["ee"]["0b"] && Cut_Event_Filter){                                                                                            Cut_Step["ee"]["0c"] = true; EventInfo[0]->Fill(2.5,1.0);}
+    if(Cut_Step["ee"]["0c"] && Cut_Tri_ee){                                                                                                  Cut_Step["ee"]["0d"] = true; EventInfo[0]->Fill(3.5,1.0);}
+    if(Cut_Step["ee"]["0d"] && Cut_ee_LeptonPair && Cut_dl_Same && Cut_e_Charge){                                                            Cut_Step["ee"]["1a"] = true; EventInfo[0]->Fill(4.5,1.0);}
+    if(Cut_Step["ee"]["1a"] && Cut_MET && HT > 300 && Index_Cut_BJet >= 2 && Index_Cut_Jet >= 2){                                            Cut_Step["ee"]["BL"] = true; EventInfo[0]->Fill(5.5,1.0);}
+    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet <= 5 && !Cut_SUSY_SRZ){                                                  Cut_Step["ee"]["SRW"] = true; EventInfo[0]->Fill(6.5,1.0);}
+    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 6 && !Cut_SUSY_SRZ){                                                  Cut_Step["ee"]["SR1"] = true; EventInfo[0]->Fill(7.5,1.0);}
+    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 7 && !Cut_SUSY_SRZ){                                                  Cut_Step["ee"]["SR2"] = true; EventInfo[0]->Fill(8.5,1.0);}
+    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 8 && !Cut_SUSY_SRZ){                                                  Cut_Step["ee"]["SR3"] = true; EventInfo[0]->Fill(9.5,1.0);}
+    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 3 && (Index_Cut_Jet == 5 || Index_Cut_Jet == 6) && !Cut_SUSY_SRZ){                          Cut_Step["ee"]["SR4"] = true; EventInfo[0]->Fill(10.5,1.0);}
+    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet == 3 && Index_Cut_Jet >= 7 && !Cut_SUSY_SRZ){                                                  Cut_Step["ee"]["SR5"] = true; EventInfo[0]->Fill(11.5,1.0);}
+    if(Cut_Step["ee"]["BL"] && Index_Cut_BJet >= 4 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ){                                                  Cut_Step["ee"]["SR6"] = true; EventInfo[0]->Fill(12.5,1.0);}
+    if(Cut_Step["ee"]["0d"] && Cut_Tri_ee && Num_IsolatedElectron + Num_IsolatedMuon == 3 && Cut_Tri_add_Charge && DiLeptonMass1 > 12 && DiLeptonMass2 > 12 && DiLeptonMass3 > 12){ Cut_Step["ee"]["1b"]  = true; EventInfo[0]->Fill(13.5,1.0);}
+    if(Cut_Step["ee"]["1b"] && Cut_MET && HT > 300 && Index_Cut_BJet >= 2 && Index_Cut_Jet >= 2){                                            Cut_Step["ee"]["BL2"] = true; EventInfo[0]->Fill(14.5,1.0);}
+    if(Cut_Step["ee"]["BL2"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){  Cut_Step["ee"]["SR7"] = true; EventInfo[0]->Fill(15.5,1.0);}
+    if(Cut_Step["ee"]["BL2"] && Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){  Cut_Step["ee"]["SR8"] = true; EventInfo[0]->Fill(16.5,1.0);}
+    if( (Cut_Step["ee"]["BL"] && Cut_SUSY_SRZ && (Index_Cut_BJet == 2 || (Index_Cut_BJet >= 3 && Index_Cut_Jet >= 5))) 
+     || (Cut_Step["ee"]["BL2"] && ((Index_Cut_BJet == 2 && Index_Cut_Jet >= 5) || (Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4)) && (!Cut_Tri_First_Zmass || !Cut_Tri_Second_Zmass || Cut_SUSY_SRZ)) ){ Cut_Step["ee"]["SRZ"] = true; EventInfo[0]->Fill(17.5,1.0);}
 
-                                                                      Cut_Step["mm"]["0a"] = true; EventInfo[1]->Fill(0.5,1.0);
-    if(Cut_Step["mm"]["0a"] && Cut_m_Trigger){                        Cut_Step["mm"]["0b"] = true; EventInfo[1]->Fill(1.5,1.0);}
-    if(Cut_Step["mm"]["0b"] && Cut_Event_Filter){                     Cut_Step["mm"]["0c"] = true; EventInfo[1]->Fill(2.5,1.0);}
-    if(Cut_Step["mm"]["0c"] && Cut_Tri_mm){                           Cut_Step["mm"]["0d"] = true; EventInfo[1]->Fill(3.5,1.0);}
-    if(Cut_Step["mm"]["0d"] && Cut_mm_LeptonPair && Cut_dl_Same && Cut_m_Charge){                                   Cut_Step["mm"]["1a"] = true; EventInfo[1]->Fill(4.5,1.0);}
-    if(Cut_Step["mm"]["1a"] && Cut_MET && HT > 300){                                                                Cut_Step["mm"]["BL"] = true; EventInfo[1]->Fill(5.5,1.0);}
-    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet <= 5 && !Cut_SUSY_SRZ){                         Cut_Step["mm"]["SRW"] = true; EventInfo[1]->Fill(6.5,1.0);}
-    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 6 && !Cut_SUSY_SRZ){                         Cut_Step["mm"]["SR1"] = true; EventInfo[1]->Fill(7.5,1.0);}
-    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 7 && !Cut_SUSY_SRZ){                         Cut_Step["mm"]["SR2"] = true; EventInfo[1]->Fill(8.5,1.0);}
-    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 8 && !Cut_SUSY_SRZ){                         Cut_Step["mm"]["SR3"] = true; EventInfo[1]->Fill(9.5,1.0);}
-    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 3 && (Index_Cut_Jet == 5 || Index_Cut_Jet == 6) && !Cut_SUSY_SRZ){ Cut_Step["mm"]["SR4"] = true; EventInfo[1]->Fill(10.5,1.0);}
-    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 3 && Index_Cut_Jet >= 7 && !Cut_SUSY_SRZ){                         Cut_Step["mm"]["SR5"] = true; EventInfo[1]->Fill(11.5,1.0);}
-    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet >= 4 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ){                         Cut_Step["mm"]["SR6"] = true; EventInfo[1]->Fill(12.5,1.0);}
-    if(Cut_Step["mm"]["0d"] && Cut_Tri_mm && Num_IsolatedElectron + Num_IsolatedMuon == 3 && Cut_Tri_add_Charge){                            Cut_Step["mm"]["1b"] = true; EventInfo[1]->Fill(13.5,1.0);}
-    if(Cut_Step["mm"]["1b"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){   Cut_Step["mm"]["SR7"] = true; EventInfo[1]->Fill(14.5,1.0);}
-    if(Cut_Step["mm"]["1b"] && Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){   Cut_Step["mm"]["SR8"] = true; EventInfo[1]->Fill(15.5,1.0);}
-    if((Cut_Step["mm"]["1a"] && Cut_SUSY_SRZ) || (Cut_Step["mm"]["1b"] && (!Cut_Tri_First_Zmass || !Cut_Tri_Second_Zmass || Cut_SUSY_SRZ))){ Cut_Step["mm"]["SRZ"] = true; EventInfo[1]->Fill(16.5,1.0);}
+                                                                                                                                             Cut_Step["mm"]["0a"] = true; EventInfo[1]->Fill(0.5,1.0);
+    if(Cut_Step["mm"]["0a"] && Cut_m_Trigger){                                                                                               Cut_Step["mm"]["0b"] = true; EventInfo[1]->Fill(1.5,1.0);}
+    if(Cut_Step["mm"]["0b"] && Cut_Event_Filter){                                                                                            Cut_Step["mm"]["0c"] = true; EventInfo[1]->Fill(2.5,1.0);}
+    if(Cut_Step["mm"]["0c"] && Cut_Tri_mm){                                                                                                  Cut_Step["mm"]["0d"] = true; EventInfo[1]->Fill(3.5,1.0);}
+    if(Cut_Step["mm"]["0d"] && Cut_mm_LeptonPair && Cut_dl_Same && Cut_m_Charge){                                                            Cut_Step["mm"]["1a"] = true; EventInfo[1]->Fill(4.5,1.0);}
+    if(Cut_Step["mm"]["1a"] && Cut_MET && HT > 300 && Index_Cut_BJet >= 2 && Index_Cut_Jet >= 2){                                            Cut_Step["mm"]["BL"] = true; EventInfo[1]->Fill(5.5,1.0);}
+    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet <= 5 && !Cut_SUSY_SRZ){                                                  Cut_Step["mm"]["SRW"] = true; EventInfo[1]->Fill(6.5,1.0);}
+    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 6 && !Cut_SUSY_SRZ){                                                  Cut_Step["mm"]["SR1"] = true; EventInfo[1]->Fill(7.5,1.0);}
+    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 7 && !Cut_SUSY_SRZ){                                                  Cut_Step["mm"]["SR2"] = true; EventInfo[1]->Fill(8.5,1.0);}
+    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 8 && !Cut_SUSY_SRZ){                                                  Cut_Step["mm"]["SR3"] = true; EventInfo[1]->Fill(9.5,1.0);}
+    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 3 && (Index_Cut_Jet == 5 || Index_Cut_Jet == 6) && !Cut_SUSY_SRZ){                          Cut_Step["mm"]["SR4"] = true; EventInfo[1]->Fill(10.5,1.0);}
+    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet == 3 && Index_Cut_Jet >= 7 && !Cut_SUSY_SRZ){                                                  Cut_Step["mm"]["SR5"] = true; EventInfo[1]->Fill(11.5,1.0);}
+    if(Cut_Step["mm"]["BL"] && Index_Cut_BJet >= 4 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ){                                                  Cut_Step["mm"]["SR6"] = true; EventInfo[1]->Fill(12.5,1.0);}
+    if(Cut_Step["mm"]["0d"] && Cut_Tri_mm && Num_IsolatedElectron + Num_IsolatedMuon == 3 && Cut_Tri_add_Charge && DiLeptonMass1 > 12 && DiLeptonMass2 > 12 && DiLeptonMass3 > 12){ Cut_Step["mm"]["1b"]  = true; EventInfo[1]->Fill(13.5,1.0);}
+    if(Cut_Step["mm"]["1b"] && Cut_MET && HT > 300 && Index_Cut_BJet >= 2 && Index_Cut_Jet >= 2){                                            Cut_Step["mm"]["BL2"] = true; EventInfo[1]->Fill(14.5,1.0);}
+    if(Cut_Step["mm"]["BL2"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){  Cut_Step["mm"]["SR7"] = true; EventInfo[1]->Fill(15.5,1.0);}
+    if(Cut_Step["mm"]["BL2"] && Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){  Cut_Step["mm"]["SR8"] = true; EventInfo[1]->Fill(16.5,1.0);}
+    if( (Cut_Step["mm"]["BL"] && Cut_SUSY_SRZ && (Index_Cut_BJet == 2 || (Index_Cut_BJet >= 3 && Index_Cut_Jet >= 5))) 
+     || (Cut_Step["mm"]["BL2"] && ((Index_Cut_BJet == 2 && Index_Cut_Jet >= 5) || (Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4)) && (!Cut_Tri_First_Zmass || !Cut_Tri_Second_Zmass || Cut_SUSY_SRZ)) ){ Cut_Step["mm"]["SRZ"] = true; EventInfo[1]->Fill(17.5,1.0);}
 
-                                                                      Cut_Step["em"]["0a"] = true; EventInfo[2]->Fill(0.5,1.0);
-    if(Cut_Step["em"]["0a"] && Cut_em_Trigger){                       Cut_Step["em"]["0b"] = true; EventInfo[2]->Fill(1.5,1.0);}
-    if(Cut_Step["em"]["0b"] && Cut_Event_Filter){                     Cut_Step["em"]["0c"] = true; EventInfo[2]->Fill(2.5,1.0);}
-    if(Cut_Step["em"]["0c"] && Cut_Tri_em){                           Cut_Step["em"]["0d"] = true; EventInfo[2]->Fill(3.5,1.0);}
-    if(Cut_Step["em"]["0d"] && Cut_em_LeptonPair && Cut_dl_Same && Cut_e_Charge && Cut_m_Charge){                   Cut_Step["em"]["1a"] = true; EventInfo[2]->Fill(4.5,1.0);}
-    if(Cut_Step["em"]["1a"] && Cut_MET && HT > 300){                                                                Cut_Step["em"]["BL"] = true; EventInfo[2]->Fill(5.5,1.0);}
-    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet <= 5 && !Cut_SUSY_SRZ){                         Cut_Step["em"]["SRW"] = true; EventInfo[2]->Fill(6.5,1.0);}
-    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 6 && !Cut_SUSY_SRZ){                         Cut_Step["em"]["SR1"] = true; EventInfo[2]->Fill(7.5,1.0);}
-    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 7 && !Cut_SUSY_SRZ){                         Cut_Step["em"]["SR2"] = true; EventInfo[2]->Fill(8.5,1.0);}
-    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 8 && !Cut_SUSY_SRZ){                         Cut_Step["em"]["SR3"] = true; EventInfo[2]->Fill(9.5,1.0);}
-    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 3 && (Index_Cut_Jet == 5 || Index_Cut_Jet == 6) && !Cut_SUSY_SRZ){ Cut_Step["em"]["SR4"] = true; EventInfo[2]->Fill(10.5,1.0);}
-    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 3 && Index_Cut_Jet >= 7 && !Cut_SUSY_SRZ){                         Cut_Step["em"]["SR5"] = true; EventInfo[2]->Fill(11.5,1.0);}
-    if(Cut_Step["em"]["BL"] && Index_Cut_BJet >= 4 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ){                         Cut_Step["em"]["SR6"] = true; EventInfo[2]->Fill(12.5,1.0);}
-    if(Cut_Step["em"]["0d"] && Cut_Tri_em && Num_IsolatedElectron + Num_IsolatedMuon == 3 && Cut_Tri_add_Charge){                            Cut_Step["em"]["1b"] = true; EventInfo[2]->Fill(13.5,1.0);}
-    if(Cut_Step["em"]["1b"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){   Cut_Step["em"]["SR7"] = true; EventInfo[2]->Fill(14.5,1.0);}
-    if(Cut_Step["em"]["1b"] && Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){   Cut_Step["em"]["SR8"] = true; EventInfo[2]->Fill(15.5,1.0);}
-    if((Cut_Step["em"]["1a"] && Cut_SUSY_SRZ) || (Cut_Step["em"]["1b"] && (!Cut_Tri_First_Zmass || !Cut_Tri_Second_Zmass || Cut_SUSY_SRZ))){ Cut_Step["em"]["SRZ"] = true; EventInfo[2]->Fill(16.5,1.0);}
+                                                                                                                                             Cut_Step["em"]["0a"] = true; EventInfo[2]->Fill(0.5,1.0);
+    if(Cut_Step["em"]["0a"] && Cut_em_Trigger){                                                                                              Cut_Step["em"]["0b"] = true; EventInfo[2]->Fill(1.5,1.0);}
+    if(Cut_Step["em"]["0b"] && Cut_Event_Filter){                                                                                            Cut_Step["em"]["0c"] = true; EventInfo[2]->Fill(2.5,1.0);}
+    if(Cut_Step["em"]["0c"] && Cut_Tri_em){                                                                                                  Cut_Step["em"]["0d"] = true; EventInfo[2]->Fill(3.5,1.0);}
+    if(Cut_Step["em"]["0d"] && Cut_em_LeptonPair && Cut_dl_Same && Cut_e_Charge && Cut_m_Charge){                                            Cut_Step["em"]["1a"] = true; EventInfo[2]->Fill(4.5,1.0);}
+    if(Cut_Step["em"]["1a"] && Cut_MET && HT > 300 && Index_Cut_BJet >= 2 && Index_Cut_Jet >= 2){                                            Cut_Step["em"]["BL"] = true; EventInfo[2]->Fill(5.5,1.0);}
+    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet <= 5 && !Cut_SUSY_SRZ){                                                  Cut_Step["em"]["SRW"] = true; EventInfo[2]->Fill(6.5,1.0);}
+    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 6 && !Cut_SUSY_SRZ){                                                  Cut_Step["em"]["SR1"] = true; EventInfo[2]->Fill(7.5,1.0);}
+    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet == 7 && !Cut_SUSY_SRZ){                                                  Cut_Step["em"]["SR2"] = true; EventInfo[2]->Fill(8.5,1.0);}
+    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 8 && !Cut_SUSY_SRZ){                                                  Cut_Step["em"]["SR3"] = true; EventInfo[2]->Fill(9.5,1.0);}
+    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 3 && (Index_Cut_Jet == 5 || Index_Cut_Jet == 6) && !Cut_SUSY_SRZ){                          Cut_Step["em"]["SR4"] = true; EventInfo[2]->Fill(10.5,1.0);}
+    if(Cut_Step["em"]["BL"] && Index_Cut_BJet == 3 && Index_Cut_Jet >= 7 && !Cut_SUSY_SRZ){                                                  Cut_Step["em"]["SR5"] = true; EventInfo[2]->Fill(11.5,1.0);}
+    if(Cut_Step["em"]["BL"] && Index_Cut_BJet >= 4 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ){                                                  Cut_Step["em"]["SR6"] = true; EventInfo[2]->Fill(12.5,1.0);}
+    if(Cut_Step["em"]["0d"] && Cut_Tri_em && Num_IsolatedElectron + Num_IsolatedMuon == 3 && Cut_Tri_add_Charge && DiLeptonMass1 > 12 && DiLeptonMass2 > 12 && DiLeptonMass3 > 12){ Cut_Step["em"]["1b"]  = true; EventInfo[2]->Fill(13.5,1.0);}
+    if(Cut_Step["em"]["1b"] && Cut_MET && HT > 300 && Index_Cut_BJet >= 2 && Index_Cut_Jet >= 2){                                            Cut_Step["em"]["BL2"] = true; EventInfo[2]->Fill(14.5,1.0);}
+    if(Cut_Step["em"]["BL2"] && Index_Cut_BJet == 2 && Index_Cut_Jet >= 5 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){  Cut_Step["em"]["SR7"] = true; EventInfo[2]->Fill(15.5,1.0);}
+    if(Cut_Step["em"]["BL2"] && Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4 && !Cut_SUSY_SRZ && Cut_Tri_First_Zmass && Cut_Tri_Second_Zmass){  Cut_Step["em"]["SR8"] = true; EventInfo[2]->Fill(16.5,1.0);}
+    if( (Cut_Step["em"]["BL"] && Cut_SUSY_SRZ && (Index_Cut_BJet == 2 || (Index_Cut_BJet >= 3 && Index_Cut_Jet >= 5))) 
+     || (Cut_Step["em"]["BL2"] && ((Index_Cut_BJet == 2 && Index_Cut_Jet >= 5) || (Index_Cut_BJet >= 3 && Index_Cut_Jet >= 4)) && (!Cut_Tri_First_Zmass || !Cut_Tri_Second_Zmass || Cut_SUSY_SRZ)) ){ Cut_Step["em"]["SRZ"] = true; EventInfo[2]->Fill(17.5,1.0);}
 
     ssbtreeManager->Fill( "Cut_ee_Step0a", Cut_Step["ee"]["0a"]  );
     ssbtreeManager->Fill( "Cut_ee_Step0b", Cut_Step["ee"]["0b"]  );
     ssbtreeManager->Fill( "Cut_ee_Step0c", Cut_Step["ee"]["0c"]  );
     ssbtreeManager->Fill( "Cut_ee_Step1a", Cut_Step["ee"]["1a"]  );
-    ssbtreeManager->Fill( "Cut_ee_BaseLine",     Cut_Step["ee"]["BL"]  );
+    ssbtreeManager->Fill( "Cut_ee_BaseLine", Cut_Step["ee"]["BL"]  );
     ssbtreeManager->Fill( "Cut_ee_SRW",    Cut_Step["ee"]["SRW"] );
     ssbtreeManager->Fill( "Cut_ee_SR1",    Cut_Step["ee"]["SR1"] );
     ssbtreeManager->Fill( "Cut_ee_SR2",    Cut_Step["ee"]["SR2"] );
@@ -566,6 +572,7 @@ SSBConverter::CutStep()
     ssbtreeManager->Fill( "Cut_ee_SR5",    Cut_Step["ee"]["SR5"] );
     ssbtreeManager->Fill( "Cut_ee_SR6",    Cut_Step["ee"]["SR6"] );
     ssbtreeManager->Fill( "Cut_ee_Step1b", Cut_Step["ee"]["1b"]  );
+    ssbtreeManager->Fill( "Cut_ee_BaseLine2", Cut_Step["ee"]["BL2"]  );
     ssbtreeManager->Fill( "Cut_ee_SR7",    Cut_Step["ee"]["SR7"] );
     ssbtreeManager->Fill( "Cut_ee_SR8",    Cut_Step["ee"]["SR8"] );
     ssbtreeManager->Fill( "Cut_ee_SRZ",    Cut_Step["ee"]["SRZ"] );
@@ -583,6 +590,7 @@ SSBConverter::CutStep()
     ssbtreeManager->Fill( "Cut_mm_SR5",    Cut_Step["mm"]["SR5"] );
     ssbtreeManager->Fill( "Cut_mm_SR6",    Cut_Step["mm"]["SR6"] );
     ssbtreeManager->Fill( "Cut_mm_Step1b", Cut_Step["mm"]["1b"]  );
+    ssbtreeManager->Fill( "Cut_mm_BaseLine2", Cut_Step["mm"]["BL2"]  );
     ssbtreeManager->Fill( "Cut_mm_SR7",    Cut_Step["mm"]["SR7"] );
     ssbtreeManager->Fill( "Cut_mm_SR8",    Cut_Step["mm"]["SR8"] );
     ssbtreeManager->Fill( "Cut_mm_SRZ",    Cut_Step["mm"]["SRZ"] );
@@ -600,6 +608,7 @@ SSBConverter::CutStep()
     ssbtreeManager->Fill( "Cut_em_SR5",    Cut_Step["em"]["SR5"] );
     ssbtreeManager->Fill( "Cut_em_SR6",    Cut_Step["em"]["SR6"] );
     ssbtreeManager->Fill( "Cut_em_Step1b", Cut_Step["em"]["1b"]  );
+    ssbtreeManager->Fill( "Cut_em_BaseLine2", Cut_Step["em"]["BL2"]  );
     ssbtreeManager->Fill( "Cut_em_SR7",    Cut_Step["em"]["SR7"] );
     ssbtreeManager->Fill( "Cut_em_SR8",    Cut_Step["em"]["SR8"] );
     ssbtreeManager->Fill( "Cut_em_SRZ",    Cut_Step["em"]["SRZ"] );

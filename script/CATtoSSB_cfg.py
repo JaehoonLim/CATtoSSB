@@ -1,17 +1,4 @@
-#UseList = True # InputList
-UseList = False # InputFile
-
-#InputList = './../data/dataset/dataset_TT_powheg.txt'
-InputList = './../data/dataset/dataset_TTTT.txt'
-
-#InputFile = 'file:/xrootd/store/group/CAT/DoubleEG/v8-0-3_Run2016B-23Sep2016-v3/161204_004831/0000/catTuple_2.root'
-#InputFile = 'file:/xrootd/store/group/CAT/TT_TuneCUETP8M1_13TeV-powheg-pythia8/v8-0-3_RunIISpring16MiniAODv2-PUSpring16RAWAODSIM_reHLT_80X_mcRun2_asymptotic_v14_ext3-v1/161207_135636/0000/catTuple_1.root'
-#InputFile = 'file:/xrootd/store/group/CAT/ttWJets_13TeV_madgraphMLM/v8-0-3_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/161219_094322/0000/catTuple_1.root'
-#InputFile = 'file:/xrootd/store/group/CAT/ttZJets_13TeV_madgraphMLM/v8-0-3_RunIISpring16MiniAODv2-PUSpring16_80X_mcRun2_asymptotic_2016_miniAODv2_v0-v1/161219_094507/0000/catTuple_1.root'
-#InputFile = 'file:/cms/scratch/jhlim/CMSSW_8_0_25/src/CATTools/CatProducer/prod/catTuple.root'
-InputFile = 'file:/xrootd/store/group/CAT/TTTT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8/v8-0-6_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170316_033329/0000/catTuple_1.root'
-#InputFile = 'file:/xrootd/store/group/CAT/WWW_4F_TuneCUETP8M1_13TeV-amcatnlo-pythia8/v8-0-4_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170113_122604/0000/catTuple_2.root'
-#InputFile = 'file:/xrootd/store/group/CAT/DoubleMuon/v8-0-6_Run2016F-03Feb2017-v1/170424_185324/0000/catTuple_402.root'
+import FWCore.ParameterSet.Config as cms
 
 SetAnalyzer = "FourTop SUSY"
 #SetAnalyzer = "Lepton+Jets"
@@ -19,32 +6,80 @@ SetAnalyzer = "FourTop SUSY"
 #SetAnalyzer = "FourTop Tri-Lepton"
 #SetAnalyzer = "Di-Lepton"
 
-ChannelName = "ALL"
-MakeOthersSample = False
-FileNameSuffix = ""
+#Channel = "SIG"
+#Channel = "OTH"
+Channel = "BG"
+ISO = "WP1"
+#ISO = "SUSY"
+
+if ISO == "WP1":
+    M_MiniIso  = cms.untracked.double(0.09)
+    M_PtRatio  = cms.untracked.double(0.74)
+    M_PtRel    = cms.untracked.double(7.2)
+    E_MiniIso  = cms.untracked.double(0.05)
+    E_PtRatio  = cms.untracked.double(0.78)
+    E_PtRel    = cms.untracked.double(7.8)
+elif ISO == "SUSY":
+    M_MiniIso  = cms.untracked.double(0.16)
+    M_PtRatio  = cms.untracked.double(0.76)
+    M_PtRel    = cms.untracked.double(7.2)
+    E_MiniIso  = cms.untracked.double(0.12)
+    E_PtRatio  = cms.untracked.double(0.80)
+    E_PtRel    = cms.untracked.double(7.2)
+else:
+    M_MiniIso  = cms.untracked.double(0.16)
+    M_PtRatio  = cms.untracked.double(0.76)
+    M_PtRel    = cms.untracked.double(7.2)
+    E_MiniIso  = cms.untracked.double(0.12)
+    E_PtRatio  = cms.untracked.double(0.80)
+    E_PtRel    = cms.untracked.double(7.2)
+
+if Channel == "SIG":
+    ChannelName = ('SSDilepton','Trilepton','Tetralepton')
+    MakeOthersSample = False
+elif Channel == "OTH":
+    ChannelName = ('SSDilepton','Trilepton','Tetralepton')
+    MakeOthersSample = True
+elif Channel == "BG":
+    ChannelName = ("ALL")
+    MakeOthersSample = False
+else:
+    ChannelName = ("ALL")
+    MakeOthersSample = False
+
 Number_of_Events = -1
-OnlyGeneratedLevel = False
-
-#ChannelName = "Electron+Jets"
-#ChannelName = "Muon+Jets"
-#ChannelName = "Jets" # ejets + mujets
-#ChannelName = "SSDilepton"
-#ChannelName = "Trilepton"
-#ChannelName = "Trilepton_TripleMuon"
-#ChannelName = "Trilepton_TripleElectron"
-#ChannelName = "OPTrilepton_DoubleElectronMuon"
-#ChannelName = "SSTrilepton_DoubleElectronMuon"
-#ChannelName = "OPTrilepton_DoubleMuonElectron"
-#ChannelName = "SSTrilepton_DoubleMuonElectron"
-
-#MakeOthersSample = True
-#FileNameSuffix = "_Other"
-#Number_of_Events = 1000
-#OnlyGeneratedLevel = True
+#Number_of_Events = 10000
 
 SaveCutStep = "0d"
 
-import FWCore.ParameterSet.Config as cms
+FileNameSuffix = ""
+#FileNameSuffix = "_Others"
+
+OnlyGeneratedLevel = False
+#OnlyGeneratedLevel = True
+
+#ChannelName = ("Electron+Jets")
+#ChannelName = ("Muon+Jets")
+#ChannelName = ("Jets") # ejets + mujets
+#ChannelName = ("Trilepton")
+#ChannelName = ("Trilepton_TripleMuon")
+#ChannelName = ("Trilepton_TripleElectron")
+#ChannelName = ("OPTrilepton_DoubleElectronMuon")
+#ChannelName = ("SSTrilepton_DoubleElectronMuon")
+#ChannelName = ("OPTrilepton_DoubleMuonElectron")
+#ChannelName = ("SSTrilepton_DoubleMuonElectron")
+
+#UseList = True # InputList
+UseList = False # InputFile
+
+#InputList = './../data/dataset/dataset_TT_powheg.txt'
+InputList = './../data/dataset/dataset_TTTT.txt'
+
+InputFile = 'file:/xrootd/store/group/CAT/TTTT_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8/v8-0-6_RunIISummer16MiniAODv2-PUMoriond17_80X_mcRun2_asymptotic_2016_TrancheIV_v6-v1/170316_033329/0000/catTuple_1.root'
+#InputFile = 'file:/xrootd/store/group/CAT/DoubleMuon/v8-0-6_Run2016F-03Feb2017-v1/170424_185324/0000/catTuple_402.root'
+#InputFile = 'file:/xrootd/store/user/jhlim/crab_v8-0-6_TTGamma_Dilept_TuneCUETP8M2T4_13TeV-amcatnlo-pythia8/results/catTuple_1.root'
+#InputFile = 'file:/xrootd/store/user/jhlim/crab_v8-0-6_TTTJ_TuneCUETP8M2T4_13TeV-madgraph-pythia8/results/catTuple_10.root'
+
 process = cms.Process("CATtoSSB")
 
 process.load("FWCore.MessageService.MessageLogger_cfi")
@@ -65,6 +100,7 @@ if OnlyGeneratedLevel:
     process.SSBAnalyzer = cms.EDAnalyzer('SSBGenInfor',
                                          genParTag         = cms.InputTag("prunedGenParticles"),
                                          genJetTag         = cms.InputTag("slimmedGenJets",""),
+                                         CheckBG           = cms.untracked.vstring(ChannelName),
                                         )
 else :
     process.SSBAnalyzer = cms.EDAnalyzer('SSBConverter',
@@ -88,17 +124,21 @@ else :
                                                                                    'HLT_Mu8_TrkIsoVVL_Ele23_CaloIdL_TrackIdL_IsoVL_DZ_v'),
                                          # Reco Level Cut Variables
                                          # Lepton
-                                         ElectronID   = cms.untracked.string("Medium"),
+                                         ElectronID   = cms.untracked.string("Tight"),
+                                         #ElectronID   = cms.untracked.string("Medium"),
                                          #ElectronID   = cms.untracked.string("Loose"),
                                          ElectronSF   = electronSFCutBasedIDMediumWP, # NEED FIX
                                          ElectronPt   = cms.untracked.double(20.0),
                                          ElectronEta  = cms.untracked.double(2.4),
-                                         ElectronIso  = cms.untracked.string("TEMP"), # TEMP 0.50
+                                         ElectronIso  = cms.untracked.string("TEMP"), # TEMP 10.0
                                          Do_Elec_MultiIso = cms.untracked.bool(True), # Switch to MVA ID
                                          #Do_Elec_MultiIso  = cms.untracked.bool(False),
-                                         ElectronMiniIso  = cms.untracked.double(0.12),
-                                         ElectronPtRatio  = cms.untracked.double(0.80),
-                                         ElectronPtRel    = cms.untracked.double(7.2),
+                                         #ElectronMiniIso  = cms.untracked.double(0.05),
+                                         #ElectronPtRatio  = cms.untracked.double(0.78),
+                                         #ElectronPtRel    = cms.untracked.double(7.8),
+                                         ElectronMiniIso  = E_MiniIso,
+                                         ElectronPtRatio  = E_PtRatio,
+                                         ElectronPtRel    = E_PtRel,
                                          #MuonID       = cms.untracked.string("Tight"),
                                          MuonID       = cms.untracked.string("Medium"),
                                          #MuonID       = cms.untracked.string("Loose"),
@@ -109,26 +149,33 @@ else :
                                          MuonIso      = cms.untracked.double(10.0), # TEMP
                                          Do_Muon_MultiIso = cms.untracked.bool(True),
                                          #Do_Muon_MultiIso  = cms.untracked.bool(False),
-                                         MuonMiniIso  = cms.untracked.double(0.16),
-                                         MuonPtRatio  = cms.untracked.double(0.76),
-                                         MuonPtRel    = cms.untracked.double(7.2),
+                                         #MuonMiniIso  = cms.untracked.double(0.09),
+                                         #MuonPtRatio  = cms.untracked.double(0.74),
+                                         #MuonPtRel    = cms.untracked.double(7.2),
+                                         MuonMiniIso  = M_MiniIso,
+                                         MuonPtRatio  = M_PtRatio,
+                                         MuonPtRel    = M_PtRel,
 
                                          # Additional Lepton Cut
                                          Do_Additional_Cut = cms.untracked.bool(True), 
                                          #Do_TightLoose     = cms.untracked.bool(True), 
                                          #Do_Additional_Cut = cms.untracked.bool(False), 
                                          Do_TightLoose     = cms.untracked.bool(False), 
-                                         Add_ElectronID    = cms.untracked.string("Medium"),
+                                         Add_ElectronID    = cms.untracked.string("Tight"),
+                                         #Add_ElectronID    = cms.untracked.string("Medium"),
                                          #Add_ElectronID    = cms.untracked.string("Loose"),
                                          Add_ElectronSF    = electronSFCutBasedIDMediumWP, # NEED FIX
                                          Add_ElectronPt    = cms.untracked.double(5.0),
                                          Add_ElectronEta   = cms.untracked.double(2.4),
-                                         Add_ElectronIso   = cms.untracked.string("TEMP"), # TEMP 0.50
+                                         Add_ElectronIso   = cms.untracked.string("TEMP"), # TEMP 10.0
                                          Do_Add_Elec_MultiIso = cms.untracked.bool(True), # Switch to MVA ID
                                          #Do_Add_Elec_MultiIso  = cms.untracked.bool(False),
-                                         Add_ElectronMiniIso  = cms.untracked.double(0.12),
-                                         Add_ElectronPtRatio  = cms.untracked.double(0.80),
-                                         Add_ElectronPtRel    = cms.untracked.double(7.2),
+                                         #Add_ElectronMiniIso  = cms.untracked.double(0.05),
+                                         #Add_ElectronPtRatio  = cms.untracked.double(0.78),
+                                         #Add_ElectronPtRel    = cms.untracked.double(7.8),
+                                         Add_ElectronMiniIso  = E_MiniIso,
+                                         Add_ElectronPtRatio  = E_PtRatio,
+                                         Add_ElectronPtRel    = E_PtRel,
                                          Add_MuonID        = cms.untracked.string("Medium"),
                                          #Add_MuonID        = cms.untracked.string("Loose"),
                                          Add_MuonSF        = muonSFTight, # NEED FIX
@@ -137,21 +184,27 @@ else :
                                          Add_MuonIso       = cms.untracked.double(10.0), # TEMP
                                          Do_Add_Muon_MultiIso = cms.untracked.bool(True),
                                          #Do_Add_Muon_MultiIso  = cms.untracked.bool(False),
-                                         Add_MuonMiniIso  = cms.untracked.double(0.16),
-                                         Add_MuonPtRatio  = cms.untracked.double(0.76),
-                                         Add_MuonPtRel    = cms.untracked.double(7.2),
+                                         #Add_MuonMiniIso  = cms.untracked.double(0.09),
+                                         #Add_MuonPtRatio  = cms.untracked.double(0.74),
+                                         #Add_MuonPtRel    = cms.untracked.double(7.2),
+                                         Add_MuonMiniIso  = M_MiniIso,
+                                         Add_MuonPtRatio  = M_PtRatio,
+                                         Add_MuonPtRel    = M_PtRel,
 
                                          # Veto Lepton
                                          veto_ElectronID  = cms.untracked.string("Veto"),
                                          veto_ElectronPt  = cms.untracked.double(5.0),
                                          veto_ElectronEta = cms.untracked.double(2.4),
                                          #veto_ElectronIso = cms.untracked.string("Veto"),
-                                         veto_ElectronIso = cms.untracked.string("TEMP"), # TEMP 0.50
+                                         veto_ElectronIso = cms.untracked.string("TEMP"), # TEMP 10.0
                                          Do_veto_Elec_MultiIso = cms.untracked.bool(True), # Switch to MVA ID
                                          #Do_veto_Elec_MultiIso  = cms.untracked.bool(False),
-                                         veto_ElectronMiniIso  = cms.untracked.double(0.12),
-                                         veto_ElectronPtRatio  = cms.untracked.double(0.80),
-                                         veto_ElectronPtRel    = cms.untracked.double(7.2),
+                                         #veto_ElectronMiniIso  = cms.untracked.double(10.0),
+                                         #veto_ElectronPtRatio  = cms.untracked.double(0.0),
+                                         #veto_ElectronPtRel    = cms.untracked.double(0.0),
+                                         veto_ElectronMiniIso  = E_MiniIso,
+                                         veto_ElectronPtRatio  = E_PtRatio,
+                                         veto_ElectronPtRel    = E_PtRel,
                                          veto_MuonID      = cms.untracked.string("Loose"),
                                          veto_MuonPt      = cms.untracked.double(5.0),
                                          veto_MuonEta     = cms.untracked.double(2.4),
@@ -159,9 +212,12 @@ else :
                                          veto_MuonIso      = cms.untracked.double(10.0), # TEMP
                                          Do_veto_Muon_MultiIso = cms.untracked.bool(True),
                                          #Do_veto_Muon_MultiIso  = cms.untracked.bool(False),
-                                         veto_MuonMiniIso  = cms.untracked.double(0.16),
-                                         veto_MuonPtRatio  = cms.untracked.double(0.76),
-                                         veto_MuonPtRel    = cms.untracked.double(7.2),
+                                         #veto_MuonMiniIso  = cms.untracked.double(10.0),
+                                         #veto_MuonPtRatio  = cms.untracked.double(0.0),
+                                         #veto_MuonPtRel    = cms.untracked.double(0.0),
+                                         veto_MuonMiniIso  = M_MiniIso,
+                                         veto_MuonPtRatio  = M_PtRatio,
+                                         veto_MuonPtRel    = M_PtRel,
 
                                          # Jet
                                          JetID        = cms.untracked.string("Loose"),
@@ -178,6 +234,7 @@ else :
                                          # SSBGenInfor
                                          genParTag         = cms.InputTag("prunedGenParticles"),
                                          genJetTag         = cms.InputTag("slimmedGenJets",""),
+                                         CheckBG           = cms.untracked.vstring(ChannelName),
                                          # SSBAnalyzer
                                          lumiMaskTag       = cms.InputTag("lumiMask"),
                                          muonTag           = cms.InputTag("catMuons"),
@@ -192,7 +249,7 @@ else :
                                          genWeightTag    = cms.InputTag("genWeight"),
                                          PileUpWeightTag = cms.InputTag("pileupWeight"),
                                          # Save Channel
-                                         Save_Channel      = cms.untracked.string(ChannelName),
+                                         Save_Channel      = cms.untracked.vstring(ChannelName),
                                          Save_CutStep      = cms.untracked.string(SaveCutStep),
                                          Save_Inversion    = cms.untracked.bool(MakeOthersSample),
                                          # Debug
@@ -200,21 +257,21 @@ else :
                                         )
 
 process.TFileService=cms.Service("TFileService",
-        fileName=cms.string("SSBTree_"+ChannelName+FileNameSuffix+".root"),
+        fileName=cms.string("SSBTree"+FileNameSuffix+".root"),
         closeFileFast = cms.untracked.bool(True)
 )
 process.p = cms.Path(process.SSBAnalyzer)
 
-#process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
-#process.printTree = cms.EDAnalyzer("ParticleTreeDrawer",
-#                                   src = cms.InputTag("prunedGenParticles"),                                                                 
-#                                   printP4 = cms.untracked.bool(False),
-#                                   printPtEtaPhi = cms.untracked.bool(False),
-#                                   printVertex = cms.untracked.bool(False),
-#                                   printStatus = cms.untracked.bool(True),
-#                                   printIndex = cms.untracked.bool(True),
-#                                   status = cms.untracked.vint32( 1,2,4,21,22,23,24,31,32,33,34,41,42,43,44,51,52,53,54,61,62,63,64,71,72,73,74 )
-#                                   )
+process.load("SimGeneral.HepPDTESSource.pythiapdt_cfi")
+process.printTree = cms.EDAnalyzer("ParticleTreeDrawer",
+                                   src = cms.InputTag("prunedGenParticles"),                                                                 
+                                   printP4 = cms.untracked.bool(False),
+                                   printPtEtaPhi = cms.untracked.bool(False),
+                                   printVertex = cms.untracked.bool(False),
+                                   printStatus = cms.untracked.bool(True),
+                                   printIndex = cms.untracked.bool(True),
+                                   status = cms.untracked.vint32( 1,2,4,21,22,23,24,31,32,33,34,41,42,43,44,51,52,53,54,61,62,63,64,71,72,73,74 )
+                                   )
 #process.p = cms.Path(process.printTree)
 
 #process.MessageLogger.cerr.FwkReport.reportEvery = 50000

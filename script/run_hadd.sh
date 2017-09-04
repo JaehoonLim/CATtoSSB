@@ -16,7 +16,7 @@ else
 fi
 
 for L in $dirlist; do
-    if [ ${L} != "Output" ]; then
+    if [ ${L} != "Output" ] && [ ${L} != "dataset" ]; then
         check=$(./checkFinishedJobs.sh ${L})
         if [ "$(echo $check | grep 'All Jobs Finished without Error')" ]; then
             echo "$check" 

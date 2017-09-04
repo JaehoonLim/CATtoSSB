@@ -34,9 +34,10 @@ SSBConverter::SSBConverter(const edm::ParameterSet& iConfig)
 :
 debugcout(             iConfig.getUntrackedParameter< bool >(                     "Debug_cout",         false                 )), 
 
-Save_Channel(          iConfig.getUntrackedParameter< std::string >(              "Save_Channel",       std::string("ALL")    )), 
+Save_Channel(          iConfig.getUntrackedParameter< std::vector<std::string> >( "Save_Channel"                              )), 
 Save_CutStep(          iConfig.getUntrackedParameter< std::string >(              "Save_CutStep",       std::string("2")      )), 
 Save_Inversion(        iConfig.getUntrackedParameter< bool >(                     "Save_Inversion",     false                 )), 
+CheckBG(               iConfig.getUntrackedParameter< std::vector<std::string> >( "CheckBG"                                   )), 
 
 Channel(               iConfig.getUntrackedParameter< std::string >(              "Channel",            std::string("FourTop Tri-Lepton")  )), 
 
@@ -161,7 +162,7 @@ METPt(                 iConfig.getUntrackedParameter< double >(                 
         CutStepName = {"0a","0b","0c","1","2","3","4","5"};
     }
     if(Channel == "FourTop SUSY"){
-        CutStepName = {"0a","0b","0c","0d","1a","BL","SRW","SR1","SR2","SR3","SR4","SR5","SR6","1b","SR7","SR8","SRZ"};
+        CutStepName = {"0a","0b","0c","0d","1a","BL","SRW","SR1","SR2","SR3","SR4","SR5","SR6","1b","BL2","SR7","SR8","SRZ"};
     }
 
     EventFilter = {"Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_goodVertices", "Flag_eeBadScFilter", "Flag_globalTightHalo2016Filter", "Flag_badPFMuon", "Flag_badChargedHadron"};
@@ -307,7 +308,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Lumi = -999;
     isData = false;
     ChannelName = "Background";
-    FillNTuple = true;
+    FillNTuple = false;
     GenWeight = 1.0;
     PileUpWeight = 1.0;
     LeptonWeight = 1.0;
@@ -365,11 +366,16 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
         PileUpWeight = (double)*pileupWeight;
 
         ChannelName = ssbgeninfor->ReturnChannel(iEvent);
-        if(Save_Channel != "ALL" && ChannelName.find(Save_Channel) == std::string::npos) FillNTuple = false;
+
+        for(auto Channel_i : Save_Channel){ 
+            if(Channel_i == "ALL" || ChannelName.find(Channel_i) != std::string::npos) FillNTuple = true;
+        }
+
         if(Save_Inversion) FillNTuple = !FillNTuple;
 
     } else {
         ChannelName = "Data";
+        FillNTuple = true;
         edm::Handle<int> lumiMask;
         iEvent.getByToken(lumiMaskToken_, lumiMask);
         if (*lumiMask == 0) FillNTuple = false;
@@ -797,39 +803,51 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
 
 
         if(!IsolatedElectronMultiIso){
-            if(IsolatedElectronID == "Veto")     isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
-            if(IsolatedElectronID == "Loose")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
-            if(IsolatedElectronID == "Medium")   isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
-            if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+            //if(IsolatedElectronID == "Veto")     isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
+            //if(IsolatedElectronID == "Loose")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
+            //if(IsolatedElectronID == "Medium")   isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
+            //if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+            if(IsolatedElectronID == "Veto")     isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto-noiso");
+            if(IsolatedElectronID == "Loose")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose-noiso");
+            if(IsolatedElectronID == "Medium")   isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium-noiso");
+            if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight-noiso");
         } else {
             if(IsolatedElectronID == "Veto")     isIsoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
             if(IsolatedElectronID == "Loose")    isIsoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
             if(IsolatedElectronID == "Medium")   isIsoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
-            if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+            if(IsolatedElectronID == "Tight")    isIsoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp80");
         }
 
         if(!AdditionalElectronMultiIso){
-            if(AdditionalElectronID == "Veto")   isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
-            if(AdditionalElectronID == "Loose")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
-            if(AdditionalElectronID == "Medium") isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
-            if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+            //if(AdditionalElectronID == "Veto")   isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
+            //if(AdditionalElectronID == "Loose")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
+            //if(AdditionalElectronID == "Medium") isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
+            //if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+            if(AdditionalElectronID == "Veto")   isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto-noiso");
+            if(AdditionalElectronID == "Loose")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose-noiso");
+            if(AdditionalElectronID == "Medium") isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium-noiso");
+            if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight-noiso");
         } else {
             if(AdditionalElectronID == "Veto")   isAddElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
             if(AdditionalElectronID == "Loose")  isAddElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
             if(AdditionalElectronID == "Medium") isAddElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
-            if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+            if(AdditionalElectronID == "Tight")  isAddElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp80");
         }
 
         if(!VetoElectronMultiIso){
-            if(VetoElectronID == "Veto")         isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
-            if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
-            if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
-            if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+            //if(VetoElectronID == "Veto")         isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto");
+            //if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose");
+            //if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium");
+            //if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight");
+            if(VetoElectronID == "Veto")         isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-veto-noiso");
+            if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-loose-noiso");
+            if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-medium-noiso");
+            if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("cutBasedElectronID-Summer16-80X-V1-tight-noiso");
         } else {
             if(VetoElectronID == "Veto")         isVetoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
             if(VetoElectronID == "Loose")        isVetoElectronID = electron.electronID("mvaEleID-Spring16-HZZ-V1-wpLoose");
             if(VetoElectronID == "Medium")       isVetoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
-            if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp90");
+            if(VetoElectronID == "Tight")        isVetoElectronID = electron.electronID("mvaEleID-Spring16-GeneralPurpose-V1-wp80");
         } 
 
         ///// 0: fails,
@@ -1094,7 +1112,7 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     Num_PlusLepton = Num_PlusMuon + Num_PlusElectron;
     Num_MinusLepton = Num_MinusMuon + Num_MinusElectron;
     if((AllLeptonMass > 20) && (Num_PlusLepton == 1 && Num_MinusLepton == 1)) Cut_dl_Opposite = true;
-    if((AllLeptonMass > 8) && ((Num_PlusLepton == 2 && Num_MinusLepton == 0) || (Num_PlusLepton == 0 && Num_MinusLepton == 2))) Cut_dl_Same = true;
+    if((AllLeptonMass > 12) && ((Num_PlusLepton == 2 && Num_MinusLepton == 0) || (Num_PlusLepton == 0 && Num_MinusLepton == 2))) Cut_dl_Same = true;
 
     TriLepton_First  = 0;
     TriLepton_Second = 0;
@@ -1250,7 +1268,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
     if(Num_OppositeLepton == 5 || Num_OppositeLepton == 15) Num_OppositeLepton = 1;
     if(Num_OppositeLepton == 20) Num_OppositeLepton = 2;
 
-
     Cut_SUSY_SRZ = false;
     if(TriLepton_Third == 0 && Num_AdditionalElectron + Num_AdditionalMuon > 0){
         for(std::map<double,int>::reverse_iterator AdditionalLep = pt_order_check.rbegin();AdditionalLep != pt_order_check.rend();++AdditionalLep){
@@ -1275,11 +1292,6 @@ SSBConverter::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup)
             }
         }
     }
-
-
-
-
-
 
     ssbtreeManager->Fill( "Cut_ej_ElectronIso",     Cut_ej_ElectronIso     );
     ssbtreeManager->Fill( "Cut_mj_MuonIso",         Cut_mj_MuonIso         );

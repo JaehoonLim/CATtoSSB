@@ -104,6 +104,7 @@ class SSBGenInfor : public edm::EDAnalyzer {
       SSBTreeManager* ssbtreeManager;
       edm::Service<TFileService> ssbfs;
 
+      std::vector<std::string> CheckBG;
       edm::EDGetTokenT<GenEventInfoProduct>         genEvnInfoTag;
       edm::EDGetTokenT<reco::GenParticleCollection> genParInfoTag;
       edm::EDGetTokenT<reco::GenJetCollection>      genJetInfoTag;
@@ -135,6 +136,7 @@ class SSBGenInfor : public edm::EDAnalyzer {
 
       map_s ParName;
 
+      bool debug_cout;
       bool isTop;
       unsigned int NTop;
       int ChannelIndex;
