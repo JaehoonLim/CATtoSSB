@@ -54,7 +54,6 @@ void SSBConverter::FillHistogram()
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0a", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0b", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0c", GenWeight*PileUpWeight);
-            ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "0d", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "1a", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "BL", GenWeight*PileUpWeight);
             ssbhistManager->SetWeight(CutChannelName[CutChannelInit], "SRW", GenWeight*PileUpWeight);
@@ -175,9 +174,9 @@ void SSBConverter::FillHistogram()
     }
 
     ssbhistManager->Fill( "AllLepton_InvMass",  LV_AllLepton.M() );
-    ssbhistManager->Fill( "DiLepton_InvMass1", DiLeptonMass1    );
-    ssbhistManager->Fill( "DiLepton_InvMass2", DiLeptonMass2    );
-    ssbhistManager->Fill( "DiLepton_InvMass3", DiLeptonMass3    );
+//    ssbhistManager->Fill( "DiLepton_InvMass1", DiLeptonMass1    );
+//    ssbhistManager->Fill( "DiLepton_InvMass2", DiLeptonMass2    );
+//    ssbhistManager->Fill( "DiLepton_InvMass3", DiLeptonMass3    );
      
     ssbhistManager->Fill( "numJets",  Num_CleanedJet );
     ssbhistManager->Fill( "numBJets", Num_BJet       );

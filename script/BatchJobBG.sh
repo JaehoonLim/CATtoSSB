@@ -27,7 +27,7 @@ if [ ${1} == "DY" ] || [ ${1} == "ALL" ]; then
 # DY
 #create-batch --jobName DYJets --fileList $CMSSW_BASE/src/CATTools/CatAnalyzer/data/dataset/dataset_DYJets.txt --maxFiles 10 --cfg CATtoSSB_cfg.py
 #create-batch --jobName DYJets_MG${Suffix} --fileList $CMSSW_BASE/src/CATTools/CatAnalyzer/data/dataset/dataset_DYJets_MG.txt --maxFiles 10 --cfg CATtoSSB_cfg.py
-###create-batch --jobName DYJets_MG_10to50${Suffix} --fileList $CMSSW_BASE/src/CATTools/CatAnalyzer/data/dataset/dataset_DYJets_MG_10to50.txt --maxFiles 10 --cfg CATtoSSB_cfg.py
+create-batch --jobName DYJets_MG_10to50${Suffix} --fileList $CMSSW_BASE/src/CATTools/CatAnalyzer/data/dataset/dataset_DYJets_MG_10to50.txt --maxFiles 10 --cfg CATtoSSB_cfg.py
 create-batch --jobName DYJets_MG_ext1${Suffix} --fileList $CMSSW_BASE/src/CATTools/CatAnalyzer/CATtoSSB/script/dataset/dataset_DYJets_MG_ext1.txt --maxFiles 10 --cfg CATtoSSB_cfg.py
 fi
 if [ ${1} == "SB" ] || [ ${1} == "ALL" ]; then
@@ -80,3 +80,4 @@ else
 :
 #create-batch --jobName  --fileList $CMSSW_BASE/src/CATTools/CatAnalyzer/data/dataset/dataset_.txt --maxFiles 10 --cfg CATtoSSB_cfg.py
 fi
+echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Done."

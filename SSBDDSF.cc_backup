@@ -1,0 +1,295 @@
+#include "SSBDDSF.h"
+
+// constructors and destructor
+SSBDDSF::SSBDDSF(const edm::ParameterSet& iConfig):
+Iso_e_Trigger(      iConfig.getUntrackedParameter< std::vector<std::string> >( "Iso_e_Trigger"    )),
+NonIso_e_Trigger(   iConfig.getUntrackedParameter< std::vector<std::string> >( "NonIso_e_Trigger" )),
+Iso_m_Trigger(      iConfig.getUntrackedParameter< std::vector<std::string> >( "Iso_m_Trigger"    )),
+NonIso_m_Trigger(   iConfig.getUntrackedParameter< std::vector<std::string> >( "NonIso_m_Trigger" )),
+
+NominalMuonID(      iConfig.getUntrackedParameter< std::string >(              "NominalMuonID",          std::string("Tight")  )),
+NominalMuonPt(      iConfig.getUntrackedParameter< double >(                   "NominalMuonPt",          30.0                  )),
+NominalMuonEta(     iConfig.getUntrackedParameter< double >(                   "NominalMuonEta",         2.4                   )),
+NominalMuonMiniIso( iConfig.getUntrackedParameter< double >(                   "NominalMuonMiniIso",     0.4                   )),
+NominalMuonPtRatio( iConfig.getUntrackedParameter< double >(                   "NominalMuonPtRatio",     0.0                   )),
+NominalMuonPtRel(   iConfig.getUntrackedParameter< double >(                   "NominalMuonPtRel",       0.0                   )),
+
+InsitueMuonID(      iConfig.getUntrackedParameter< std::string >(              "InsitueMuonID",          std::string("Tight")  )),
+InsitueMuonPt(      iConfig.getUntrackedParameter< double >(                   "InsitueMuonPt",          30.0                  )),
+InsitueMuonEta(     iConfig.getUntrackedParameter< double >(                   "InsitueMuonEta",         2.4                   )),
+InsitueMuonMiniIso( iConfig.getUntrackedParameter< double >(                   "InsitueMuonMiniIso",     0.4                   )),
+InsitueMuonPtRatio( iConfig.getUntrackedParameter< double >(                   "InsitueMuonPtRatio",     0.0                   )),
+InsitueMuonPtRel(   iConfig.getUntrackedParameter< double >(                   "InsitueMuonPtRel",       0.0                   )),
+
+LooseMuonID(        iConfig.getUntrackedParameter< std::string >(              "LooseMuonID",            std::string("Loose")  )),
+LooseMuonPt(        iConfig.getUntrackedParameter< double >(                   "LooseMuonPt",            30.0                  )),
+LooseMuonEta(       iConfig.getUntrackedParameter< double >(                   "LooseMuonEta",           2.4                   )),
+LooseMuonMiniIso(   iConfig.getUntrackedParameter< double >(                   "LooseMuonMiniIso",       0.4                   )),
+LooseMuonPtRatio(   iConfig.getUntrackedParameter< double >(                   "LooseMuonPtRatio",       0.0                   )),
+LooseMuonPtRel(     iConfig.getUntrackedParameter< double >(                   "LooseMuonPtRel",         0.0                   )),
+
+NominalElecID(      iConfig.getUntrackedParameter< std::string >(              "NominalElectronID",      std::string("Tight")  )),
+NominalElecPt(      iConfig.getUntrackedParameter< double >(                   "NominalElectronPt",      30.0                  )),
+NominalElecEta(     iConfig.getUntrackedParameter< double >(                   "NominalElectronEta",     2.4                   )),
+NominalElecMiniIso( iConfig.getUntrackedParameter< double >(                   "NominalElectronMiniIso", 0.4                   )),
+NominalElecPtRatio( iConfig.getUntrackedParameter< double >(                   "NominalElectronPtRatio", 0.0                   )),
+NominalElecPtRel(   iConfig.getUntrackedParameter< double >(                   "NominalElectronPtRel",   0.0                   )),
+
+InsitueElecID(      iConfig.getUntrackedParameter< std::string >(              "InsitueElectronID",      std::string("Tight")  )),
+InsitueElecPt(      iConfig.getUntrackedParameter< double >(                   "InsitueElectronPt",      30.0                  )),
+InsitueElecEta(     iConfig.getUntrackedParameter< double >(                   "InsitueElectronEta",     2.4                   )),
+InsitueElecMiniIso( iConfig.getUntrackedParameter< double >(                   "InsitueElectronMiniIso", 0.4                   )),
+InsitueElecPtRatio( iConfig.getUntrackedParameter< double >(                   "InsitueElectronPtRatio", 0.0                   )),
+InsitueElecPtRel(   iConfig.getUntrackedParameter< double >(                   "InsitueElectronPtRel",   0.0                   )),
+
+LooseElecID(        iConfig.getUntrackedParameter< std::string >(              "LooseElectronID",        std::string("Loose")  )),
+LooseElecPt(        iConfig.getUntrackedParameter< double >(                   "LooseElectronPt",        30.0                  )),
+LooseElecEta(       iConfig.getUntrackedParameter< double >(                   "LooseElectronEta",       2.4                   )),
+LooseElecMiniIso(   iConfig.getUntrackedParameter< double >(                   "LooseElectronMiniIso",   0.4                   )),
+LooseElecPtRatio(   iConfig.getUntrackedParameter< double >(                   "LooseElectronPtRatio",   0.0                   )),
+LooseElecPtRel(     iConfig.getUntrackedParameter< double >(                   "LooseElectronPtRel",     0.0                   )),
+
+JetID(              iConfig.getUntrackedParameter< std::string >(              "JetID",                  std::string("Loose")  )),
+JetPt(              iConfig.getUntrackedParameter< double >(                   "JetPt",                  30.0                  )),
+JetEta(             iConfig.getUntrackedParameter< double >(                   "JetEta",                 2.4                   ))
+{
+    genWeightToken_  = consumes<cat::GenWeights>             (iConfig.getParameter<edm::InputTag>("genWeightTag"));
+    lumiMaskToken_   = consumes<int>                         (iConfig.getParameter<edm::InputTag>("lumiMaskTag"));
+    muonToken_       = consumes<cat::MuonCollection>         (iConfig.getParameter<edm::InputTag>("muonTag"));
+    electronToken_   = consumes<cat::ElectronCollection>     (iConfig.getParameter<edm::InputTag>("electronTag"));
+    jetToken_        = consumes<cat::JetCollection>          (iConfig.getParameter<edm::InputTag>("jetTag"));
+    metToken_        = consumes<cat::METCollection>          (iConfig.getParameter<edm::InputTag>("metTag"));
+    PUWeightToken_   = consumes<float>                       (iConfig.getParameter<edm::InputTag>("PileUpWeightTag"));
+
+    for(auto& trig : iConfig.getParameter<std::vector<edm::InputTag>>("triggerBitsTag")) {
+        triggerBits_.push_back(consumes<edm::TriggerResults>(trig));
+    }
+    for(auto& filt : iConfig.getParameter<std::vector<edm::InputTag>>("EventFilterBitsTag")) {
+        EventFilterBits_.push_back(consumes<edm::TriggerResults>(filt));
+    }
+
+    EventFilter = {"Flag_HBHENoiseFilter", "Flag_HBHENoiseIsoFilter", "Flag_EcalDeadCellTriggerPrimitiveFilter", "Flag_goodVertices", "Flag_eeBadScFilter", "Flag_globalTightHalo2016Filter", "Flag_badPFMuon", "Flag_badChargedHadron"};
+
+    Num_Iso_e_Trigger    = Iso_e_Trigger.size();
+    Num_NonIso_e_Trigger = NonIso_e_Trigger.size();
+    Num_Iso_m_Trigger    = Iso_m_Trigger.size();
+    Num_NonIso_m_Trigger = NonIso_m_Trigger.size();
+
+    if(NominalMuonID != "Loose" && NominalMuonID != "Medium" && NominalMuonID != "Tight" && NominalMuonID != "Soft"){
+        cout << endl << "Nominal MuonID Error"<< endl << endl;
+        cerr << endl << "Nominal MuonID Error"<< endl << endl;
+        exit(0);
+    }
+    if(InsitueMuonID != "Loose" && InsitueMuonID != "Medium" && InsitueMuonID != "Tight" && InsitueMuonID != "Soft"){
+        cout << endl << "Insitue MuonID Error"<< endl << endl;
+        cerr << endl << "Insitue MuonID Error"<< endl << endl;
+        exit(0);
+    }
+    if(LooseMuonID != "Loose" && LooseMuonID != "Medium" && LooseMuonID != "Tight" && LooseMuonID != "Soft"){
+        cout << endl << "Loose MuonID Error"<< endl << endl;
+        cerr << endl << "Loose MuonID Error"<< endl << endl;
+        exit(0);
+    }
+    if(NominalElecID != "Loose" && NominalElecID != "Medium" && NominalElecID != "Tight" && NominalElecID != "Soft"){
+        cout << endl << "Nominal ElecID Error"<< endl << endl;
+        cerr << endl << "Nominal ElecID Error"<< endl << endl;
+        exit(0);
+    }
+    if(InsitueElecID != "Loose" && InsitueElecID != "Medium" && InsitueElecID != "Tight" && InsitueElecID != "Soft"){
+        cout << endl << "Insitue ElecID Error"<< endl << endl;
+        cerr << endl << "Insitue ElecID Error"<< endl << endl;
+        exit(0);
+    }
+    if(LooseElecID != "Loose" && LooseElecID != "Medium" && LooseElecID != "Tight" && LooseElecID != "Soft"){
+        cout << endl << "Loose ElecID Error"<< endl << endl;
+        cerr << endl << "Loose ElecID Error"<< endl << endl;
+        exit(0);
+    }
+
+
+}
+
+
+// ------------ method called for each event  ------------
+void SSBDDSF::analyze(const edm::Event& iEvent, const edm::EventSetup& iSetup){
+
+    using namespace edm;
+
+    ///////////////////////////
+    /// Trigger Information ///
+    ///////////////////////////
+    Cut_Iso_e_Trigger    = false;
+    Cut_NonIso_e_Trigger = false;
+    Cut_Iso_m_Trigger    = false;
+    Cut_NonIso_m_Trigger = false;
+    edm::Handle<edm::TriggerResults> triggerBits;
+    for(auto triggerBits_i : triggerBits_) {
+    if(!iEvent.getByToken(triggerBits_i, triggerBits)) continue;
+    const edm::TriggerNames &trigNames = iEvent.triggerNames(*triggerBits);
+    unsigned int Num_Trigger = triggerBits->size();
+
+    for(unsigned int Index_Trigger = 0; Index_Trigger < Num_Trigger; ++Index_Trigger){
+        const string& trigName = trigNames.triggerName(Index_Trigger);
+        for(unsigned int Index_Iso_e = 0; Index_Iso_e < Num_Iso_e_Trigger; ++Index_Iso_e){
+            if(trigName.find(Iso_e_Trigger.at(Index_Iso_e)) != std::string::npos
+               && triggerBits->accept(Index_Trigger)){
+                Cut_Iso_e_Trigger = true;
+            }
+        }
+        for(unsigned int Index_NonIso_e = 0; Index_NonIso_e < Num_NonIso_e_Trigger; ++Index_NonIso_e){
+            if(trigName.find(NonIso_e_Trigger.at(Index_NonIso_e)) != std::string::npos
+               && triggerBits->accept(Index_Trigger)){
+                Cut_NonIso_e_Trigger = true;
+            }
+        }
+        for(unsigned int Index_Iso_m = 0; Index_Iso_m < Num_Iso_m_Trigger; ++Index_Iso_m){
+            if(trigName.find(Iso_m_Trigger.at(Index_Iso_m)) != std::string::npos
+               && triggerBits->accept(Index_Trigger)){
+                Cut_Iso_m_Trigger = true;
+            }
+        }
+        for(unsigned int Index_NonIso_m = 0; Index_NonIso_m < Num_NonIso_m_Trigger; ++Index_NonIso_m){
+            if(trigName.find(NonIso_m_Trigger.at(Index_NonIso_m)) != std::string::npos
+               && triggerBits->accept(Index_Trigger)){
+                Cut_NonIso_m_Trigger = true;
+            }
+        }
+    }
+    } // auto
+
+    ///////////////////////
+    /// MET Information ///
+    ///////////////////////
+    iEvent.getByToken(metToken_, mets);
+    const cat::MET &met = mets->at(0);
+    if(met.pt() != met.pt()){ // Check -NaN
+        LV_MET.SetPtEtaPhiE(0, 0, 0, 0);
+        ssbtreeManager->Fill( "MET" , 0, 0, 0, 0, 0 );
+    } else {
+        LV_MET.SetPtEtaPhiE(met.pt(), met.eta(), met.phi(), met.energy());
+        ssbtreeManager->Fill( "MET" , met.pt(), 0, met.phi(), 0, 0 );
+    }
+
+    iEvent.getByToken(jetToken_, jets);
+
+    for (const cat::Muon &muon : *muons)
+    {
+
+        for (const cat::Jet &jet : *jets){
+            LV_jet = JetJER(jet,JERupdown) * jet.smearedRes(JESupdown) * jet.tlv();
+            if(LV_muon.DeltaR(LV_jet) < muon_ClosestdR) {
+                muon_ClosestdR = LV_muon.DeltaR(LV_jet);
+                muon_Pt_ratio = LV_muon.Pt() / LV_jet.Pt();
+                muon_Pt_rel = ((LV_jet.Vect() - LV_muon.Vect()).Cross(LV_muon.Vect())).Mag() / (LV_jet.Vect() - LV_muon.Vect()).Mag();
+            }
+            if(LV_muon.DeltaR(LV_jet) > muon_FarestdR) {
+                muon_FarestdR = LV_muon.DeltaR(LV_jet);
+            }
+        }
+
+        if(isAddIDMuon && (muon.pt() > AdditionalMuonPt) && (std::abs(muon.eta()) < AdditionalMuonEta) &&
+            ((double)muon.miniRelIso() < AdditionalMuonMiniIso && (muon_Pt_rel > AdditionalMuonPtRel || muon_Pt_ratio > AdditionalMuonPtRatio) )
+                
+            && (!Muon_dxyz || (Muon_dxyz && abs(muon.dxy())<0.05 && abs(muon.dz())<0.1))
+        ){
+
+                isIsolatedMuon = true;
+                Index_IsolatedMuon.push_back(Index_Muon);
+                ++Num_IsolatedMuon;
+                ssbtreeManager->Fill( "Cut_Muon_ClosestJetdR" , muon_ClosestdR    );
+        }
+    }
+
+
+    for (const cat::Electron &electron : *electrons)
+    {
+
+        for (const cat::Jet &jet : *jets){
+            LV_jet = JetJER(jet,JERupdown) * jet.smearedRes(JESupdown) * jet.tlv();
+            if(LV_electron.DeltaR(LV_jet) < electron_ClosestdR) {
+                electron_ClosestdR = LV_electron.DeltaR(LV_jet);
+                electron_Pt_ratio = LV_electron.Pt() / LV_jet.Pt();
+                electron_Pt_rel = ((LV_jet.Vect() - LV_electron.Vect()).Cross(LV_electron.Vect())).Mag() / (LV_jet.Vect() - LV_electron.Vect()).Mag();
+            }
+        }
+
+        if(isAddElectronID && (electron.pt() > AdditionalElectronPt) && (std::abs(electron.eta()) < AdditionalElectronEta) && PassConversionVeto &&
+            ((!AdditionalElectronMultiIso && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < AddCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < AddCutHighEta))) ||
+                (AdditionalElectronMultiIso &&
+                ( (double)electron.miniRelIso() < AdditionalElectronMiniIso && (electron_Pt_rel > AdditionalElectronPtRel || electron_Pt_ratio > AdditionalElectronPtRatio) )
+                )
+            ) && (!Elec_dxyz || (Elec_dxyz && electron.dxy()<0.05 && electron.dz()<0.1))
+        ){
+            if(isIsoElectronID && (electron.pt() > IsolatedElectronPt) && (std::abs(electron.eta()) < IsolatedElectronEta) && PassConversionVeto &&
+                ((!IsolatedElectronMultiIso && ((std::abs(SuperClusterEta) < 1.4442 && PFIsodbeta03 < IsoCutLowEta) || (std::abs(SuperClusterEta) > 1.566 && PFIsodbeta03 < IsoCutHighEta))) ||
+                    (IsolatedElectronMultiIso &&
+                    ( (double)electron.miniRelIso() < IsolatedElectronMiniIso && (electron_Pt_rel > IsolatedElectronPtRel || electron_Pt_ratio > IsolatedElectronPtRatio) )
+                    )
+                ) && (!Elec_dxyz || (Elec_dxyz && electron.dxy()<0.05 && electron.dz()<0.1 && electron.ipsignificance()<4))
+            ){
+
+                isIsolatedElectron = true;
+                Index_IsolatedElectron.push_back(Index_Electron);
+                ++Num_IsolatedElectron;
+            } else {
+                isAdditionalElectron = true;
+                ++Num_AdditionalElectron;
+                Index_AdditionalElectron.push_back(Index_Electron);
+            }
+        }
+
+    }
+
+}
+
+// ------------ method called once each job just before starting event loop  ------------
+void
+SSBConverter::beginJob()
+{
+   ssbtree = ssbfs->make<TTree>("SSBTree", "Tree for Physics Analyses at CMS");
+   ssbtreeManager = new SSBTreeManager();
+   ssbtreeManager->Book(ssbtree);
+}
+
+// ------------ method called once each job just after ending the event loop  ------------
+void
+SSBConverter::endJob()
+{
+}
+
+// ------------ method called when starting to processes a run  ------------
+void
+SSBConverter::beginRun(edm::Run const&, edm::EventSetup const&)
+{
+}
+
+// ------------ method called when ending the processing of a run  ------------
+void
+SSBConverter::endRun(edm::Run const&, edm::EventSetup const&)
+{
+}
+
+// ------------ method called when starting to processes a luminosity block  ------------
+void
+SSBConverter::beginLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+{
+}
+
+// ------------ method called when ending the processing of a luminosity block  ------------
+void
+SSBConverter::endLuminosityBlock(edm::LuminosityBlock const&, edm::EventSetup const&)
+{
+}
+
+// ------------ method fills 'descriptions' with the allowed parameters for the module  ------------
+void
+SSBConverter::fillDescriptions(edm::ConfigurationDescriptions& descriptions) {
+  //The following says we do not know what parameters are allowed so do no validation
+  // Please change this to state exactly what you do use, even if it is no parameters
+  edm::ParameterSetDescription desc;
+  desc.setUnknown();
+  descriptions.addDefault(desc);
+}
+
+//define this as a plug-in
+DEFINE_FWK_MODULE(SSBDDSF);

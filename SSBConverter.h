@@ -42,6 +42,7 @@
 #include "CATTools/DataFormats/interface/Jet.h"
 #include "CATTools/DataFormats/interface/MET.h"
 #include "CATTools/DataFormats/interface/GenWeights.h"
+#include "CATTools/CatAnalyzer/interface/BTagWeightEvaluator.h"
 
 // root
 #include "TTree.h"
@@ -168,9 +169,14 @@ class SSBConverter : public edm::EDAnalyzer {
       double                   JetEta;
       std::string              JetBTag;
       double                   JetCleaningdR;
+      std::string              JES_systematic;
+      std::string              JER_systematic;
+      std::string              PU_systematic;
 
       double                   InvariantMass;
       double                   InvariantMassE;
+      double                   DiLeptonOpposite;
+      double                   DiLeptonSame;
       double                   METPt;
 
       edm::EDGetTokenT<reco::GenParticleCollection> genParInfoTag;
@@ -183,6 +189,8 @@ class SSBConverter : public edm::EDAnalyzer {
       edm::EDGetTokenT<cat::METCollection>          metToken_;
       edm::EDGetTokenT<int>                         npvToken_;
       edm::EDGetTokenT<float>                       PUWeightToken_;
+      edm::EDGetTokenT<float>                       PUWeightToken_UP;
+      edm::EDGetTokenT<float>                       PUWeightToken_DN;
       std::vector<edm::EDGetTokenT<edm::TriggerResults>>         triggerBits_;
       std::vector<edm::EDGetTokenT<edm::TriggerResults>>         EventFilterBits_;
 
@@ -250,30 +258,29 @@ class SSBConverter : public edm::EDAnalyzer {
       bool Cut_ee_LeptonPair;
       bool Cut_mm_LeptonPair;
       bool Cut_em_LeptonPair;
+      bool Cut_ee_LeptonPair_TightMass;
+      bool Cut_mm_LeptonPair_TightMass;
+      bool Cut_em_LeptonPair_TightMass;
       bool Cut_dl_Opposite;
       bool Cut_dl_Same;
+      bool Cut_Tri_Charge;
 
       bool Cut_ee_TL;
       bool Cut_mm_TL;
       bool Cut_em_TL;
 
-      int TriLepton_First;
-      int TriLepton_Second;
-      int TriLepton_Third;
-      int TriLepton_Other;
+      std::vector<int> TriLepton;
+      std::vector<int> TriAddLepton;
 
       bool Cut_Tri_ee;
       bool Cut_Tri_mm;
       bool Cut_Tri_em;
-      bool Cut_Tri_First_Opposite;
-      bool Cut_Tri_First_Same;
+      //bool Cut_Tri_First_Opposite;
+      //bool Cut_Tri_First_Same;
       bool Cut_Tri_First_Zmass;
-      bool Cut_Tri_ExactlyThree;
-      bool Cut_Tri_add_e;
-      bool Cut_Tri_add_m;
-      bool Cut_Tri_add_Charge;
+      bool Cut_Tri_TriOrMore;
       bool Cut_Tri_Second_Zmass;
-      int Num_OppositeLepton;
+      //int Num_OppositeLepton;
       bool Cut_SUSY_SRZ;
 
       std::map<std::string,std::map<std::string,bool>> Cut_Step;
@@ -350,6 +357,7 @@ class SSBConverter : public edm::EDAnalyzer {
 
       // variables for Jets
       edm::Handle<cat::JetCollection> jets;
+      BTagWeightEvaluator csvWeight;
       int Index_Jet;
       int Index_Cut_Jet;
       int Index_Cut_BJet;
@@ -372,21 +380,24 @@ class SSBConverter : public edm::EDAnalyzer {
       TLorentzVector LV_Veto;
       std::vector<int> Index_CleanedJet;
       std::vector<int> Index_BJet;
+      int JESupdown;
+      int JERupdown;
 
       // other variables
       double GenWeight;
       double PileUpWeight;
+      double PileUpWeight_UP;
+      double PileUpWeight_DN;
       double LeptonWeight;
       double AddLeptonWeight;
+      double BJetWeight;
+      double JERWeight;
       edm::Handle<cat::METCollection> mets;
       int numPV;
       double HT;
       double HM;
       double AllLeptonMass;
-      double DiLeptonMass1;
-      double DiLeptonMass2;
-      double DiLeptonMass3;
-      double DiLeptonMassOther;
+      double DiLeptonMass;
 
       ScaleFactorEvaluator *MuonSFEval;
       ScaleFactorEvaluator *ElectronSFEval;
@@ -394,12 +405,39 @@ class SSBConverter : public edm::EDAnalyzer {
       TLorentzVector LV_AllLepton;
       TLorentzVector LV_Tri_First;
       TLorentzVector LV_Tri_Second;
-      TLorentzVector LV_Tri_Third;
-      TLorentzVector LV_Tri_Other;
-      TLorentzVector LV_Tri_Dilepton1;
-      TLorentzVector LV_Tri_Dilepton2;
-      TLorentzVector LV_Tri_Dilepton3;
-      TLorentzVector LV_Tri_DileptonOther;
+      TLorentzVector LV_Tri_Dilepton;
+
+      // weight for systematic study
+      double SYS_JES_up;
+      double SYS_JES_down;
+      double SYS_JER_up;
+      double SYS_JER_down;
+      double SYS_BJet_JES_up;
+      double SYS_BJet_JES_down;
+      double SYS_BJet_LF_up;
+      double SYS_BJet_LF_down;
+      double SYS_BJet_HF_up;
+      double SYS_BJet_HF_down;
+      double SYS_BJet_HFstat1_up;
+      double SYS_BJet_HFstat1_down;
+      double SYS_BJet_HFstat2_up;
+      double SYS_BJet_HFstat2_down;
+      double SYS_BJet_LFstat1_up;
+      double SYS_BJet_LFstat1_down;
+      double SYS_BJet_LFstat2_up;
+      double SYS_BJet_LFstat2_down;
+      double SYS_BJet_CFerr1_up;
+      double SYS_BJet_CFerr1_down;
+      double SYS_BJet_CFerr2_up;
+      double SYS_BJet_CFerr2_down;
+
+      double JetJER(cat::Jet jet,int JERupdown){
+         if(JERupdown == 0) return 1.0;
+         else if(JERupdown == -1) return jet.shiftedEnDown();
+         else if(JERupdown == 1) return jet.shiftedEnUp();
+         else return 1.0;
+      }
+
 /*
    string TriID[4]        = {"MMM","TMM","TTM","TTT"};
    double Elec_IsoHigh[3] = {0.1590,0.1070,0.0821};

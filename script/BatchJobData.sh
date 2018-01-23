@@ -34,3 +34,4 @@ create-batch --jobName MuonEG_Run2016H_v3${Suffix} --fileList $CMSSW_BASE/src/CA
 else
 :
 fi
+echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Done."

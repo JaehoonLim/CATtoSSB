@@ -1,13 +1,14 @@
+testdir="./"
 dirtime=$(TZ=GMT-2 date +%y%m%d)
-if [ ! -d ./Output ]; then
-    mkdir Output
+if [ ! -d ${testdir}/Output ]; then
+    mkdir ${testdir}/Output
 fi
-if [ ! -d ./Output/${dirtime} ]; then
-    mkdir Output/${dirtime}
+if [ ! -d ${testdir}/Output/${dirtime} ]; then
+    mkdir ${testdir}/Output/${dirtime}
 fi
-if [ ! -d ./Output/${dirtime}/ControlPlots ]; then
-    mkdir Output/${dirtime}/ControlPlots
-fi
+#if [ ! -d ./Output/${dirtime}/ControlPlots ]; then
+#    mkdir Output/${dirtime}/ControlPlots
+#fi
 
 if [ $1 ]; then
     dirlist=$1
@@ -20,7 +21,7 @@ for L in $dirlist; do
         check=$(./checkFinishedJobs.sh ${L})
         if [ "$(echo $check | grep 'All Jobs Finished without Error')" ]; then
             echo "$check" 
-            hadd Output/${dirtime}/${L}.root ${L}/*.root
+            hadd ${testdir}/Output/${dirtime}/${L}.root ${L}/*.root
             rm -rf ${L}
         else
             echo "$check" 
