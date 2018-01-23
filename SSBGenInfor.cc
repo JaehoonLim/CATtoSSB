@@ -775,9 +775,9 @@ SSBGenInfor::ReturnChannel(const edm::Event& iEvent) {
         else if(ChannelIndex ==  22) ChannelName = "Dilepton_DoubleElectron";
         else if(ChannelIndex ==  24) ChannelName = "Dilepton_ElectronMuon";
         else if(ChannelIndex ==  26) ChannelName = "Dilepton_DoubleMuon";
-        else if(ChannelIndex ==  -4) ChannelName = "TauElectron";
-        else if(ChannelIndex ==  -2) ChannelName = "TauMuon";
-        else if(ChannelIndex == -30) ChannelName = "DoubleTau";
+        else if(ChannelIndex ==  -4) ChannelName = "SUSY_TauElectron";
+        else if(ChannelIndex ==  -2) ChannelName = "SUSY_TauMuon";
+        else if(ChannelIndex == -30) ChannelName = "SUSY_DoubleTau";
 
         else if(ChannelIndex == 133) ChannelName = "Trilepton_TripleElectron";
         else if(ChannelIndex == 135) {ChannelName = "Trilepton_DoubleElectronMuon";
@@ -789,28 +789,28 @@ SSBGenInfor::ReturnChannel(const edm::Event& iEvent) {
                                       else ChannelCharge = "SS";
                                      }
         else if(ChannelIndex == 139) ChannelName = "Trilepton_TripleMuon";
-        else if(ChannelIndex == 107) ChannelName = "TauDoubleElectron";
-        else if(ChannelIndex == 109) ChannelName = "TauElectronMuon";
-        else if(ChannelIndex == 111) ChannelName = "TauDoubleMuon";
-        else if(ChannelIndex ==  81) ChannelName = "DoubleTauElectron";
-        else if(ChannelIndex ==  83) ChannelName = "DoubleTauMuon";
-        else if(ChannelIndex ==  55) ChannelName = "TripleTau";
+        else if(ChannelIndex == 107) ChannelName = "SUSY_TauDoubleElectron";
+        else if(ChannelIndex == 109) ChannelName = "SUSY_TauElectronMuon";
+        else if(ChannelIndex == 111) ChannelName = "SUSY_TauDoubleMuon";
+        else if(ChannelIndex ==  81) ChannelName = "SUSY_DoubleTauElectron";
+        else if(ChannelIndex ==  83) ChannelName = "SUSY_DoubleTauMuon";
+        else if(ChannelIndex ==  55) ChannelName = "SUSY_TripleTau";
 
         else if(ChannelIndex == 144) ChannelName = "Tetralepton_QuadrupleElectron";
         else if(ChannelIndex == 146) ChannelName = "Tetralepton_TripleElectronMuon";
         else if(ChannelIndex == 148) ChannelName = "Tetralepton_DoubleElectronDoubleMuon";
         else if(ChannelIndex == 150) ChannelName = "Tetralepton_TripleMuonElectron";
         else if(ChannelIndex == 152) ChannelName = "Tetralepton_QuadrupleMuon";
-        else if(ChannelIndex == 118) ChannelName = "TauTripleElectron";
-        else if(ChannelIndex == 120) ChannelName = "TauDoubleElectronMuon";
-        else if(ChannelIndex == 122) ChannelName = "TauDoubleMuonElectron";
-        else if(ChannelIndex == 124) ChannelName = "TauTripleMuon";
-        else if(ChannelIndex ==  92) ChannelName = "DoubleTauDoubleElectron";
-        else if(ChannelIndex ==  94) ChannelName = "DoubleTauElectronMuon";
-        else if(ChannelIndex ==  96) ChannelName = "DoubleTauDoubleMuon";
-        else if(ChannelIndex ==  66) ChannelName = "TripleTauElectron";
-        else if(ChannelIndex ==  68) ChannelName = "TripleTauMuon";
-        else if(ChannelIndex ==  40) ChannelName = "QuadrupleTau";
+        else if(ChannelIndex == 118) ChannelName = "SUSY_TauTripleElectron";
+        else if(ChannelIndex == 120) ChannelName = "SUSY_TauDoubleElectronMuon";
+        else if(ChannelIndex == 122) ChannelName = "SUSY_TauDoubleMuonElectron";
+        else if(ChannelIndex == 124) ChannelName = "SUSY_TauTripleMuon";
+        else if(ChannelIndex ==  92) ChannelName = "SUSY_DoubleTauDoubleElectron";
+        else if(ChannelIndex ==  94) ChannelName = "SUSY_DoubleTauElectronMuon";
+        else if(ChannelIndex ==  96) ChannelName = "SUSY_DoubleTauDoubleMuon";
+        else if(ChannelIndex ==  66) ChannelName = "SUSY_TripleTauElectron";
+        else if(ChannelIndex ==  68) ChannelName = "SUSY_TripleTauMuon";
+        else if(ChannelIndex ==  40) ChannelName = "SUSY_QuadrupleTau";
         else {
             cout << endl << "Error : Is Signal? " << ChannelIndex << endl << endl; 
             cerr << endl << "Error : Is Signal? " << ChannelIndex << endl << endl; 

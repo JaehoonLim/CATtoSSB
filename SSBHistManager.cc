@@ -233,12 +233,6 @@ void SSBHistManager::InitializeHist(){
         HistBox["numBJets_"+AllCutName[i_hist]]->Sumw2();
         HistBox["AllLepton_InvMass_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("AllLepton_InvMass_%s",AllCutName[i_hist].c_str()),Form("AllLepton_InvMass_%s",AllCutName[i_hist].c_str()),1000,0,1000);
         HistBox["AllLepton_InvMass_"+AllCutName[i_hist]]->Sumw2();
-        HistBox["DiLepton_InvMass1_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("DiLepton_InvMass1_%s",AllCutName[i_hist].c_str()),Form("DiLepton_InvMass1_%s",AllCutName[i_hist].c_str()),200,0,200);
-        HistBox["DiLepton_InvMass1_"+AllCutName[i_hist]]->Sumw2();
-        HistBox["DiLepton_InvMass2_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("DiLepton_InvMass2_%s",AllCutName[i_hist].c_str()),Form("DiLepton_InvMass2_%s",AllCutName[i_hist].c_str()),200,0,200);
-        HistBox["DiLepton_InvMass2_"+AllCutName[i_hist]]->Sumw2();
-        HistBox["DiLepton_InvMass3_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("DiLepton_InvMass3_%s",AllCutName[i_hist].c_str()),Form("DiLepton_InvMass3_%s",AllCutName[i_hist].c_str()),200,0,200);
-        HistBox["DiLepton_InvMass3_"+AllCutName[i_hist]]->Sumw2();
         HistBox["Jet_1_Pt_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Jet_1_Pt_%s",AllCutName[i_hist].c_str()),Form("Jet_1_Pt_%s",AllCutName[i_hist].c_str()),2000,0,2000);
         HistBox["Jet_1_Pt_"+AllCutName[i_hist]]->Sumw2();
         HistBox["Jet_1_Eta_"+AllCutName[i_hist]] = ssbhist.make<TH1D>(Form("Jet_1_Eta_%s",AllCutName[i_hist].c_str()),Form("Jet_1_Eta_%s",AllCutName[i_hist].c_str()),1000,-5,5);

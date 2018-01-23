@@ -9,7 +9,10 @@ for L in $dirlist; do
         >&2 echo ""
         >&2 echo "${L} : Checking ${allfile} files"
         # >&2 means 'stdout' to 'stderr' / & means 'not file' (ex : Name of file is '2')
-        #grep -H 'Begin Fatal Exception' ./${L}/job_*.err
+        if [ $1 ]; then
+            grep -H -e 'Begin Fatal Exception' -e 'Segmentation fault      cmsRun' ./${L}/job_*.err
+            echo ""
+        fi
         errorfile=$(grep -H -e 'Begin Fatal Exception' -e 'Segmentation fault      cmsRun' ./${L}/job_*.err 2>/dev/null | wc -l)
         #grep -H 'real' ./${L}/job_*.err
         #endfile=$(grep -H 'real' ./${L}/job_*.err 2>/dev/null | wc -l)

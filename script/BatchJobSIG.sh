@@ -22,3 +22,4 @@ create-batch --jobName TTTT_fsrdown${Suffix} --fileList $CMSSW_BASE/src/CATTools
 else
 :
 fi
+echo "@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ Done."
